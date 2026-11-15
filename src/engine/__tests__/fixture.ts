@@ -46,6 +46,7 @@ export function makeFixture(): GameContent {
     chapters: [{ id: 'ch1', title: 'One', startScene: 's1' }],
     backgrounds: { room: { id: 'room', name: 'Room', placeholder: { palette: ['#000', '#111', '#222'] } } },
     cgs: {},
+    shots: {},
     music: {},
     sfx: {},
     scenes: {

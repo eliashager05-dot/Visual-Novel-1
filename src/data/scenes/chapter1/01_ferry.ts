@@ -1,6 +1,6 @@
 import {
   affinity, bg, C, cg, choice, hide, jump, me, music, narrate, option, scene, setFlag, sfx, show, speaker, think,
-  title, trust, when, expr,
+  title, trust, when, expr, shot,
 } from '../../story/dsl';
 
 const noor = speaker('noor');
@@ -11,6 +11,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   bg('ferry_deck_dusk', 'fade'),
   music('crossing', 2),
   sfx('gull'),
+  shot('c1_ferry_establish'),
   narrate(
     'The ferry to Halcyon Point runs twice a day in summer and once a day the rest of the year. Nobody mentioned it would smell this strongly of diesel and wet rope.',
   ),
@@ -19,6 +20,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   think(
     'A great-aunt I met once, when I was six. She gave me a shell and told me to listen for the storm inside it. That\'s the entire relationship.',
   ),
+  shot('c1_ferry_noor_call'),
   narrate('Further along the rail, someone is having a worse crossing than you.'),
   show('noor', { position: 'right', expression: 'worried', pose: 'leaning' }),
   sfx('phone_buzz'),
@@ -31,9 +33,12 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
       effects: [affinity('noor', 5), trust('noor', 3), setFlag('noor_ferry_asked')],
       steps: [
         me('Rough call?'),
+        shot('c1_ferry_noor_turns'),
         stranger('Oh — God, was I loud? I was loud. Every gull on this boat now knows my business.', 'surprised'),
         me('The gulls seemed sympathetic.'),
+        shot('c1_ferry_noor_laugh'),
         stranger('They\'re not. They\'re thieves. One took an entire sandwich out of my hand in May.', 'laughing'),
+        shot('c1_ferry_noor_beside'),
         stranger('I\'m fine. Really. Money stuff. Boring grown-up money stuff.', 'neutral'),
         think('She says "fine" the way people do when they need you to agree with them.'),
       ],
@@ -42,9 +47,12 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
       effects: [affinity('noor', 3), setFlag('noor_ferry_joked')],
       steps: [
         me('For what it\'s worth, I hear the island has excellent ocean views. From every side.'),
+        shot('c1_ferry_noor_turns'),
         stranger('…Was that a joke? Was that a geography joke?', 'surprised'),
         me('It was an attempt.'),
+        shot('c1_ferry_noor_laugh'),
         stranger('It was a terrible one. I respect it enormously.', 'laughing'),
+        shot('c1_ferry_noor_beside'),
         stranger('Sorry. You caught me mid-crisis. It\'s a weekly thing. Don\'t worry about it.', 'neutral'),
       ],
     }),
@@ -52,6 +60,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
       effects: [trust('noor', 2), setFlag('noor_ferry_space')],
       steps: [
         narrate('You turn back to the water. Some things aren\'t yours to fix on a ferry.'),
+        shot('c1_ferry_noor_beside'),
         narrate('After a minute, she drifts down the rail toward you anyway.'),
         stranger('Thanks for not staring. Everyone on this boat stares. It\'s a very small boat.', 'neutral'),
       ],
@@ -60,16 +69,19 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
 
   cg('cg_ferry_noor'),
   narrate('The island rises out of the haze — a dark hump of rock, a lighthouse, a scatter of lit windows climbing a hill.'),
-  stranger('You\'re not a tourist. Tourists photograph the water. You\'ve been reading the same piece of paper since we left.', 'flirty'),
   cg(null),
+  shot('c1_ferry_noor_flirty'),
+  stranger('You\'re not a tourist. Tourists photograph the water. You\'ve been reading the same piece of paper since we left.', 'flirty'),
 
   choice('c1_ferry_paper', [
     option('truth', 'Tell her about the inheritance.', {
       effects: [trust('noor', 3), setFlag('told_noor_inheritance')],
       steps: [
         me('My great-aunt left me part of a hotel. The Halcyon.'),
+        shot('c1_ferry_noor_turns'),
         stranger('You\'re Margit\'s—', 'surprised'),
         expr('noor', 'sad'),
+        shot('c1_ferry_noor_sad'),
         stranger('Oh. I\'m sorry. She was… she was really something.', 'sad'),
         think('Something in her voice closes, quietly, like a door pulled to.'),
       ],
@@ -84,6 +96,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   ]),
 
   sfx('ferry_horn'),
+  shot('c1_ferry_arrival'),
   noor('That\'s us. Welcome to Halcyon Point. Population: not enough.', 'happy'),
   noor('I\'m Noor, by the way. I pour drinks at the Low Tide.', 'neutral'),
   when(

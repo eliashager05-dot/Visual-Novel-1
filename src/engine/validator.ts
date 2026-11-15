@@ -40,6 +40,23 @@ export function validateContent(content: GameContent): ValidationIssue[] {
     }
   }
 
+  // --- Shots -------------------------------------------------------------
+  for (const [key, s] of Object.entries(content.shots)) {
+    const where = `shot ${key}`;
+    if (s.id !== key) err(where, `id "${s.id}" does not match registry key`);
+    if (!content.backgrounds[s.background]) err(where, `unknown background "${s.background}"`);
+    if (!s.description.trim()) warn(where, 'missing render description');
+    for (const c of s.characters) {
+      const def = content.characters[c.id];
+      if (!def) {
+        err(where, `unknown character "${c.id}"`);
+        continue;
+      }
+      if (c.expression && !def.expressions.includes(c.expression)) err(where, `${c.id} has no expression "${c.expression}"`);
+      if (c.pose && !def.poses.includes(c.pose)) err(where, `${c.id} has no pose "${c.pose}"`);
+    }
+  }
+
   // --- Chapters ----------------------------------------------------------
   if (content.chapters.length === 0) err('chapters', 'no chapters defined');
   for (const ch of content.chapters) {
@@ -153,6 +170,12 @@ export function validateContent(content: GameContent): ValidationIssue[] {
         case 'cg':
           if (i.id && !content.cgs[i.id]) err(where, `unknown CG "${i.id}"`);
           break;
+        case 'shot': {
+          if (!i.id) break;
+          const shot = content.shots[i.id];
+          if (!shot) err(where, `unknown shot "${i.id}"`);
+          break;
+        }
         case 'unlock':
           if (!content.cgs[i.gallery]) err(where, `unknown gallery item "${i.gallery}"`);
           break;

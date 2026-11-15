@@ -13,6 +13,7 @@ export interface StageCharacter {
 export interface StageState {
   background: string | null;
   cg: string | null;
+  shot: string | null;
   characters: StageCharacter[];
   music: string | null;
 }
@@ -66,6 +67,7 @@ export type EngineEvent =
   | { type: 'music'; track: string | null; fade?: number }
   | { type: 'unlockGallery'; id: string }
   | { type: 'unlockScene'; id: string }
+  | { type: 'characterMet'; character: CharacterId }
   | { type: 'ending'; id: string }
   | { type: 'relationshipChanged'; character: CharacterId; stat: 'affinity' | 'trust'; delta: number }
   | { type: 'milestone'; character: CharacterId; milestone: string };

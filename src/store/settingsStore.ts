@@ -1,7 +1,13 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+export type DialogueStyle = 'cinematic' | 'panel';
+
 export interface Settings {
+  /** 'cinematic': centred subtitles over the image (rendered-VN style). 'panel': classic text box. */
+  dialogueStyle: DialogueStyle;
+  /** Show "X will remember that." notices. */
+  relationshipNotices: boolean;
   /** Characters per second; 0 = instant. */
   textSpeed: number;
   /** Base pause (ms) after a line finishes before auto mode advances. */
@@ -17,6 +23,8 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  dialogueStyle: 'cinematic',
+  relationshipNotices: true,
   textSpeed: 45,
   autoDelay: 1200,
   autoPerChar: 28,

@@ -31,3 +31,7 @@ export function preload(urls: (string | null)[]) {
     img.src = u;
   }
 }
+
+export function shotSrc(id: string): string | null {
+  return content.shots[id]?.src ?? null;
+}

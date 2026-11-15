@@ -91,6 +91,8 @@ export type Step =
   | { type: 'expression'; character: CharacterId; expression: Expression; pose?: string }
   | { type: 'move'; character: CharacterId; position: StagePosition }
   | { type: 'cg'; id: string | null }
+  /** Full-frame render; replaces sprite staging until cleared or the background changes. */
+  | { type: 'shot'; id: string | null }
   | { type: 'transition'; kind: TransitionKind; duration?: number }
   | { type: 'music'; track: string | null; fade?: number }
   | { type: 'sfx'; id: string }

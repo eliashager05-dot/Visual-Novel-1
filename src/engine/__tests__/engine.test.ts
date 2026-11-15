@@ -6,7 +6,7 @@ import { validateContent } from '../validator';
 import { getTier, isRevealed, visibleProfile } from '../relationshipEngine';
 import { char, makeFixture } from './fixture';
 import type { GameState } from '@/types';
-import { jump, label, narrate, scene } from '@/data/story/dsl';
+import { bg, end, jump, label, narrate, scene, shot } from '@/data/story/dsl';
 
 const lineText = (s: GameState) => (s.presentation.kind === 'line' ? s.presentation.line.text : null);
 
@@ -113,6 +113,45 @@ describe('dialogue engine', () => {
     c.scenes.loop = scene('loop', 'ch1', 'Loop', [label('x'), jump({ label: 'x' })]);
     const m = new SceneManager(c);
     expect(() => createNewGame(m, { playerName: 'x', startScene: 'loop' })).toThrow(/infinite loop/);
+  });
+});
+
+describe('shots', () => {
+  it('sets the stage shot, keeps it across lines, clears it on background change', () => {
+    const c = makeFixture();
+    c.shots.wide = { id: 'wide', background: 'room', camera: 'wide', characters: [], description: 'x' };
+    c.scenes.sh = scene('sh', 'ch1', 'Shots', [
+      bg('room'),
+      shot('wide'),
+      narrate('one'),
+      narrate('two'),
+      bg('room'),
+      narrate('three'),
+      end(),
+    ]);
+    const m = new SceneManager(c);
+    let s = createNewGame(m, { playerName: 'x', startScene: 'sh' }).state;
+    expect(s.stage.shot).toBe('wide');
+    s = advance(m, s).state;
+    expect(s.stage.shot).toBe('wide');
+    s = advance(m, s).state;
+    expect(s.stage.shot).toBeNull();
+    expect(validateContent(c).filter((i) => i.level === 'error')).toEqual([]);
+  });
+
+  it('validates shot references', () => {
+    const c = makeFixture();
+    c.shots.bad = { id: 'bad', background: 'nowhere', camera: 'close', characters: [{ id: 'ghost' }], description: 'x' };
+    c.scenes.s2 = scene('s2', 'ch1', 'S2', [shot('missing'), end()]);
+    const msgs = validateContent(c).map((i) => i.message);
+    expect(msgs).toEqual(
+      expect.arrayContaining(['unknown background "nowhere"', 'unknown character "ghost"', 'unknown shot "missing"']),
+    );
+  });
+
+  it('emits characterMet once', () => {
+    const { events } = start();
+    expect(events.filter((e) => e.type === 'characterMet')).toEqual([{ type: 'characterMet', character: 'a' }]);
   });
 });
 

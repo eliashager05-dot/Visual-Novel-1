@@ -6,6 +6,7 @@ import type {
   ChapterDefinition,
   CharacterDefinition,
   SceneDefinition,
+  ShotDefinition,
 } from '@/types';
 
 /** Everything the engine needs from the content layer. Pure data. */
@@ -17,6 +18,7 @@ export interface GameContent {
   chapters: ChapterDefinition[];
   backgrounds: Record<string, BackgroundDefinition>;
   cgs: Record<string, CgDefinition>;
+  shots: Record<string, ShotDefinition>;
   music: Record<string, AudioDefinition>;
   sfx: Record<string, AudioDefinition>;
   /** Default player name offered on new game. */

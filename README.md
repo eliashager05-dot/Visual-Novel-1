@@ -12,6 +12,8 @@ npm run build
 ```
 
 - Architecture, roadmap and art pipeline: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- Realistic 3D art direction and production pipeline: [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md)
+- Render checklist for the artist (generated with `npm run brief`): [`docs/RENDER_BRIEF.md`](docs/RENDER_BRIEF.md)
 - Story content: `src/data/` (characters, scenes, chapters, asset manifest)
 - Engine (pure TypeScript, UI-agnostic): `src/engine/`
 
@@ -27,4 +29,4 @@ panel (dev builds only).
 |---|---|---|
 | ![Main menu](docs/screenshots/main-menu.png) | ![Dialogue](docs/screenshots/dialogue.png) | ![Expression](docs/screenshots/expression-and-toast.png) |
 
-*Placeholder art is procedural; final 3D renders drop in through `src/data/characterArt.ts` and `src/data/assets.ts`.*
+*Placeholder art is procedural and only previews composition. The target look is photoreal 3D renders (see ART_DIRECTION.md), which drop in through `src/data/shots.ts`, `characterArt.ts` and `assets.ts` without story changes.*

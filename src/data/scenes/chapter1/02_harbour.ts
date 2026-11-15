@@ -1,6 +1,6 @@
 import {
   affinity, bg, C, choice, end, expr, jump, label, me, music, narrate, option, scene, setFlag, show, speaker, think,
-  trust, when,
+  trust, when, shot,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -10,7 +10,9 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
   music('halcyon_theme', 3),
   narrate('At the bottom of the ramp, a woman in a charcoal coat holds a small, precisely lettered sign. It reads: {player}.'),
   show('vera', { position: 'center', pose: 'arms_crossed', expression: 'neutral' }),
+  shot('c1_harbour_sign'),
   vera('{player}. You were on the manifest, and you look like your passport photo. That is rarer than you would think.', 'neutral', { as: '???' }),
+  shot('c1_harbour_vera_close'),
   vera('Vera Lindqvist. I manage the Halcyon.', 'neutral'),
 
   when(
@@ -34,15 +36,19 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
     option('sell', '"Honestly? I\'ll probably sell."', {
       effects: [trust('vera', 3), affinity('vera', -3), setFlag('player_leans_sell')],
       steps: [
+        shot('c1_harbour_vera_angry'),
         vera('…', 'angry'),
+        shot('c1_harbour_vera_close'),
         vera('Thank you for not pretending. Most people pretend.', 'neutral'),
       ],
     }),
     option('dinner', '"Shouldn\'t we at least have dinner before discussing mergers?"', {
       effects: [affinity('vera', 3), setFlag('vera_flustered')],
       steps: [
+        shot('c1_harbour_vera_flustered'),
         vera('I—', 'embarrassed'),
         expr('vera', 'neutral', 'standing'),
+        shot('c1_harbour_vera_close'),
         vera('Dinner is at eight. Bram has made fish. Bram has always made fish.', 'neutral'),
         jump({ label: 'walk' }),
       ],
@@ -53,6 +59,7 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
   vera('We should go. The hill is steeper than it looks, and it looks steep.', 'neutral'),
 
   label('walk'),
+  shot('c1_harbour_walk'),
   narrate('She takes your bag before you can object, and walks up the hill as though she expects you to keep pace.'),
   end(),
 ]);

@@ -9,6 +9,7 @@ import { useGameInput } from '@/hooks/useGameInput';
 import type { DisplayedLine } from '@/types';
 import { CharacterLayer } from '../CharacterRenderer/CharacterRenderer';
 import { ChoiceMenu } from '../ChoiceMenu/ChoiceMenu';
+import { CinematicDialogue } from '../DialogueBox/CinematicDialogue';
 import { DialogueBox } from '../DialogueBox/DialogueBox';
 import { QuickMenu } from '../DialogueBox/QuickMenu';
 import { DebugPanel } from '../Overlays/DebugPanel';
@@ -20,6 +21,8 @@ import { TitleCard } from '../Overlays/TitleCard';
 import { Toasts } from '../Overlays/Toasts';
 import { BackgroundLayer } from '../Stage/BackgroundLayer';
 import { CgLayer } from '../Stage/CgLayer';
+import { ShotLayer } from '../Stage/ShotLayer';
+import { useSettings } from '@/store/settingsStore';
 
 export function GameScreen() {
   useGameInput();
@@ -31,6 +34,8 @@ export function GameScreen() {
   const error = useGameStore((s) => s.error);
   const { hideUi, overlay, auto, skip, setHideUi } = useUi();
   const advanceIntent = useAdvanceIntent();
+  const cinematic = useSettings((s) => s.dialogueStyle) === 'cinematic';
+  const Dialogue = cinematic ? CinematicDialogue : DialogueBox;
 
   if (!view || !game) return null;
   const p = view.presentation;
@@ -53,21 +58,23 @@ export function GameScreen() {
       }}
     >
       <BackgroundLayer id={view.stage.background} />
-      <CharacterLayer characters={view.stage.characters} speaker={speaker} />
+      {/* In shot mode the render already contains the characters. */}
+      {!view.stage.shot && <CharacterLayer characters={view.stage.characters} speaker={speaker} />}
+      <ShotLayer id={view.stage.shot} />
       <CgLayer id={view.stage.cg} />
-      {/* Soft gradient so text stays legible over bright art. */}
-      {!hideUi && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[420px] bg-gradient-to-t from-black/55 to-transparent" />}
+      {/* Soft gradient so panel text stays legible over bright art (cinematic mode draws its own). */}
+      {!hideUi && !cinematic && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[420px] bg-gradient-to-t from-black/55 to-transparent" />}
 
       {!hideUi && p.kind === 'line' && (
         <>
-          <DialogueBox line={p.line} lineId={game.lineCount} />
-          <QuickMenu />
+          <Dialogue line={p.line} lineId={game.lineCount} />
+          <QuickMenu cinematic={cinematic} />
         </>
       )}
       {!hideUi && p.kind === 'choice' && (
         <>
           <div className="pointer-events-none absolute inset-0 bg-black/30 transition-opacity" />
-          {lastLine && <DialogueBox line={lastLine} lineId={-1} dimmed />}
+          {lastLine && <Dialogue line={lastLine} lineId={-1} dimmed />}
           <ChoiceMenu choice={p.choice} onChoose={choose} />
         </>
       )}

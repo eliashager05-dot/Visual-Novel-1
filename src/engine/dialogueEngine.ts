@@ -37,7 +37,7 @@ export function createNewGame(
     schemaVersion: SAVE_SCHEMA_VERSION,
     player: { name: opts.playerName.trim() || content.defaultPlayerName },
     pointer: { scene: startScene, index: 0 },
-    stage: { background: null, cg: null, characters: [], music: null },
+    stage: { background: null, cg: null, shot: null, characters: [], music: null },
     presentation: { kind: 'idle' },
     relationships,
     flags: {},
@@ -133,7 +133,10 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
           if (!def) throw new Error(`Unknown speaker "${instr.speaker}"`);
           speakerName = instr.as ?? def.shortName ?? def.name;
           const rel = state.relationships[instr.speaker];
-          if (rel && !instr.as) rel.met = true;
+          if (rel && !instr.as && !rel.met) {
+            rel.met = true;
+            events.push({ type: 'characterMet', character: instr.speaker });
+          }
           const onStage = findOnStage(state, instr.speaker);
           if (onStage) {
             if (instr.expression) onStage.expression = instr.expression;
@@ -160,6 +163,7 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
 
       case 'background':
         state.stage.background = instr.id;
+        state.stage.shot = null; // a new location starts in staged (sprite) mode
         if (instr.transition && instr.transition !== 'none') {
           events.push({ type: 'transition', kind: instr.transition });
         }
@@ -207,6 +211,10 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
       case 'cg':
         state.stage.cg = instr.id;
         if (instr.id) events.push({ type: 'unlockGallery', id: instr.id });
+        break;
+
+      case 'shot':
+        state.stage.shot = instr.id;
         break;
 
       case 'transition':

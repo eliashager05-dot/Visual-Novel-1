@@ -35,6 +35,36 @@ export interface AudioDefinition {
   src?: string;
 }
 
+/** Camera framing for a shot — part of the render brief and used by the placeholder. */
+export type CameraFraming = 'wide' | 'medium' | 'close' | 'extreme_close' | 'over_shoulder';
+
+export interface ShotCharacter {
+  id: string;
+  pose?: string;
+  expression?: import('./character').Expression;
+  /** Horizontal placement in frame. */
+  position?: import('./character').StagePosition;
+  /** Which way the character faces in the render. */
+  facing?: 'left' | 'right' | 'camera';
+}
+
+/**
+ * A "shot" is a full-frame render with characters, camera and lighting baked
+ * in — the primary presentation style of 3D-rendered visual novels. The
+ * definition doubles as the brief for the render artist.
+ */
+export interface ShotDefinition {
+  id: string;
+  /** Location (for the placeholder and the brief's lighting reference). */
+  background: string;
+  camera: CameraFraming;
+  characters: ShotCharacter[];
+  /** What the artist should render: action, mood, lighting, props. */
+  description: string;
+  /** Final render URL (1920×1080). Absent → placeholder composite. */
+  src?: string;
+}
+
 export type HairStyle = 'bun' | 'curls_scarf' | 'pixie' | 'bob' | 'bald_beard';
 
 /** Look of the procedural stand-in sprite. Locked per character for consistency. */

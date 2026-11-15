@@ -80,6 +80,8 @@ export const expr = (character: string, expression: Expression, pose?: string): 
 });
 export const move = (character: string, position: StagePosition): Step => ({ type: 'move', character, position });
 export const cg = (id: string | null): Step => ({ type: 'cg', id });
+/** Switch to a full-frame render (see data/shots). `shot(null)` returns to sprite staging. */
+export const shot = (id: string | null): Step => ({ type: 'shot', id });
 export const transition = (kind: TransitionKind, duration?: number): Step => ({ type: 'transition', kind, duration });
 export const music = (track: string | null, fade?: number): Step => ({ type: 'music', track, fade });
 export const sfx = (id: string): Step => ({ type: 'sfx', id });

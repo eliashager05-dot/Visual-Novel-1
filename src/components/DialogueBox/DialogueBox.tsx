@@ -1,15 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback } from 'react';
-import { content } from '@/data';
 import { useSettings } from '@/store/settingsStore';
 import { useUi } from '@/store/uiStore';
 import type { DisplayedLine } from '@/types';
+import { speakerColor } from './speakerColor';
 import { Typewriter } from './Typewriter';
 
-function speakerColor(line: Pick<DisplayedLine, 'speaker'>): string {
-  if (!line.speaker || line.speaker === 'player') return '#e9e4da';
-  return content.characters[line.speaker]?.color ?? '#e9e4da';
-}
 
 /**
  * Bottom dialogue panel. Narration is set in serif italics without a name

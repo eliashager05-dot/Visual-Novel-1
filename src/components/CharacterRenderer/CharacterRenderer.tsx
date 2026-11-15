@@ -6,7 +6,7 @@ import { ImageWithFallback } from '../Stage/ImageWithFallback';
 import { PlaceholderCharacter } from '../Stage/placeholders/PlaceholderCharacter';
 
 /** Horizontal centre of each stage slot, as % of stage width. */
-const SLOT_X: Record<StagePosition, number> = {
+export const SLOT_X: Record<StagePosition, number> = {
   farLeft: 14,
   left: 30,
   center: 50,
@@ -15,8 +15,8 @@ const SLOT_X: Record<StagePosition, number> = {
 };
 
 /** Sprite art box is 600×1500; scaled so an average-height character's head sits in the upper third. */
-const SPRITE_W = 600;
-const SPRITE_H = 1500;
+export const SPRITE_W = 600;
+export const SPRITE_H = 1500;
 const BASE_SCALE = 0.86;
 
 export function CharacterLayer({ characters, speaker }: { characters: StageCharacter[]; speaker: string | null }) {

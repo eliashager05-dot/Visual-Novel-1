@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { content } from '@/data';
 import { useGameStore } from '@/store/gameStore';
+import { useSettings } from '@/store/settingsStore';
 import { useUi } from '@/store/uiStore';
 
 /**
@@ -14,6 +15,7 @@ export function useEventToasts() {
   useEffect(() => {
     if (seen.current.has(events)) return; // StrictMode re-run / no new events
     seen.current.add(events);
+    if (!useSettings.getState().relationshipNotices) return;
     const { pushToast } = useUi.getState();
     const perCharacter = new Map<string, { affinity: number; trust: number }>();
     for (const e of events) {
