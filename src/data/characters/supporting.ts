@@ -1,0 +1,25 @@
+import type { CharacterDefinition } from '@/types';
+
+export const bram: CharacterDefinition = {
+  id: 'bram',
+  name: 'Bram Okafor',
+  shortName: 'Bram',
+  age: 61,
+  role: 'supporting',
+  romanceable: false,
+  color: '#c9b37e',
+  occupation: 'Cook at the Halcyon for thirty years',
+  appearance: 'Broad, bald, grey beard, forearms covered in old burn scars. Apron over a fisherman\'s jumper.',
+  personality: 'Gruff, patient, sentimental about food and nothing else (he claims). The island\'s memory.',
+  background: 'Came as a ship\'s cook, stayed for Margit\'s kitchen. Knows every rumour and repeats almost none.',
+  motivations: ['Keep feeding people', 'Protect Vera from herself'],
+  strengths: ['Discreet', 'Steady'],
+  weaknesses: ['Stubborn', 'Talks to the oven more than to people'],
+  dialogueStyle: 'Few words. Proverbs he may have invented. Calls everyone "kid" regardless of age.',
+  initialRelationship: { affinity: 20, trust: 20 },
+  poses: ['standing'],
+  defaultPose: 'standing',
+  expressions: ['neutral', 'happy', 'sad', 'angry', 'surprised', 'worried', 'laughing'],
+  profile: [{ id: 'role', label: 'Role', text: 'Cook. Has outlasted four ovens and three managers.' }],
+  milestones: [],
+};
