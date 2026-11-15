@@ -206,13 +206,13 @@ export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
         effects: [trust('noor', 6), affinity('noor', 2), setFlag('noor_confessed_march')],
         steps: [
           me(`I found this in the boathouse.`),
-          noor(`…I lost that weeks ago.`, 'surprised'),
+          noor(`…I lost that last night. I thought it was behind the bar.`, 'surprised'),
           me(`Noor.`),
           noor(`I wasn't there tonight. I swear on — on anything you like. I was in the bar with a mop.`, 'worried'),
           noor(`But I was there in March. The night she went out.`, 'sad'),
           noor(`She asked me to help with the ropes. She said if anyone asked, I hadn't seen her. So I promised.`),
           noor(`I've kept that promise for five months, and it's been eating me alive.`, 'sad'),
-          think(`She lost the scarf weeks ago. So someone else had it tonight. Or someone wanted it found.`),
+          think(`She was wearing it on the ferry, and by this morning it was gone. So someone took it. And tonight, someone wanted it found.`),
         ],
       }),
       option('accuse', `"Were you in the boathouse tonight?"`, {

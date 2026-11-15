@@ -48,14 +48,14 @@ export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
   when(C.flag('june_mooring_hint'), [think(`The old mooring. Where June said the glow is brightest.`)]),
   when(C.any(C.flag('june_manmade_theory'), C.flag('felt_vibration')), [think(`A pipe. A cable. A machine.`)]),
   shot('c1_margit_photo_wall'),
-  narrate(`Pinned above the desk is a photograph: a much younger Margit on the deck of the ELIN, laughing into the wind, and beside her a girl of about ten holding up a fish nearly as big as she is.`),
+  narrate(`Pinned above the desk is a faded photograph: a much younger Margit on the deck of the ELIN, laughing into the wind, and beside her a young woman of about twenty, one arm around Margit's shoulders, holding up a fish as long as her arm.`),
   when(
     C.flag('vera_invited_room'),
     [
-      vera(`That is not me. I was nineteen when I came here.`, 'worried'),
-      vera(`I do not know who that is.`),
+      vera(`That is not me. That photograph is thirty years old.`, 'worried'),
+      vera(`I do not know who that is. Margit never once mentioned her.`),
     ],
-    [think(`A girl of ten. Margit never had children. Did she?`)],
+    [think(`A young woman, thirty years ago. She'd be about fifty now. Nobody on this island has mentioned her.`)],
   ),
 
   shot('c1_margit_ledger'),

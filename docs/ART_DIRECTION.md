@@ -62,6 +62,9 @@ keeps performance trivial, at any render quality, and lets the art pipeline chan
 
 ### First render, step by step
 
+The full beginner's walkthrough is in [DAZ_GUIDE.md](DAZ_GUIDE.md); character looks and outfits are in
+[CHARACTER_SHEETS.md](CHARACTER_SHEETS.md). In short:
+
 1. Install DAZ Studio (free) and the Genesis 9 starter content.
 2. Build **one** character from her description in `RENDER_BRIEF.md` (character reference sheets). Save
    her as a scene subset and never edit that file again.
@@ -125,6 +128,7 @@ train on or imitate a real person's likeness or an existing game's characters. T
 ---
 
 ## 4. What not to do
+- Don't depict anyone under 21 in any image, including photographs and background figures. Every character must read clearly as an adult.
 - Don't mix art styles or sources for the same character.
 - Don't use stock photos or images from other games, not even temporarily.
 - Don't re-pose a character by editing their face morphs per shot. Use the saved expression presets.

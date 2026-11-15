@@ -63,7 +63,7 @@ Before the Storm (whoever you didn't choose gets a scene) ─ THE STORM ─ Cand
 - **Under the tide:** monthly payments to "N.H.", "J.C.", and a final "S.M. — paid in full" in March.
 - **The cove:** warm mud and a vibration at the old mooring, a temperature spike at 19:40 during the storm,
   boat lights seen at 19:30, and Aldane wants the seabed, not the hotel.
-- **People:** the girl in Margit's photograph; the figure in the oilskin; Noor's March promise; Sienna's
+- **People:** the young woman in Margit's thirty-year-old photograph; the figure in the oilskin; Noor's March promise; Sienna's
   anonymous benefactor; why Vera "has a key to the boathouse".
 
 ## Flags carried into Chapter Two (selection)

@@ -93,3 +93,46 @@ export interface CharacterArt {
   sprites?: Record<string, string>;
   silhouette: SilhouetteSpec;
 }
+
+// ---------------------------------------------------------------------------
+// Production data for the render artist. Not used by the running game.
+// ---------------------------------------------------------------------------
+
+export interface WardrobeItem {
+  id: string;
+  name: string;
+  description: string;
+  /** Scene ids where this outfit is worn. */
+  scenes: string[];
+}
+
+/** Locked visual specification for building a character in 3D. */
+export interface RenderSheet {
+  character: string;
+  heightCm: number;
+  build: string;
+  face: string;
+  skin: string;
+  eyes: string;
+  hair: string;
+  makeup: string;
+  /** Details that must be visible in every render where they could be seen. */
+  signature: string[];
+  wardrobe: WardrobeItem[];
+  /** How this person holds themselves and how big their expressions are. */
+  acting: string;
+}
+
+/** One lighting state of a physical set. */
+export interface LocationBrief {
+  background: string;
+  /** Physical set this background belongs to (one build, several lighting states). */
+  set: string;
+  lighting: string;
+}
+
+export interface SetBrief {
+  id: string;
+  name: string;
+  description: string;
+}

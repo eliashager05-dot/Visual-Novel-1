@@ -1,153 +1,262 @@
 /**
- * Generates docs/RENDER_BRIEF.md: the complete list of renders the script
- * currently needs, with status. Run with `npm run brief`.
+ * Generates the artist's documents from the story data. Run with `npm run brief`.
+ *
+ *   docs/RENDER_BRIEF.md       production order, sets and lighting, every shot with status
+ *   docs/CHARACTER_SHEETS.md   locked build sheet and wardrobe for every character
  */
 import { existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { content } from '../src/data';
+import { locations, photoOnlyCharacters, renderSheets, sets } from '../src/data/renderSheets';
 import { SceneManager } from '../src/engine/sceneManager';
 
 const manager = new SceneManager(content);
-const shotUse = new Map<string, Set<string>>();
-const spriteUse = new Map<string, Map<string, Set<string>>>(); // char → "pose/expression" → scenes
-
-const addSprite = (char: string, pose: string, expr: string, scene: string) => {
-  const m = spriteUse.get(char) ?? new Map<string, Set<string>>();
-  const key = `${pose}/${expr}`;
-  (m.get(key) ?? m.set(key, new Set()).get(key)!).add(scene);
-  spriteUse.set(char, m);
-};
-
-for (const scene of manager.compileAll()) {
-  // Linear scan (ignores branching): records each sprite visible while a line is on screen.
-  const onStage = new Map<string, { pose: string; expr: string }>();
-  let inShot = false;
-  for (const i of scene.instructions) {
-    switch (i.type) {
-      case 'shot':
-        inShot = i.id !== null;
-        if (i.id) (shotUse.get(i.id) ?? shotUse.set(i.id, new Set()).get(i.id)!).add(scene.id);
-        break;
-      case 'background':
-        inShot = false;
-        break;
-      case 'show': {
-        const cur = onStage.get(i.character);
-        onStage.set(i.character, {
-          pose: i.pose ?? cur?.pose ?? content.characters[i.character]!.defaultPose,
-          expr: i.expression ?? cur?.expr ?? 'neutral',
-        });
-        break;
-      }
-      case 'hide':
-        if (i.character === '*') onStage.clear();
-        else onStage.delete(i.character);
-        break;
-      case 'expression': {
-        const cur = onStage.get(i.character);
-        if (cur) onStage.set(i.character, { pose: i.pose ?? cur.pose, expr: i.expression });
-        break;
-      }
-      case 'say':
-      case 'narrate':
-      case 'think': {
-        if (i.type === 'say' && i.speaker !== 'player') {
-          const cur = onStage.get(i.speaker);
-          if (cur) onStage.set(i.speaker, { pose: i.pose ?? cur.pose, expr: i.expression ?? cur.expr });
-        }
-        if (!inShot) for (const [c, v] of onStage) addSprite(c, v.pose, v.expr, scene.id);
-        break;
-      }
-    }
-  }
-}
-
 const ASSETS = fileURLToPath(new URL('../src/assets/', import.meta.url));
 const EXT = /\.(webp|avif|jpe?g|png)$/i;
-/** A render exists if the definition has `src` or a file named after the id was dropped into src/assets/<folder>. */
+
+/** A render exists if the definition has `src` or a file named after the id is in src/assets/<folder>. */
 const hasFile = (folder: string, id: string) => {
   const dir = ASSETS + folder;
   return existsSync(dir) && readdirSync(dir).some((f) => EXT.test(f) && f.replace(EXT, '') === id);
 };
-const status = (folder: string, id: string, src?: string) => (src || hasFile(folder, id) ? '✅ rendered' : '⬜ placeholder');
-const lines: string[] = [];
-const p = (s = '') => lines.push(s);
+const isDone = (folder: string, id: string, src?: string) => Boolean(src) || hasFile(folder, id);
+const mark = (done: boolean) => (done ? '✅ rendered' : '⬜ to do');
+
+const locationOf = (bg: string) => locations.find((l) => l.background === bg);
+const setOf = (bg: string) => sets.find((s) => s.id === locationOf(bg)?.set);
+const charName = (id: string) => content.characters[id]?.name ?? id;
+const outfitFor = (charId: string, sceneId: string) =>
+  renderSheets.find((s) => s.character === charId)?.wardrobe.find((w) => w.scenes.includes(sceneId));
+
+// --- Scan the script in story order ---------------------------------------
+interface SceneUse {
+  id: string;
+  title: string;
+  shots: string[];
+  cgs: string[];
+  characters: Set<string>;
+}
+const sceneUses: SceneUse[] = [];
+const shotFirstScene = new Map<string, string>();
+const shotScenes = new Map<string, Set<string>>();
+
+for (const def of Object.values(content.scenes)) {
+  const use: SceneUse = { id: def.id, title: def.title, shots: [], cgs: [], characters: new Set() };
+  for (const i of manager.getScene(def.id).instructions) {
+    if (i.type === 'shot' && i.id) {
+      if (!use.shots.includes(i.id)) use.shots.push(i.id);
+      if (!shotFirstScene.has(i.id)) shotFirstScene.set(i.id, def.id);
+      (shotScenes.get(i.id) ?? shotScenes.set(i.id, new Set()).get(i.id)!).add(def.id);
+      for (const c of content.shots[i.id]?.characters ?? []) use.characters.add(c.id);
+    }
+    if (i.type === 'cg' && i.id && !use.cgs.includes(i.id)) use.cgs.push(i.id);
+    if (i.type === 'say' && i.speaker !== 'player') use.characters.add(i.speaker);
+  }
+  sceneUses.push(use);
+}
+
+const allShots = Object.values(content.shots);
+const shotsDone = allShots.filter((s) => isDone('shots', s.id, s.src)).length;
+const allCgs = Object.values(content.cgs);
+const cgsDone = allCgs.filter((c) => isDone('cg', c.id, c.src)).length;
+
+// ===========================================================================
+// RENDER_BRIEF.md
+// ===========================================================================
+const out: string[] = [];
+const p = (s = '') => out.push(s);
 
 p('# Render Brief');
 p();
 p('Generated by `npm run brief` from the story files. Do not edit by hand.');
-p('Style rules: see [ART_DIRECTION.md](ART_DIRECTION.md). Output: 1920×1080 WebP/AVIF/JPG/PNG for shots, backgrounds');
-p('and CGs; transparent WebP/PNG (1440 px tall) for sprites. Drop files into `src/assets/…` named after the id;');
-p('no code changes are needed. Backgrounds go in `src/assets/backgrounds/`, illustrations in `src/assets/cg/`.');
+p();
+p(`**Progress:** ${shotsDone} / ${allShots.length} shots · ${cgsDone} / ${allCgs.length} illustrations.`);
+p();
+p('- How to make the renders: [DAZ_GUIDE.md](DAZ_GUIDE.md)');
+p('- What each character looks like and wears: [CHARACTER_SHEETS.md](CHARACTER_SHEETS.md)');
+p('- Style rules: [ART_DIRECTION.md](ART_DIRECTION.md)');
+p();
+p('**Delivering a render:** save it as a 1920×1080 image named after its id, in `src/assets/shots/` (shots) or');
+p('`src/assets/cg/` (illustrations). `.png`, `.jpg`, `.webp` and `.avif` all work. The game picks it up with no code');
+p('changes. Run `npm run renders` to check names and sizes.');
+p();
+p('**Point of view:** the player character is never shown from the front. Shots are first-person, or over the');
+p("player's shoulder with the face out of frame. Hands and arms may appear; keep them neutral and unadorned.");
 p();
 
-const shots = Object.values(content.shots);
-const done = shots.filter((s) => s.src || hasFile('shots', s.id)).length;
-p(`## Shots (${done}/${shots.length} rendered)`);
+// --- Production order -----------------------------------------------------
+p('## Production order');
 p();
-p('Full-frame renders with characters baked in. These are the primary visuals of the game.');
+p('Work through the story in this order. Each row is one sitting: load the set, light it once, dress the');
+p('characters once, then render all of its shots. The first two rows make the opening of the game look finished.');
 p();
-for (const s of shots) {
-  const used = [...(shotUse.get(s.id) ?? [])];
-  p(`### \`${s.id}\` · ${status('shots', s.id, s.src)}`);
-  p();
-  p(`- **Location:** ${content.backgrounds[s.background]?.name ?? s.background} (\`${s.background}\`)`);
-  p(`- **Camera:** ${s.camera.replace('_', ' ')}`);
+p('| # | Scene | Set(s) | Characters (outfit) | Shots | Illustrations | Done |');
+p('|---|---|---|---|---|---|---|');
+sceneUses.forEach((u, idx) => {
+  if (u.shots.length === 0 && u.cgs.length === 0) return;
+  const setNames = [...new Set(u.shots.map((s) => setOf(content.shots[s]!.background)?.name).filter(Boolean))];
+  const chars = [...u.characters].map((c) => `${content.characters[c]?.shortName ?? c} (${outfitFor(c, u.id)?.name ?? '—'})`);
+  const ownShots = u.shots.filter((s) => shotFirstScene.get(s) === u.id);
+  const done = ownShots.filter((s) => isDone('shots', s, content.shots[s]?.src)).length;
   p(
-    `- **Characters:** ${
-      s.characters.length
-        ? s.characters
-            .map((c) => `${content.characters[c.id]?.name ?? c.id} — ${c.expression ?? 'neutral'}, ${c.pose ?? 'default pose'}, ${c.position ?? 'center'}, facing ${c.facing ?? 'camera'}`)
-            .join('; ')
-        : 'none'
-    }`,
+    `| ${idx + 1} | **${u.title}** \`${u.id}\` | ${setNames.join(', ') || '—'} | ${chars.join(', ') || '—'} | ${ownShots.length}${u.shots.length > ownShots.length ? ` (+${u.shots.length - ownShots.length} reused)` : ''} | ${u.cgs.length || '—'} | ${done}/${ownShots.length} |`,
   );
-  p(`- **Used in:** ${used.length ? used.map((u) => `\`${u}\``).join(', ') : '⚠️ not used by any scene'}`);
-  p(`- **Brief:** ${s.description}`);
-  p(`- **Save as:** \`src/assets/shots/${s.id}.webp\` (1920×1080). It appears in the game automatically.`);
+});
+p();
+
+// --- Sets -----------------------------------------------------------------
+p('## Sets and lighting');
+p();
+p(`${sets.length} physical sets cover all ${Object.keys(content.backgrounds).length} locations. Build each set once and save a lighting preset per state.`);
+p();
+for (const set of sets) {
+  const states = locations.filter((l) => l.set === set.id);
+  const shotCount = allShots.filter((s) => locationOf(s.background)?.set === set.id).length;
+  p(`### ${set.name} · ${shotCount} shot${shotCount === 1 ? '' : 's'}`);
+  p();
+  p(set.description);
+  p();
+  for (const st of states) {
+    const n = allShots.filter((s) => s.background === st.background).length;
+    p(`- **${content.backgrounds[st.background]?.name ?? st.background}** (\`${st.background}\`, ${n} shot${n === 1 ? '' : 's'}): ${st.lighting}`);
+  }
   p();
 }
 
-p('## Character sprites');
+// --- Shots ----------------------------------------------------------------
+p(`## Shots (${shotsDone}/${allShots.length} rendered)`);
 p();
-if (spriteUse.size === 0) p('_No scene currently shows sprites outside a shot. Sprites are optional until a scene uses staging._\n');
-p('Transparent full-body renders for scenes that use sprite staging rather than shots.');
-p('Save as `src/assets/characters/<id>/<pose>/<expression>.webp`. They are picked up automatically.');
+p('Full-frame renders with characters baked in, grouped by the scene that first uses them.');
 p();
-for (const [char, combos] of spriteUse) {
-  const def = content.characters[char]!;
-  const art = content.characterArt[char];
-  p(`### ${def.name} (\`${char}\`) · ${art?.basePath ? '✅ basePath set' : '⬜ placeholder'}`);
+for (const u of sceneUses) {
+  const own = u.shots.filter((s) => shotFirstScene.get(s) === u.id);
+  if (own.length === 0) continue;
+  p(`### Scene: ${u.title} (\`${u.id}\`)`);
   p();
-  p(`> ${def.appearance}`);
+  for (const id of own) {
+    const s = content.shots[id]!;
+    const used = [...(shotScenes.get(id) ?? [])];
+    p(`#### \`${s.id}\` · ${mark(isDone('shots', s.id, s.src))}`);
+    p();
+    p(`- **Set / lighting:** ${setOf(s.background)?.name ?? '?'} — ${content.backgrounds[s.background]?.name ?? s.background}`);
+    p(`- **Camera:** ${s.camera.replace('_', ' ')}`);
+    p(
+      `- **Characters:** ${
+        s.characters.length
+          ? s.characters
+              .map(
+                (c) =>
+                  `${charName(c.id)} — ${c.expression ?? 'neutral'}, pose "${c.pose ?? 'default'}", frame ${c.position ?? 'center'}, facing ${c.facing ?? 'camera'}, outfit "${outfitFor(c.id, u.id)?.name ?? '?'}"`,
+              )
+              .join('; ')
+          : 'none'
+      }`,
+    );
+    if (used.length > 1) p(`- **Also used in:** ${used.filter((x) => x !== u.id).map((x) => `\`${x}\``).join(', ')}`);
+    p(`- **Brief:** ${s.description}`);
+    p(`- **Save as:** \`src/assets/shots/${s.id}.png\``);
+    p();
+  }
+}
+const unused = allShots.filter((s) => !shotFirstScene.has(s.id));
+if (unused.length) {
+  p('### Not used by any scene');
   p();
-  p('| Pose / expression | Scenes |');
-  p('|---|---|');
-  for (const [k, scenes] of [...combos].sort()) p(`| \`${k}\` | ${[...scenes].join(', ')} |`);
+  for (const s of unused) p(`- \`${s.id}\``);
   p();
 }
 
-p('## Backgrounds');
+// --- Illustrations --------------------------------------------------------
+p(`## Illustrations (${cgsDone}/${allCgs.length} rendered)`);
+p();
+p('Key moments, unlocked in the gallery. Render these with extra care: they are the images players keep.');
+p();
+p('| Id | Title | Characters | Save as | Status |');
+p('|---|---|---|---|---|');
+for (const c of allCgs) {
+  p(`| \`${c.id}\` | ${c.title} | ${c.characters.map(charName).join(', ') || '—'} | \`src/assets/cg/${c.id}.png\` | ${mark(isDone('cg', c.id, c.src))} |`);
+}
+p();
+p('## Backgrounds (optional)');
+p();
+p('Only needed if a scene is staged with sprites instead of shots. Every scene in Chapter One uses shots, so');
+p('these can wait. Save as `src/assets/backgrounds/<id>.png`.');
 p();
 p('| Id | Name | Status |');
 p('|---|---|---|');
-for (const b of Object.values(content.backgrounds)) p(`| \`${b.id}\` | ${b.name} | ${status('backgrounds', b.id, b.src)} |`);
-p();
-p('## Illustrations (gallery CGs)');
-p();
-p('| Id | Title | Characters | Status |');
-p('|---|---|---|---|');
-for (const c of Object.values(content.cgs)) p(`| \`${c.id}\` | ${c.title} | ${c.characters.join(', ')} | ${status('cg', c.id, c.src)} |`);
-p();
-p('## Character reference sheets');
-p();
-p('Before any scene work, each character needs a locked reference: front, three-quarter and profile head shots,');
-p('plus a full-body turnaround in their default outfit, rendered under neutral studio light.');
-p();
-for (const def of Object.values(content.characters)) {
-  p(`- **${def.name}** (${def.age}) — ${def.appearance}`);
-}
+for (const b of Object.values(content.backgrounds)) p(`| \`${b.id}\` | ${b.name} | ${mark(isDone('backgrounds', b.id, b.src))} |`);
 p();
 
-writeFileSync(new URL('../docs/RENDER_BRIEF.md', import.meta.url), lines.join('\n'));
-console.log(`docs/RENDER_BRIEF.md written: ${shots.length} shots, ${[...spriteUse.values()].reduce((n, m) => n + m.size, 0)} sprite variants.`);
+writeFileSync(new URL('../docs/RENDER_BRIEF.md', import.meta.url), out.join('\n'));
+
+// ===========================================================================
+// CHARACTER_SHEETS.md
+// ===========================================================================
+const cs: string[] = [];
+const c = (s = '') => cs.push(s);
+c('# Character Sheets');
+c();
+c('Generated by `npm run brief` from `src/data/renderSheets.ts`. Do not edit by hand.');
+c();
+c('Build each character **once** from this sheet, get the look right, save it, and never change it again.');
+c('Every character is an adult and must read clearly as one. See [DAZ_GUIDE.md](DAZ_GUIDE.md) for how.');
+c();
+c('**Reference renders to make first, per character** (neutral studio light, plain grey backdrop): face front,');
+c('face three-quarter, face profile, full body front, full body back. Compare every later render against them.');
+c();
+for (const sheet of renderSheets) {
+  const def = content.characters[sheet.character]!;
+  const shotCount = allShots.filter((s) => s.characters.some((x) => x.id === sheet.character)).length;
+  c(`## ${def.name}`);
+  c();
+  c(`**Age ${def.age} · ${def.occupation} · ${sheet.heightCm} cm · appears in ${shotCount} shots**`);
+  c();
+  c(`> ${def.personality}`);
+  c();
+  c('| | |');
+  c('|---|---|');
+  c(`| **Build** | ${sheet.build} |`);
+  c(`| **Face** | ${sheet.face} |`);
+  c(`| **Skin** | ${sheet.skin} |`);
+  c(`| **Eyes** | ${sheet.eyes} |`);
+  c(`| **Hair** | ${sheet.hair} |`);
+  c(`| **Make-up** | ${sheet.makeup} |`);
+  c(`| **Acting** | ${sheet.acting} |`);
+  c();
+  c('**Always visible when in frame:**');
+  c();
+  for (const s of sheet.signature) c(`- ${s}`);
+  c();
+  c('**Wardrobe:**');
+  c();
+  c('| Outfit | What it is | Scenes |');
+  c('|---|---|---|');
+  for (const w of sheet.wardrobe) {
+    c(`| **${w.name}** | ${w.description} | ${w.scenes.map((s) => content.scenes[s]?.title ?? s).join(', ')} |`);
+  }
+  c();
+  const exprs = new Set<string>();
+  const poses = new Set<string>();
+  for (const s of allShots) for (const x of s.characters) if (x.id === sheet.character) {
+    exprs.add(x.expression ?? 'neutral');
+    poses.add(x.pose ?? def.defaultPose);
+  }
+  c(`**Expressions needed in Chapter One:** ${[...exprs].sort().join(', ')}.`);
+  c();
+  c(`**Poses needed:** ${[...poses].sort().join(', ')}.`);
+  c();
+}
+c('## Seen only in photographs');
+c();
+for (const ph of photoOnlyCharacters) c(`- **${ph.name}.** ${ph.description}`);
+c();
+c('## The player');
+c();
+c('The player character is never shown from the front, so there is nothing to build beyond a neutral pair of');
+c('hands and forearms and a plain dark coat sleeve for over-the-shoulder shots.');
+c();
+writeFileSync(new URL('../docs/CHARACTER_SHEETS.md', import.meta.url), cs.join('\n'));
+
+console.log(
+  `Wrote docs/RENDER_BRIEF.md and docs/CHARACTER_SHEETS.md — ${allShots.length} shots (${shotsDone} done), ${allCgs.length} illustrations (${cgsDone} done), ${sets.length} sets, ${renderSheets.length} characters.`,
+);

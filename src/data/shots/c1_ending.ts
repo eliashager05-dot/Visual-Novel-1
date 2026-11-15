@@ -8,7 +8,7 @@ export const c1EndingShots = [
   S('c1_margit_room_wide', 'margit_room_night', 'wide', [],
     'Margit\'s room by candlelight: crowded bookshelves, a brass barometer, a pipe rack, and a desk under the window buried in hand-drawn sea charts. Lived-in, frozen in March. 24 mm.'),
   S('c1_margit_photo_wall', 'margit_room_night', 'close', [],
-    'Insert: an old photograph pinned above the desk — a younger Margit (60s) laughing on the deck of a blue lobster boat named ELIN, a girl of about ten beside her holding up a huge fish. Charts with a circled mooring around it. 100 mm.'),
+    'Insert: a faded 30-year-old photograph pinned above the desk — Margit in her late thirties laughing on the deck of a blue lobster boat named ELIN, a young woman of about twenty beside her with an arm round her shoulders, holding up a large fish. Both adults. Charts with a circled mooring around it. 100 mm.'),
   S('c1_margit_ledger', 'margit_room_night', 'close', [],
     'Insert: an open ledger in a desk drawer, neat fountain-pen columns, entries "N.H. — 600", "J.C. — 1,200", and "S.M. — final. Paid in full." under candlelight. 100 mm macro.'),
   S('c1_room_dawn', 'player_room_night', 'wide', [],
