@@ -85,14 +85,14 @@ export const renderSheets: RenderSheet[] = [
         name: 'Arrival',
         description: 'Charcoal wool overcoat, knee length, over a navy waistcoat and white shirt, dark tailored trousers, flat black ankle boots.',
         scenes: ['c1_harbour', 'c1_hotel'],
-        prompt: 'charcoal wool overcoat over a navy waistcoat and white shirt, hair pinned in a neat low bun with one loose strand at her left temple',
+        prompt: 'charcoal wool overcoat over a navy waistcoat and white shirt, (hair pinned up in a neat low bun:1.25) with one loose strand at her left temple',
       },
       {
         id: 'vera_work',
         name: 'Work',
         description: 'White cotton shirt with sleeves rolled twice, navy waistcoat, dark trousers. No coat.',
         scenes: ['c1_dinner', 'c1_morning'],
-        prompt: 'white cotton shirt with the sleeves rolled up, navy waistcoat, dark trousers, hair pinned in a neat low bun with one loose strand at her left temple',
+        prompt: 'white cotton shirt with the sleeves rolled up, navy waistcoat, dark trousers, (hair pinned up in a neat low bun:1.25) with one loose strand at her left temple',
       },
       {
         id: 'vera_night',
@@ -201,7 +201,8 @@ export const renderSheets: RenderSheet[] = [
     ],
     acting:
       'Open and unguarded: every thought shows. Enthusiasm is whole-body (eyes wide, leaning in). Embarrassment is immediate and visible. She looks at objects more than at people; eye contact from June means something.',
-    prompt: '31 year old woman, petite, very fair heavily freckled skin, short tousled copper-red hair with a longer fringe, green-hazel eyes, round face with a small upturned nose, no makeup, a chunky black watch',
+    prompt: '31 year old woman with (very short cropped copper-red pixie haircut:1.35), ears visible, petite, very fair heavily freckled skin, green-hazel eyes, round face with a small upturned nose, no makeup, a chunky black watch',
+    avoid: 'long hair, shoulder-length hair, wavy long hair, hair past the chin',
   },
   {
     character: 'sienna',
@@ -242,7 +243,8 @@ export const renderSheets: RenderSheet[] = [
     ],
     acting:
       'Controlled and unhurried. Holds eye contact a beat too long. Smiles before she speaks. The armour drops three times in this chapter (the boat shed, off the record, the fire after the storm): in those shots, no smile, shoulders down, looking away.',
-    prompt: '33 year old woman, slim and poised, olive skin, glossy near-black chin-length bob with a centre parting, dark brown almond-shaped eyes, angular face with strong cheekbones, deep red lipstick, a thin blue thread bracelet',
+    prompt: '33 year old woman with (sleek near-black chin-length bob haircut with a centre parting:1.25), slim and poised, olive skin, dark brown almond-shaped eyes, angular face with strong cheekbones, deep red lipstick, a thin blue thread bracelet',
+    avoid: 'long hair, ponytail, bun, slicked-back hair',
   },
   {
     character: 'bram',

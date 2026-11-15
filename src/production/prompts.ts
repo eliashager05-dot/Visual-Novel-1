@@ -169,8 +169,8 @@ export function buildPrompt(
   opts: { style?: string; negative?: string; extra?: string } = {},
 ): BuiltPrompt {
   const style = opts.style ?? DEFAULT_STYLE;
-  const negative = [DEFAULT_NEGATIVE, opts.negative].filter(Boolean).join(', ');
-  const parts: string[] = [style];
+  // Image models weight the start of a prompt most, so the subject comes first and the style last.
+  const parts: string[] = [];
 
   if (item.kind === 'refs') {
     const charId = item.characters[0]!;
@@ -216,5 +216,11 @@ export function buildPrompt(
   }
 
   if (opts.extra?.trim()) parts.push(opts.extra.trim());
+  parts.push(style);
+
+  // A person's avoid list only applies when they are alone in the image; with several
+  // people, "long hair" for one would also push everyone else's hair shorter.
+  const avoid = item.characters.length === 1 ? sheetOf(item.characters[0]!)?.avoid : undefined;
+  const negative = [DEFAULT_NEGATIVE, avoid, opts.negative].filter(Boolean).join(', ');
   return { positive: parts.filter(Boolean).join('. ').replace(/\.\./g, '.'), negative, seed: seedFor(item.id) };
 }

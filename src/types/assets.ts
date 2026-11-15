@@ -129,6 +129,8 @@ export interface RenderSheet {
   acting: string;
   /** Compact identity for image prompts: age, build, skin, hair colour, eyes, face. No clothes, no hairstyle. */
   prompt: string;
+  /** Things the image generator keeps getting wrong for this person; used in images where they appear alone. */
+  avoid?: string;
 }
 
 /** One lighting state of a physical set. */

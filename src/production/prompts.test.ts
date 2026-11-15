@@ -64,4 +64,18 @@ describe('image prompts', () => {
     expect(buildPrompt(item, { extra: 'heavier fog' }).positive).toContain('heavier fog');
     expect(buildPrompt(items[1]!).seed).not.toBe(buildPrompt(item).seed);
   });
+
+  it('puts the subject first and the style last', () => {
+    const { positive } = buildPrompt(items.find((i) => i.id === 'ref_june')!);
+    expect(positive.startsWith('studio portrait')).toBe(true);
+    expect(positive.endsWith('high detail')).toBe(true);
+    expect(positive).toContain('pixie haircut');
+  });
+
+  it("applies a person's avoid list only when they are alone in the image", () => {
+    const alone = buildPrompt(items.find((i) => i.id === 'ref_june')!);
+    expect(alone.negative).toContain('shoulder-length hair');
+    const together = buildPrompt(items.find((i) => i.id === 'c1_june_stairs')!);
+    expect(together.negative).not.toContain('shoulder-length hair');
+  });
 });
