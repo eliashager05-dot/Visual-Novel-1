@@ -26,30 +26,50 @@ me the error text.
 
 ## 2. Install the generator (ComfyUI)
 
-1. Go to the ComfyUI project page on GitHub and open **Releases**.
-2. Download the Windows portable package for NVIDIA cards (a `.7z` file of a few GB). File names change
-   between releases; pick the one that mentions Windows, portable and NVIDIA.
-3. Extract it with 7-Zip to a short path without spaces, for example `D:\ComfyUI`.
+1. **Update your NVIDIA driver** with the NVIDIA app or from nvidia.com (Game Ready or Studio, either
+   works). Current ComfyUI builds need a recent driver; an old one is the most common reason it will not
+   start.
+2. Open the official ComfyUI repository on GitHub (`Comfy-Org/ComfyUI`) and go to **Releases**.
+3. Under the newest release, download the **Windows portable package for NVIDIA**. It is a `.7z` file of
+   a few GB, named like `ComfyUI_windows_portable_nvidia.7z`. Your RTX 2080 uses this standard build.
+   (A separate build marked `cu126` exists for GTX 10-series and older cards; you do not need it.)
+4. If Windows blocks the file: right-click it → **Properties** → tick **Unblock** → OK.
+5. Extract it with 7-Zip (or Windows 11's built-in **Extract All**) to a short path with no spaces, for
+   example `D:\AI\`. Avoid OneDrive, Desktop and Program Files.
 
-If you install the ComfyUI desktop app instead, it may listen on a different address. Find the address in
-its settings and put it in `comfyUrl` (section 8).
+You now have a folder like `D:\AI\ComfyUI_windows_portable\`. It contains its own Python, so nothing else
+needs installing. The real program lives in the **`ComfyUI`** folder inside it.
+
+**Desktop app instead?** ComfyUI also has an installer-based desktop app. It works too, but it normally
+listens on port **8000** rather than 8188. If you use it, set `"comfyUrl": "http://127.0.0.1:8000"` in
+`ai-render.config.json` (section 8).
 
 ## 3. Download a model
 
 The model is the file that knows how to draw. Start with **Stable Diffusion XL base 1.0**:
 
-1. On Hugging Face, open Stability AI's `stable-diffusion-xl-base-1.0` page.
-2. Download `sd_xl_base_1.0.safetensors` (about 7 GB).
-3. Put it in `ComfyUI\models\checkpoints\`.
+1. On Hugging Face, open `stabilityai/stable-diffusion-xl-base-1.0` → **Files and versions**.
+2. Download `sd_xl_base_1.0.safetensors` (about 7 GB). Only that file; ignore the rest.
+3. Move it to:
+   `D:\AI\ComfyUI_windows_portable\ComfyUI\models\checkpoints\`
+   (note the `ComfyUI` folder inside the portable folder).
 
 **Before you sell a game made with any model, read that model's licence page** and confirm it allows
 commercial use of the images. Community "photorealistic" versions of this model often look better for
 people, but each has its own licence, so check before you rely on one.
 
-## 4. Start it
+## 4. Start it and test it
 
-Double-click `run_nvidia_gpu.bat` in the ComfyUI folder. A black window opens; wait until it says it is
-listening on `127.0.0.1:8188`. **Leave that window open** while you generate.
+1. Double-click **`run_nvidia_gpu.bat`** in `ComfyUI_windows_portable`. A black window opens. The first
+   start takes a few minutes.
+2. When it prints `To see the GUI go to: http://127.0.0.1:8188`, it is ready. Your browser may open that
+   page by itself.
+3. **Test it once by hand.** On that page, the default workflow is already loaded. In the
+   *Load Checkpoint* box, pick `sd_xl_base_1.0.safetensors`, then press **Run** (or **Queue**). An image of
+   the default prompt should appear after a short wait. If it does, the generator works.
+4. **Leave the black window open** while you generate. Closing it stops ComfyUI.
+
+The game's commands talk to that window directly; you do not need the browser page for them.
 
 ---
 
@@ -172,8 +192,9 @@ watermarks. `negative` adds to it; it cannot remove from it.
 
 | Message or symptom | What to do |
 |---|---|
-| `Cannot reach ComfyUI` | The generator is not running. Start `run_nvidia_gpu.bat` and wait for "listening". |
-| `ComfyUI has no model installed` | The model file is not in `ComfyUI\models\checkpoints\`, or ComfyUI was started before you put it there. Restart it. |
+| `Cannot reach ComfyUI` | The generator is not running. Start `run_nvidia_gpu.bat` and wait for the `http://127.0.0.1:8188` line. With the desktop app, set `comfyUrl` to port 8000. |
+| The black window closes straight away, or mentions CUDA or the driver | Update the NVIDIA driver and restart the PC. If it still fails, re-download the `.7z` (a broken download is the next most common cause). |
+| `ComfyUI has no model installed` | The model file is not in `ComfyUI_windows_portable\ComfyUI\models\checkpoints\`, or ComfyUI was started before you put it there. Restart it. |
 | `ComfyUI has several models` | Put the file name you want in `checkpoint`. |
 | `CUDA out of memory` | Close other programs that use the graphics card (games, video). Set `hires` to false. If it persists, lower the size to 1216 × 704. |
 | Everything is very slow | Check the black window: if it says it is using the CPU, the NVIDIA version was not installed. |
