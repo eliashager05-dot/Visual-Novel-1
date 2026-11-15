@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 
-export type Overlay = 'none' | 'history' | 'pause';
+export type Overlay = 'none' | 'history' | 'pause' | 'save' | 'load' | 'settings' | 'relationships';
+
+export type MenuScreen = 'none' | 'load' | 'gallery' | 'settings';
 
 export interface Toast {
   id: number;
   text: string;
-  tone: 'up' | 'down' | 'milestone';
+  tone: 'up' | 'down' | 'milestone' | 'info';
   color?: string;
 }
 
@@ -22,6 +24,8 @@ interface UiStore {
   /** Input is blocked while a screen transition covers the stage. */
   transitioning: boolean;
   toasts: Toast[];
+  /** Sub-screen open over the title menu. */
+  menuScreen: MenuScreen;
 
   setTextComplete: (v: boolean) => void;
   requestComplete: () => void;
@@ -32,6 +36,7 @@ interface UiStore {
   setTransitioning: (v: boolean) => void;
   pushToast: (t: Omit<Toast, 'id'>) => void;
   dismissToast: (id: number) => void;
+  setMenuScreen: (m: MenuScreen) => void;
   reset: () => void;
 }
 
@@ -46,6 +51,7 @@ export const useUi = create<UiStore>()((set) => ({
   overlay: 'none',
   transitioning: false,
   toasts: [],
+  menuScreen: 'none',
 
   setTextComplete: (textComplete) => set({ textComplete }),
   requestComplete: () => set((s) => ({ completeSignal: s.completeSignal + 1 })),
@@ -57,6 +63,7 @@ export const useUi = create<UiStore>()((set) => ({
   setTransitioning: (transitioning) => set({ transitioning }),
   pushToast: (t) => set((s) => ({ toasts: [...s.toasts.slice(-3), { ...t, id: ++toastId }] })),
   dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+  setMenuScreen: (menuScreen) => set({ menuScreen }),
   reset: () =>
     set({ textComplete: false, auto: false, skip: false, hideUi: false, overlay: 'none', transitioning: false, toasts: [] }),
 }));

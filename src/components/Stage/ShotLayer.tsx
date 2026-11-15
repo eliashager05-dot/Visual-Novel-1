@@ -27,7 +27,7 @@ export function ShotLayer({ id }: { id: string | null }) {
   );
 }
 
-export function ShotImage({ id }: { id: string }) {
+export function ShotImage({ id, showBrief = true }: { id: string; showBrief?: boolean }) {
   const def = content.shots[id];
   if (!def) return null;
   return (
@@ -35,7 +35,7 @@ export function ShotImage({ id }: { id: string }) {
       src={shotSrc(id)}
       alt={def.description}
       className="absolute inset-0 h-full w-full object-cover"
-      fallback={<ShotPlaceholder def={def} />}
+      fallback={<ShotPlaceholder def={def} showBrief={showBrief} />}
     />
   );
 }
@@ -53,7 +53,7 @@ const FRAMING: Record<CameraFraming, { scale: number; headY: number; bgBlur: num
   extreme_close: { scale: 2.7, headY: 470, bgBlur: 8, bgScale: 1.35 },
 };
 
-function ShotPlaceholder({ def }: { def: ShotDefinition }) {
+function ShotPlaceholder({ def, showBrief }: { def: ShotDefinition; showBrief: boolean }) {
   const bg = content.backgrounds[def.background];
   const f = FRAMING[def.camera];
   return (
@@ -92,7 +92,7 @@ function ShotPlaceholder({ def }: { def: ShotDefinition }) {
       )}
       {/* Cinematic grade: letterbox-style vignette */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.55))]" />
-      {import.meta.env.DEV && (
+      {import.meta.env.DEV && showBrief && (
         <div className="absolute left-1/2 top-6 max-w-[640px] -translate-x-1/2 rounded-md bg-black/55 px-4 py-2 text-center text-[13px] leading-snug text-white/55">
           <div className="font-mono text-white/75">
             PLACEHOLDER · {def.id} · {def.camera}

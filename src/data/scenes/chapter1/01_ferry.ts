@@ -112,4 +112,4 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   ),
   hide('noor', 'fade'),
   jump('c1_harbour'),
-]);
+], { replayable: true });

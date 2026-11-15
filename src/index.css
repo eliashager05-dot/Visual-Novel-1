@@ -17,3 +17,7 @@ body { @apply bg-black font-sans text-neutral-100 antialiased; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 2px solid #e8c88f; outline-offset: 3px; }
+
+/* Range slider thumb */
+.vn-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 9999px; background: #f1ece2; box-shadow: 0 0 0 4px rgba(232,200,143,0.25); }
+.vn-range::-moz-range-thumb { width: 22px; height: 22px; border: 0; border-radius: 9999px; background: #f1ece2; }

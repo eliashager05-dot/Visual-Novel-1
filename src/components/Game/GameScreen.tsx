@@ -16,9 +16,11 @@ import { DebugPanel } from '../Overlays/DebugPanel';
 import { EndCard } from '../Overlays/EndCard';
 import { HistoryPanel } from '../Overlays/HistoryPanel';
 import { PauseMenu } from '../Overlays/PauseMenu';
+import { RelationshipScreen } from '../Relationships/RelationshipScreen';
+import { SaveLoadScreen } from '../SaveMenu/SaveLoadScreen';
+import { SettingsScreen } from '../SettingsMenu/SettingsScreen';
 import { ScreenCover } from '../Overlays/ScreenCover';
 import { TitleCard } from '../Overlays/TitleCard';
-import { Toasts } from '../Overlays/Toasts';
 import { BackgroundLayer } from '../Stage/BackgroundLayer';
 import { CgLayer } from '../Stage/CgLayer';
 import { ShotLayer } from '../Stage/ShotLayer';
@@ -36,6 +38,8 @@ export function GameScreen() {
   const advanceIntent = useAdvanceIntent();
   const cinematic = useSettings((s) => s.dialogueStyle) === 'cinematic';
   const Dialogue = cinematic ? CinematicDialogue : DialogueBox;
+
+  const closeToPause = () => useUi.getState().setOverlay('none');
 
   if (!view || !game) return null;
   const p = view.presentation;
@@ -87,11 +91,14 @@ export function GameScreen() {
       <AnimatePresence>{p.kind === 'title' && <TitleCard key={p.title + p.subtitle} title={p.title} subtitle={p.subtitle} />}</AnimatePresence>
       {p.kind === 'end' && <EndCard ending={p.ending} nextChapter={p.nextChapter} />}
 
-      <Toasts />
       <ScreenCover cover={cover} flashKey={flashKey} />
       <AnimatePresence>
         {overlay === 'history' && <HistoryPanel key="history" />}
         {overlay === 'pause' && <PauseMenu key="pause" />}
+        {overlay === 'save' && <SaveLoadScreen key="save" mode="save" onClose={closeToPause} />}
+        {overlay === 'load' && <SaveLoadScreen key="load" mode="load" onClose={closeToPause} />}
+        {overlay === 'settings' && <SettingsScreen key="settings" onClose={closeToPause} />}
+        {overlay === 'relationships' && <RelationshipScreen key="rel" game={game} onClose={closeToPause} />}
       </AnimatePresence>
 
       {error && (

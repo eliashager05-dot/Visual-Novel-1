@@ -62,4 +62,4 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
   shot('c1_harbour_walk'),
   narrate('She takes your bag before you can object, and walks up the hill as though she expects you to keep pace.'),
   end(),
-]);
+], { replayable: true });

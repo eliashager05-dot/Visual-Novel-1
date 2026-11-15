@@ -11,13 +11,15 @@ interface PersistentState {
   unlockedGallery: Record<string, true>;
   unlockedScenes: Record<string, true>;
   endingsSeen: Record<string, true>;
+  /** Characters ever met in any playthrough (gallery profiles). */
+  charactersMet: Record<string, true>;
   markRead: (key: string) => void;
   isRead: (key: string) => boolean;
   ingestEvents: (events: EngineEvent[]) => void;
   resetProgress: () => void;
 }
 
-const empty = () => ({ readLines: {}, unlockedGallery: {}, unlockedScenes: {}, endingsSeen: {} });
+const empty = () => ({ readLines: {}, unlockedGallery: {}, unlockedScenes: {}, endingsSeen: {}, charactersMet: {} });
 
 export const usePersistentStore = create<PersistentState>()(
   persist(
@@ -29,12 +31,13 @@ export const usePersistentStore = create<PersistentState>()(
       },
       isRead: (key) => Boolean(get().readLines[key]),
       ingestEvents: (events) => {
-        const add = (field: 'unlockedGallery' | 'unlockedScenes' | 'endingsSeen', id: string) =>
+        const add = (field: 'unlockedGallery' | 'unlockedScenes' | 'endingsSeen' | 'charactersMet', id: string) =>
           set((s) => (s[field][id] ? s : { ...s, [field]: { ...s[field], [id]: true } }));
         for (const e of events) {
           if (e.type === 'unlockGallery') add('unlockedGallery', e.id);
           else if (e.type === 'unlockScene') add('unlockedScenes', e.id);
           else if (e.type === 'ending') add('endingsSeen', e.id);
+          else if (e.type === 'characterMet') add('charactersMet', e.character);
         }
       },
       resetProgress: () => set(empty()),
@@ -48,6 +51,7 @@ export const usePersistentStore = create<PersistentState>()(
         unlockedGallery: s.unlockedGallery,
         unlockedScenes: s.unlockedScenes,
         endingsSeen: s.endingsSeen,
+        charactersMet: s.charactersMet,
       }),
     },
   ),

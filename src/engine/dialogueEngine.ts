@@ -3,6 +3,7 @@ import { presentChoice, resolveChoice } from './choiceEngine';
 import { evaluateCondition } from './conditions';
 import { applyEffects } from './effects';
 import { createRelationship } from './relationshipEngine';
+import type { Instruction } from './sceneCompiler';
 import type { SceneManager } from './sceneManager';
 import { hashString, interpolate } from './text';
 
@@ -12,7 +13,8 @@ import { hashString, interpolate } from './text';
  * `events` (sounds, transitions, toasts). Nothing in here touches the DOM.
  */
 
-export const SAVE_SCHEMA_VERSION = 1;
+/** v2: stage.shot added. */
+export const SAVE_SCHEMA_VERSION = 2;
 export const HISTORY_LIMIT = 400;
 /** Guards against authoring mistakes like an unconditional goto loop. */
 const MAX_INSTRUCTIONS_PER_ADVANCE = 10_000;
@@ -59,6 +61,13 @@ export function advance(manager: SceneManager, prev: GameState): EngineResult {
   return run(manager, structuredClone(prev), []);
 }
 
+/** Runs from the current pointer (used after restoring a rewound save). */
+export function resume(manager: SceneManager, prev: GameState): EngineResult {
+  const state = structuredClone(prev);
+  state.presentation = { kind: 'idle' };
+  return run(manager, state, []);
+}
+
 export function choose(manager: SceneManager, prev: GameState, optionId: string): EngineResult {
   if (prev.presentation.kind !== 'choice') throw new Error('choose() called while no choice is pending');
   const state = structuredClone(prev);
@@ -81,6 +90,36 @@ function enterScene(manager: SceneManager, state: GameState, sceneId: string, ev
 function pushHistory(state: GameState, line: DisplayedLine) {
   state.history.push({ kind: line.kind, speaker: line.speaker, speakerName: line.speakerName, text: line.text });
   if (state.history.length > HISTORY_LIMIT) state.history.splice(0, state.history.length - HISTORY_LIMIT);
+}
+
+type LineInstruction = Extract<Instruction, { type: 'say' | 'narrate' | 'think' }>;
+
+/** Stable read-tracking key: survives edits elsewhere in the scene. */
+export function lineKey(sceneId: string, instr: LineInstruction): string {
+  return `${sceneId}:${hashString((instr.type === 'say' ? instr.speaker : instr.type) + instr.text)}`;
+}
+
+/** Builds the on-screen line for an instruction. Pure: no state changes. */
+export function presentLine(manager: SceneManager, state: GameState, sceneId: string, instr: LineInstruction): DisplayedLine {
+  const text = interpolate(instr.text, state);
+  if (instr.type !== 'say') {
+    const think = instr.type === 'think';
+    return {
+      kind: instr.type,
+      speaker: think ? 'player' : null,
+      speakerName: think ? state.player.name : null,
+      text,
+      key: lineKey(sceneId, instr),
+    };
+  }
+  let speakerName: string;
+  if (instr.speaker === 'player') speakerName = state.player.name;
+  else {
+    const def = manager.content.characters[instr.speaker];
+    if (!def) throw new Error(`Unknown speaker "${instr.speaker}"`);
+    speakerName = instr.as ?? def.shortName ?? def.name;
+  }
+  return { kind: 'say', speaker: instr.speaker, speakerName, text, expression: instr.expression, key: lineKey(sceneId, instr) };
 }
 
 function findOnStage(state: GameState, id: string): StageCharacter | undefined {
@@ -108,30 +147,9 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
 
     switch (instr.type) {
       case 'narrate':
-      case 'think': {
-        const text = interpolate(instr.text, state);
-        const line: DisplayedLine = {
-          kind: instr.type,
-          speaker: instr.type === 'think' ? 'player' : null,
-          speakerName: instr.type === 'think' ? state.player.name : null,
-          text,
-          key: `${scene.id}:${hashString(instr.type + instr.text)}`,
-        };
-        state.presentation = { kind: 'line', line };
-        pushHistory(state, line);
-        state.lineCount++;
-        return { state, events };
-      }
-
+      case 'think':
       case 'say': {
-        const text = interpolate(instr.text, state);
-        let speakerName: string;
-        if (instr.speaker === 'player') {
-          speakerName = state.player.name;
-        } else {
-          const def = content.characters[instr.speaker];
-          if (!def) throw new Error(`Unknown speaker "${instr.speaker}"`);
-          speakerName = instr.as ?? def.shortName ?? def.name;
+        if (instr.type === 'say' && instr.speaker !== 'player') {
           const rel = state.relationships[instr.speaker];
           if (rel && !instr.as && !rel.met) {
             rel.met = true;
@@ -143,14 +161,7 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
             if (instr.pose) onStage.pose = instr.pose;
           }
         }
-        const line: DisplayedLine = {
-          kind: 'say',
-          speaker: instr.speaker,
-          speakerName,
-          text,
-          expression: instr.expression,
-          key: `${scene.id}:${hashString(instr.speaker + instr.text)}`,
-        };
+        const line = presentLine(manager, state, scene.id, instr);
         state.presentation = { kind: 'line', line };
         pushHistory(state, line);
         state.lineCount++;

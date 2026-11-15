@@ -9,3 +9,4 @@ export * from './dialogueEngine';
 export * from './text';
 export * from './validator';
 export * from './storyWalker';
+export * from './saveManager';

@@ -5,9 +5,10 @@ import { useUi } from '@/store/uiStore';
 
 export function EndCard({ ending, nextChapter }: { ending?: string; nextChapter?: string }) {
   const quit = useGameStore((s) => s.quitToTitle);
+  const replay = useGameStore((s) => s.mode === 'replay');
   const scene = useGameStore((s) => s.game?.pointer.scene);
   const chapter = content.chapters.find((c) => c.id === (scene && content.scenes[scene]?.chapter));
-  const heading = ending ? 'An ending' : nextChapter && chapter ? `End of ${chapter.title}` : 'To be continued';
+  const heading = replay ? 'End of replay' : ending ? 'An ending' : nextChapter && chapter ? `End of ${chapter.title}` : 'To be continued';
 
   return (
     <motion.div
@@ -20,18 +21,21 @@ export function EndCard({ ending, nextChapter }: { ending?: string; nextChapter?
       <div className="font-serif text-[84px] italic text-[#f1ece2]">{heading}</div>
       <div className="my-8 h-px w-[220px] bg-[#e8c88f]/60" />
       <p className="max-w-[900px] text-center text-[22px] leading-relaxed text-white/55">
-        {ending
-          ? 'Your choices led here. Other paths remain.'
-          : 'The story continues in the next update. Your choices so far will matter.'}
+        {replay
+          ? 'Replays never affect your saves.'
+          : ending
+            ? 'Your choices led here. Other paths remain.'
+            : 'The story continues in the next update. Your choices so far will matter.'}
       </p>
       <button
         onClick={() => {
           useUi.getState().reset();
           quit();
+          if (replay) useUi.getState().setMenuScreen('gallery');
         }}
         className="mt-14 rounded-full border border-white/20 px-12 py-4 text-[20px] uppercase tracking-[0.3em] text-white/80 hover:border-[#e8c88f]/60 hover:text-white"
       >
-        Return to title
+        {replay ? 'Return to gallery' : 'Return to title'}
       </button>
     </motion.div>
   );

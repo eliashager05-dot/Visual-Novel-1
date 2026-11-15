@@ -3,6 +3,7 @@ import { ErrorBoundary } from './components/Game/ErrorBoundary';
 import { GameScreen } from './components/Game/GameScreen';
 import { AgeGate } from './components/MainMenu/AgeGate';
 import { MainMenu } from './components/MainMenu/MainMenu';
+import { Toasts } from './components/Overlays/Toasts';
 import { GameViewport } from './components/Stage/GameViewport';
 import { useGameStore } from './store/gameStore';
 import { useSettings } from './store/settingsStore';
@@ -26,6 +27,7 @@ export default function App() {
           </ErrorBoundary>
         ) : <MainMenu key="menu" />}
       </AnimatePresence>
+      <Toasts />
     </GameViewport>
   );
 }

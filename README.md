@@ -17,13 +17,14 @@ npm run build
 - Story content: `src/data/` (characters, scenes, chapters, asset manifest)
 - Engine (pure TypeScript, UI-agnostic): `src/engine/`
 
-**Status:** Phases 1 and 2 are complete: the narrative engine and the cinematic interface (main menu,
-stage, dialogue, choices, history, auto, skip, transitions). Placeholder art is procedural until final 3D
-renders are integrated. Next is Phase 3: saving and loading, settings, relationship menu and gallery.
+**Status:** Phases 1–3 are complete: the narrative engine; the cinematic interface with full-frame shots
+and subtitles for realistic 3D renders; saving and loading (manual, auto and quick) with rollback,
+settings, the relationship menu and the gallery. Placeholder art is procedural until final renders are
+delivered. Next is Phase 4: the full Chapter One.
 
-**Controls:** Click, Space or Enter to continue · A auto · S or hold Ctrl to skip read text · H or
-right-click to hide the interface · L or wheel up for history · Esc for the menu · backtick for the debug
-panel (dev builds only).
+**Controls:** Click, Space or Enter to continue · Backspace to go back · A auto · S or hold Ctrl to skip
+read text · H or right-click to hide the interface · L or wheel up for history · R for relationships ·
+F5 / F9 for quick save / load · Esc for the menu · backtick for the debug panel (dev builds only).
 
 | Main menu | Dialogue | Expressions & relationship notice |
 |---|---|---|

@@ -209,7 +209,37 @@ Originally planned scope:
 - A `ChoiceMenu` with keyboard navigation (1–9, arrows, Enter) and an optional timer.
 - Layout tuned for 1920×1080 that scales to any 16:9 viewport and adapts to portrait later.
 
-### Phase 3: Gameplay systems
+### Realistic 3D presentation ✅ (between Phases 2 and 3)
+- Full-frame **shots** (`shot('id')`, `src/data/shots.ts`) are the primary presentation, as in rendered 3D
+  visual novels. A shot's definition doubles as the render brief.
+- A **cinematic subtitle** dialogue style (the default); the panel style is still available in Settings.
+- `npm run brief` generates `docs/RENDER_BRIEF.md`. See `docs/ART_DIRECTION.md` for the photoreal pipeline.
+
+### Phase 3: Gameplay systems ✅
+Delivered:
+- `engine/saveManager.ts`, pure and unit-tested:
+  - save records hold the full state, preview metadata, a stage thumbnail descriptor and a scene
+    fingerprint;
+  - a schema migration path (v1 → v2);
+  - after a story update, a save is relocated to the same line or choice by its stable key, or rewound to
+    the scene start (and the player is told);
+  - corrupt slots are ignored safely.
+- 18 manual slots (3 pages), 3 rotating autosaves (on every new scene and after every decision), a quick
+  save (F5) and quick load (F9), timestamps, and Continue on the title screen. Overwrite, delete and
+  load-over-progress all ask for confirmation.
+- Save thumbnails are re-rendered from save data rather than captured, so they automatically show final
+  renders once delivered.
+- Rollback (Backspace / PageUp / "Back"), up to 80 steps, including back across choices.
+- Settings: text speed with a live preview, auto speed, dialogue style, text background, skip unread,
+  relationship notices, fullscreen, reset settings, and erase all progress. *Volume sliders arrive with
+  audio playback in Phase 5, so no non-functional controls ship now.*
+- Relationship menu (R): only characters you've met, tier, affinity and trust out of 100, profile entries
+  as they unlock, and milestones reached. Unreached milestones appear only as a count.
+- Gallery: illustrations with a full-screen viewer, profiles of characters you've met, and replayable
+  scenes. Unlocks persist across playthroughs. Replays are sandboxed: no saves, they stop at the scene
+  boundary, and they return to the gallery.
+
+Originally planned scope:
 - `saveManager`: 12 manual slots, autosave on scene entry and choice, quicksave/quickload, timestamps,
   scene title, chapter and a thumbnail (a small render of the current stage), versioned with migrations.
   IndexedDB for slots (thumbnails are large) and localStorage for settings.

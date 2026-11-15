@@ -12,6 +12,7 @@ function isTyping(e: Event) {
  * Keyboard & wheel bindings for the in-game screen.
  *  Space/Enter/→ advance · Esc pause/close · H hide UI · A auto · S skip
  *  Ctrl (hold) skip · L or wheel-up history · wheel-down advance
+ *  Backspace/PageUp rollback · R relationships · F5 quick save · F9 quick load
  */
 export function useGameInput() {
   const advanceIntent = useAdvanceIntent();
@@ -22,6 +23,17 @@ export function useGameInput() {
       const ui = useUi.getState();
       const kind = useGameStore.getState().game?.presentation.kind;
 
+      // Quick save/load work everywhere in-game; F5 must not reload the page.
+      if (e.key === 'F5') {
+        e.preventDefault();
+        if (ui.overlay === 'none') useGameStore.getState().quickSave();
+        return;
+      }
+      if (e.key === 'F9') {
+        e.preventDefault();
+        if (ui.overlay === 'none') useGameStore.getState().quickLoad();
+        return;
+      }
       if (e.key === 'Escape') {
         e.preventDefault();
         if (ui.hideUi) ui.setHideUi(false);
@@ -53,6 +65,15 @@ export function useGameInput() {
         case 'l':
         case 'L':
           ui.setOverlay('history');
+          break;
+        case 'Backspace':
+        case 'PageUp':
+          e.preventDefault();
+          if (!ui.transitioning) useGameStore.getState().rollback();
+          break;
+        case 'r':
+        case 'R':
+          if (useGameStore.getState().mode === 'story') ui.setOverlay('relationships');
           break;
         case 'Control':
           if (!e.repeat) ui.setSkip(true);

@@ -20,7 +20,7 @@ export function Panel({ title, onClose, children, width = 1100 }: { title: strin
       }}
     >
       <motion.div
-        className="flex max-h-[900px] flex-col rounded-[28px] border border-white/10 bg-[rgba(10,11,16,0.92)] shadow-2xl"
+        className="flex max-h-[1030px] flex-col rounded-[28px] border border-white/10 bg-[rgba(10,11,16,0.92)] shadow-2xl"
         style={{ width }}
         initial={{ y: 18, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
