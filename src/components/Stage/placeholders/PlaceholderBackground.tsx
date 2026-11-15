@@ -181,6 +181,27 @@ export const PlaceholderBackground = memo(function PlaceholderBackground({
         </>
       )}
 
+      {(motif === 'shore' || motif === 'storm') && (
+        <>
+          <circle cx={1400} cy={520} r={300} fill={`url(#${g}-glow)`} opacity={motif === 'storm' ? 0.3 : 1} />
+          <rect y="560" width="1920" height="300" fill={`url(#${g}-water)`} />
+          {Array.from({ length: 30 }, (_, i) => (
+            <rect key={i} x={rnd() * 1920} y={570 + rnd() * 260} width={60 + rnd() * 200} height="2" fill={mid} opacity={0.15 + rnd() * 0.3} />
+          ))}
+          <path d="M0 760 Q 400 700 900 760 T 1920 740 V1080 H0Z" fill={bottom} />
+          <path d="M0 860 Q 600 820 1100 880 T 1920 860 V1080 H0Z" fill="#000" opacity="0.35" />
+          {[120, 1500, 1720].map((x, i) => (
+            <ellipse key={i} cx={x} cy={800 + i * 30} rx={160 + i * 30} ry={70} fill="#0b0d10" opacity="0.85" />
+          ))}
+          {motif === 'storm' &&
+            Array.from({ length: 220 }, (_, i) => {
+              const x = rnd() * 2100 - 100;
+              const y = rnd() * 1080;
+              return <line key={`r${i}`} x1={x} y1={y} x2={x - 18} y2={y + 60} stroke="#cfd8e6" strokeOpacity={0.12 + rnd() * 0.2} strokeWidth="1.5" />;
+            })}
+        </>
+      )}
+
       {/* Cinematic grade: vignette + subtle top/bottom darkening. */}
       <radialGradient id={`${g}-vig`} cx="0.5" cy="0.45" r="0.75">
         <stop offset="0.55" stopColor="#000" stopOpacity="0" />

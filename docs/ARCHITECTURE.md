@@ -251,28 +251,14 @@ Originally planned scope:
   entries and milestones. No hidden info is leaked.
 - Gallery: CGs, character profiles and a replayable scene list, all unlocked through play.
 
-### Phase 4: Content (Chapter 1, about 20–30 minutes of play)
-Planned scene flow (about 14 scenes, about 600–800 lines):
-1. **The Crossing.** Ferry, Noor (written).
-2. **The Harbour.** Meeting Vera (written).
-3. **The Halcyon.** Hotel tour, Bram, the closed east wing, Margit's room.
-4. **Room 7.** First meeting with June; she mistakes the player for a maintenance contractor.
-5. **Dinner.** Group scene. Choice of where to sit sets the first evening's dynamics.
-6. **The Low Tide.** Noor's bar. Sienna makes her entrance and an offer.
-7. **First night.** Free choice: find Vera at the desk, Noor at the piano, or June at the cove (affinity
-   gates and exclusive scenes).
-8. **Morning.** Solicitor call, the hotel's money problems, and the first decision about the hotel.
-9. **Sienna's tour.** Her version of the island, and its history.
-10. **The cove at low tide.** June's research and the bioluminescence.
-11. **Storm.** *The unexpected event*: the power fails, the boathouse floods, and someone is found where
-    they shouldn't be. Who you help depends on your choices and affinity.
-12. **Aftermath.** Second relationship beat for each of the four, with trust-dependent dialogue.
-13. **Margit's room.** A discovery.
-14. **Cliffhanger.** A photograph on the player's phone from an unknown number, taken *today*, showing
-    Margit on the ferry deck.
+### Phase 4: Content ✅
+Chapter One, "Low Tide", is complete: 20 scenes, 89 briefed shots and 7 illustrations. It takes about
+22–24 minutes per playthrough at default text speed (340–390 lines), with 30+ decision points and four
+exclusive first-night scenes. See [`STORY_CH1.md`](STORY_CH1.md) for the scene flow, every decision and
+its consequences, and the flags that carry into Chapter Two.
 
-Each major character gets at least two relationship-building opportunities, plus one exclusive scene
-chosen in scene 7. Choices set flags that pay off in Chapter 2.
+Testing: the content test runs 1,200 seeded random playthroughs. It requires zero errors, every option of
+every choice to be reachable, every scene to be reached, and every path to fall within the length target.
 
 ### Phase 5: Polish
 - Audio: music cross-fades, SFX, UI sounds, per-channel volume.

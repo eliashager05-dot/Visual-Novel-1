@@ -1,4 +1,5 @@
 import type { CharacterDefinition } from '@/types';
+import { C } from '../story/dsl';
 
 export const bram: CharacterDefinition = {
   id: 'bram',
@@ -20,6 +21,9 @@ export const bram: CharacterDefinition = {
   poses: ['standing'],
   defaultPose: 'standing',
   expressions: ['neutral', 'happy', 'sad', 'angry', 'surprised', 'worried', 'laughing'],
-  profile: [{ id: 'role', label: 'Role', text: 'Cook. Has outlasted four ovens and three managers.' }],
+  profile: [
+    { id: 'role', label: 'Role', text: 'Cook. Has outlasted four ovens and three managers.' },
+    { id: 'burns', label: 'Forecast', text: 'His burn scars ache before bad weather. They have never once been wrong.', unlockWhen: C.flag('saw_storm_arrive') },
+  ],
   milestones: [],
 };

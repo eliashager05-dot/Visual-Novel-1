@@ -64,6 +64,18 @@ export const vera: CharacterDefinition = {
       text: 'Swears in Swedish when she thinks nobody is listening.',
       unlockWhen: C.flag('vera_heard_swearing'),
     },
+    {
+      id: 'books',
+      label: 'The books',
+      text: 'Found monthly payments in the hotel accounts marked "Under the tide". She has told no one but you.',
+      unlockWhen: C.flag('saw_payments'),
+    },
+    {
+      id: 'boat',
+      label: 'The boat',
+      text: 'Signed the form when the police took the ELIN to the mainland. She was there when it came back.',
+      unlockWhen: C.flag('found_scarf'),
+    },
   ],
   milestones: [
     { id: 'first_truce', title: 'First Truce', description: 'You and Vera agreed not to make any decision about the hotel without each other.' },

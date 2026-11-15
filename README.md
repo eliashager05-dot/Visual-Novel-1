@@ -17,10 +17,11 @@ npm run build
 - Story content: `src/data/` (characters, scenes, chapters, asset manifest)
 - Engine (pure TypeScript, UI-agnostic): `src/engine/`
 
-**Status:** Phases 1–3 are complete: the narrative engine; the cinematic interface with full-frame shots
-and subtitles for realistic 3D renders; saving and loading (manual, auto and quick) with rollback,
-settings, the relationship menu and the gallery. Placeholder art is procedural until final renders are
-delivered. Next is Phase 4: the full Chapter One.
+**Status:** Phases 1–4 are complete. Chapter One, "Low Tide", is fully playable: about 22–24 minutes,
+20 scenes, 30+ choices, four exclusive first-night scenes, a storm, and a cliffhanger. It runs on the
+cinematic engine with saves, rollback, relationships and gallery. Placeholder art is procedural until the
+89 briefed shots in `docs/RENDER_BRIEF.md` are rendered. Next is Phase 5: audio and polish. Story bible:
+[`docs/STORY_CH1.md`](docs/STORY_CH1.md).
 
 **Controls:** Click, Space or Enter to continue · Backspace to go back · A auto · S or hold Ctrl to skip
 read text · H or right-click to hide the interface · L or wheel up for history · R for relationships ·

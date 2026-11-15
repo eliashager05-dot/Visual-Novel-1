@@ -111,7 +111,13 @@ export type Step =
       /** Seconds before the default option is taken — tension choices. Optional. */
       timeout?: { seconds: number; defaultOption: string };
     }
-  | { type: 'end'; ending?: string; nextChapter?: string };
+  | {
+      type: 'end';
+      ending?: string;
+      nextChapter?: string;
+      /** Marks the end of a chapter's available content ("End of Chapter One"). */
+      chapterComplete?: boolean;
+    };
 
 export interface SceneDefinition {
   id: string;

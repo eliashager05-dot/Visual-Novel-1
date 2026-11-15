@@ -9,7 +9,7 @@ export interface PlaceholderArt {
   /** Gradient stops from top to bottom (sky → ground). */
   palette: [string, string, string];
   /** Hint for the placeholder painter: what kind of scene to suggest. */
-  motif?: 'interior' | 'exterior' | 'night' | 'water' | 'bar' | 'room';
+  motif?: 'interior' | 'exterior' | 'night' | 'water' | 'bar' | 'room' | 'shore' | 'storm';
 }
 
 export interface BackgroundDefinition {

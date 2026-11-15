@@ -274,7 +274,12 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
 
       case 'end':
         if (instr.ending) events.push({ type: 'ending', id: instr.ending });
-        state.presentation = { kind: 'end', ending: instr.ending, nextChapter: instr.nextChapter };
+        state.presentation = {
+          kind: 'end',
+          ending: instr.ending,
+          nextChapter: instr.nextChapter,
+          ...(instr.chapterComplete ? { chapterComplete: true } : {}),
+        };
         return { state, events };
     }
   }

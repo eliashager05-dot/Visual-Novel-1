@@ -3,12 +3,12 @@ import { content } from '@/data';
 import { useGameStore } from '@/store/gameStore';
 import { useUi } from '@/store/uiStore';
 
-export function EndCard({ ending, nextChapter }: { ending?: string; nextChapter?: string }) {
+export function EndCard({ ending, nextChapter, chapterComplete }: { ending?: string; nextChapter?: string; chapterComplete?: boolean }) {
   const quit = useGameStore((s) => s.quitToTitle);
   const replay = useGameStore((s) => s.mode === 'replay');
   const scene = useGameStore((s) => s.game?.pointer.scene);
   const chapter = content.chapters.find((c) => c.id === (scene && content.scenes[scene]?.chapter));
-  const heading = replay ? 'End of replay' : ending ? 'An ending' : nextChapter && chapter ? `End of ${chapter.title}` : 'To be continued';
+  const heading = replay ? 'End of replay' : ending ? 'An ending' : (nextChapter || chapterComplete) && chapter ? `End of ${chapter.title}` : 'To be continued';
 
   return (
     <motion.div
@@ -25,7 +25,9 @@ export function EndCard({ ending, nextChapter }: { ending?: string; nextChapter?
           ? 'Replays never affect your saves.'
           : ending
             ? 'Your choices led here. Other paths remain.'
-            : 'The story continues in the next update. Your choices so far will matter.'}
+            : chapterComplete
+              ? 'To be continued. Every choice you made in this chapter will carry forward.'
+              : 'The story continues in the next update. Your choices so far will matter.'}
       </p>
       <button
         onClick={() => {

@@ -1,5 +1,5 @@
 import {
-  affinity, bg, C, choice, end, expr, jump, label, me, music, narrate, option, scene, setFlag, show, speaker, think,
+  affinity, bg, C, choice, expr, jump, label, me, music, narrate, option, scene, setFlag, show, speaker, think,
   trust, when, shot,
 } from '../../story/dsl';
 
@@ -61,5 +61,11 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
   label('walk'),
   shot('c1_harbour_walk'),
   narrate('She takes your bag before you can object, and walks up the hill as though she expects you to keep pace.'),
-  end(),
+  narrate('The street climbs between whitewashed houses with their curtains already drawn. A dog watches you pass from a doorstep with professional interest.'),
+  vera('The island is four miles long. One shop, one school, one pub that is not ours, and a church nobody attends but everybody repairs.', 'neutral'),
+  vera('In winter it is eight hundred people and the wind. In summer it is eight hundred people, the wind, and whoever the ferry brings.'),
+  me('Which am I?'),
+  vera('That depends on whether you are still here in winter.', 'neutral'),
+  think('It is not, I notice, a no.'),
+  jump('c1_hotel'),
 ], { replayable: true });

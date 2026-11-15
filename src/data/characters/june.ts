@@ -47,6 +47,12 @@ export const june: CharacterDefinition = {
       text: 'Her research was paid for by Margit, privately.',
       unlockWhen: C.flag('june_funding_revealed'),
     },
+    {
+      id: 'theory',
+      label: 'The cove',
+      text: 'Thinks something under the old mooring is warming the mud and feeding the bloom — possibly something man-made.',
+      unlockWhen: C.any(C.flag('june_mooring_hint'), C.flag('june_manmade_theory'), C.flag('june_knows_boat')),
+    },
   ],
   milestones: [
     { id: 'the_glow', title: 'The Glow', description: 'June showed you the cove at night.' },

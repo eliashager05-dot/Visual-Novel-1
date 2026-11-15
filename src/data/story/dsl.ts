@@ -110,7 +110,7 @@ export const option = (id: string, text: string, rest: Omit<ChoiceOption, 'id' |
   text,
   ...rest,
 });
-export const end = (opts: { ending?: string; nextChapter?: string } = {}): Step => ({ type: 'end', ...opts });
+export const end = (opts: { ending?: string; nextChapter?: string; chapterComplete?: boolean } = {}): Step => ({ type: 'end', ...opts });
 export const effects = (...list: Effect[]): Step => ({ type: 'effects', effects: list });
 export const unlock = (gallery: string): Step => ({ type: 'unlock', gallery });
 

@@ -48,6 +48,18 @@ export const noor: CharacterDefinition = {
       text: 'Writes songs on receipts. Has never played one for you.',
       unlockWhen: C.affinity('noor', { gte: 25 }),
     },
+    {
+      id: 'debt',
+      label: 'The deal',
+      text: 'Had a record deal at twenty-three. The label folded; the advance turned out to be a loan. She is still paying.',
+      unlockWhen: C.milestone('noor', 'after_hours'),
+    },
+    {
+      id: 'promise',
+      label: 'March',
+      text: 'Helped Margit with the ropes the night she disappeared, and promised to tell no one.',
+      unlockWhen: C.flag('noor_confessed_march'),
+    },
   ],
   milestones: [
     { id: 'after_hours', title: 'After Hours', description: 'Noor played the piano for you after closing.' },

@@ -34,7 +34,7 @@ export type Presentation =
   | { kind: 'line'; line: DisplayedLine }
   | { kind: 'choice'; choice: PresentedChoice }
   | { kind: 'title'; title: string; subtitle?: string }
-  | { kind: 'end'; ending?: string; nextChapter?: string }
+  | { kind: 'end'; ending?: string; nextChapter?: string; chapterComplete?: boolean }
   | { kind: 'idle' };
 
 /**

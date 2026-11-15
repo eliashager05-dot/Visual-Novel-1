@@ -54,6 +54,18 @@ export const sienna: CharacterDefinition = {
       text: 'Grew up on the island. Doesn\'t like to talk about it.',
       unlockWhen: C.flag('sienna_is_local'),
     },
+    {
+      id: 'aldane',
+      label: 'Aldane',
+      text: 'Has closed eleven deals for them. This is the first time she has been told not to ask why.',
+      unlockWhen: C.flag('sienna_off_record'),
+    },
+    {
+      id: 'lights',
+      label: 'The storm',
+      text: 'Saw a boat\'s lights out past the cove at half seven, in the worst of the storm.',
+      unlockWhen: C.flag('sienna_saw_lights'),
+    },
   ],
   milestones: [
     { id: 'off_record', title: 'Off the Record', description: 'Sienna told you something her employers wouldn\'t like.' },

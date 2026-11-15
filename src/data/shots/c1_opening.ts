@@ -1,4 +1,3 @@
-import { byId } from '@/engine/content';
 import type { ShotDefinition } from '@/types';
 
 /**
@@ -9,8 +8,7 @@ import type { ShotDefinition } from '@/types';
  * House style (see docs/ART_DIRECTION.md): photoreal 3D, natural skin, soft
  * motivated lighting, shallow depth of field, 35–85 mm lens language.
  */
-export const shots = byId<ShotDefinition>(
-  [
+export const c1OpeningShots: ShotDefinition[] = [
     // --- Chapter 1 · The Crossing ------------------------------------------
     {
       id: 'c1_ferry_establish',
@@ -118,6 +116,4 @@ export const shots = byId<ShotDefinition>(
       description:
         'From behind: Vera carrying the player’s bag up a steep cobbled street toward the hotel on the hill. The Halcyon’s lit windows at the top of frame. Long shadows from street lamps. 28 mm.',
     },
-  ],
-  'shot',
-);
+  ];

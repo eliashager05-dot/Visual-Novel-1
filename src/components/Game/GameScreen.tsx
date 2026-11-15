@@ -89,7 +89,7 @@ export function GameScreen() {
       )}
 
       <AnimatePresence>{p.kind === 'title' && <TitleCard key={p.title + p.subtitle} title={p.title} subtitle={p.subtitle} />}</AnimatePresence>
-      {p.kind === 'end' && <EndCard ending={p.ending} nextChapter={p.nextChapter} />}
+      {p.kind === 'end' && <EndCard ending={p.ending} nextChapter={p.nextChapter} chapterComplete={p.chapterComplete} />}
 
       <ScreenCover cover={cover} flashKey={flashKey} />
       <AnimatePresence>

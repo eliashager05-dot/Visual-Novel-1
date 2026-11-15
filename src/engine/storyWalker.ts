@@ -84,3 +84,84 @@ export function walkStory(
   result.unreachableOptions = [...allOptions].filter((o) => !seenOptions.has(o));
   return result;
 }
+
+export interface SampleResult {
+  runs: number;
+  endings: Record<string, number>;
+  scenesReached: Set<string>;
+  /** "choiceId/optionId" pairs never picked in any sampled run. */
+  unreachableOptions: string[];
+  errors: { path: string[]; message: string }[];
+  /** Lines shown per playthrough (reading-length estimate). */
+  lines: { min: number; max: number; avg: number };
+}
+
+/**
+ * Random-walk exploration for content too branchy to enumerate. Each run picks
+ * uniformly among enabled options using a seeded PRNG, so results are
+ * reproducible. Reports coverage (options never reached) and length stats.
+ */
+export function sampleStory(
+  manager: SceneManager,
+  opts: { runs?: number; seed?: number; startScene?: string; maxLinesPerPath?: number } = {},
+): SampleResult {
+  const runs = opts.runs ?? 500;
+  const maxLines = opts.maxLinesPerPath ?? 20_000;
+  let seed = opts.seed ?? 1;
+  const rand = () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const allOptions = new Set<string>();
+  for (const s of manager.compileAll()) {
+    for (const i of s.instructions) if (i.type === 'choice') for (const o of i.options) allOptions.add(`${i.id}/${o.id}`);
+  }
+  const seen = new Set<string>();
+  const result: SampleResult = {
+    runs: 0,
+    endings: {},
+    scenesReached: new Set(),
+    unreachableOptions: [],
+    errors: [],
+    lines: { min: Infinity, max: 0, avg: 0 },
+  };
+  let totalLines = 0;
+  for (let r = 0; r < runs; r++) {
+    const path: string[] = [];
+    try {
+      let state = createNewGame(manager, { playerName: 'Tester', startScene: opts.startScene }).state;
+      for (let steps = 0; ; steps++) {
+        if (steps > maxLines) throw new Error('path exceeded line limit (possible loop)');
+        const p = state.presentation;
+        if (p.kind === 'end') {
+          const key = p.ending ?? 'chapter_end';
+          result.endings[key] = (result.endings[key] ?? 0) + 1;
+          state.visitedScenes.forEach((v) => result.scenesReached.add(v));
+          result.lines.min = Math.min(result.lines.min, state.lineCount);
+          result.lines.max = Math.max(result.lines.max, state.lineCount);
+          totalLines += state.lineCount;
+          result.runs++;
+          break;
+        }
+        if (p.kind === 'choice') {
+          const enabled = p.choice.options.filter((o) => o.enabled);
+          const pick = enabled[Math.floor(rand() * enabled.length)]!;
+          const key = `${p.choice.choiceId}/${pick.id}`;
+          seen.add(key);
+          path.push(key);
+          state = choose(manager, state, pick.id).state;
+          continue;
+        }
+        state = advance(manager, state).state;
+      }
+    } catch (e) {
+      result.errors.push({ path, message: (e as Error).message });
+    }
+  }
+  result.lines.avg = result.runs ? Math.round(totalLines / result.runs) : 0;
+  if (!result.runs) result.lines.min = 0;
+  result.unreachableOptions = [...allOptions].filter((o) => !seen.has(o));
+  return result;
+}
