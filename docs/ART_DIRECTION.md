@@ -116,7 +116,9 @@ A 20–30 minute chapter in this style typically needs **250–450 shots** (one 
 
 ---
 
-## 3. AI-assisted alternative (with caveats)
+## 3. AI-generated images (with caveats)
+
+The game can generate its own prompts and drive a local generator: see [AI_RENDER_GUIDE.md](AI_RENDER_GUIDE.md).
 
 Image models (e.g. Stable Diffusion/Flux with per-character LoRAs, ControlNet for pose and composition)
 can produce a realistic look faster. Keeping faces, bodies, outfits and locations consistent across

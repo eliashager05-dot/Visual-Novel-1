@@ -59,6 +59,12 @@ export function validateContent(content: GameContent): ValidationIssue[] {
     }
   }
 
+  // --- Illustrations -----------------------------------------------------
+  for (const [key, cgDef] of Object.entries(content.cgs)) {
+    if (!content.backgrounds[cgDef.background]) err(`cg ${key}`, `unknown background "${cgDef.background}"`);
+    if (!cgDef.description.trim()) warn(`cg ${key}`, 'missing description');
+  }
+
   // --- Chapters ----------------------------------------------------------
   if (content.chapters.length === 0) err('chapters', 'no chapters defined');
   for (const ch of content.chapters) {

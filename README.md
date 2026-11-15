@@ -13,7 +13,9 @@ npm run build
 
 - Architecture, roadmap and art pipeline: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - Realistic 3D art direction and production pipeline: [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md)
-- Making the renders yourself in DAZ Studio, step by step: [`docs/DAZ_GUIDE.md`](docs/DAZ_GUIDE.md)
+- Generating the images with a local AI image generator: [`docs/AI_RENDER_GUIDE.md`](docs/AI_RENDER_GUIDE.md)
+  (`npm run generate -- --milestone 1`, then `npm run studio` to compare and choose)
+- Building them in DAZ Studio instead: [`docs/DAZ_GUIDE.md`](docs/DAZ_GUIDE.md)
 - Character looks and wardrobe: [`docs/CHARACTER_SHEETS.md`](docs/CHARACTER_SHEETS.md)
 - Render checklist and production order (generated with `npm run brief`): [`docs/RENDER_BRIEF.md`](docs/RENDER_BRIEF.md)
 - Check your renders' names and sizes: `npm run renders` (add `-- --optimize` to convert them to WebP)

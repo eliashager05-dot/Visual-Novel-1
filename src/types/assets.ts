@@ -23,6 +23,10 @@ export interface BackgroundDefinition {
 export interface CgDefinition {
   id: string;
   title: string;
+  /** Location, for lighting reference. */
+  background: string;
+  /** What the illustration shows: the brief for the artist. */
+  description: string;
   src?: string;
   /** Characters featured, used for gallery filtering. */
   characters: string[];
@@ -104,6 +108,8 @@ export interface WardrobeItem {
   description: string;
   /** Scene ids where this outfit is worn. */
   scenes: string[];
+  /** Compact wording for image prompts: clothes plus how the hair is worn. */
+  prompt: string;
 }
 
 /** Locked visual specification for building a character in 3D. */
@@ -121,6 +127,8 @@ export interface RenderSheet {
   wardrobe: WardrobeItem[];
   /** How this person holds themselves and how big their expressions are. */
   acting: string;
+  /** Compact identity for image prompts: age, build, skin, hair colour, eyes, face. No clothes, no hairstyle. */
+  prompt: string;
 }
 
 /** One lighting state of a physical set. */

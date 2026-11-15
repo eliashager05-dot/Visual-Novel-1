@@ -88,7 +88,7 @@ export const c1OpeningShots: ShotDefinition[] = [
       camera: 'medium',
       characters: [{ id: 'vera', pose: 'arms_crossed', expression: 'neutral', position: 'center', facing: 'camera' }],
       description:
-        'Bottom of the ferry ramp. Vera in a charcoal coat holding a small, neatly hand-lettered sign with the player’s name. Hair pinned up, one strand loose in the wind. Harbour lamps behind her, wet cobbles reflecting. Slight low angle. 50 mm.',
+        'Bottom of the ferry ramp. Vera in a charcoal coat holding a small hand-lettered sign, angled so its lettering cannot be read (players choose the protagonist’s name, so it must never be legible). Hair pinned up, one strand loose in the wind. Harbour lamps behind her, wet cobbles reflecting. Slight low angle. 50 mm.',
     },
     {
       id: 'c1_harbour_vera_close',

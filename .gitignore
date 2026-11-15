@@ -5,3 +5,5 @@ dist
 coverage
 *.tsbuildinfo
 render-masters
+render-candidates
+ai-render.config.json

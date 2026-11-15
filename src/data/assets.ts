@@ -38,42 +38,63 @@ export const cgs = byId<CgDefinition>(
     {
       id: 'cg_ferry_noor',
       title: 'Crossing',
-      characters: ['noor'],
+      background: 'ferry_deck_dusk',
+      description:
+        'Wide cinematic view from behind: Noor and the protagonist side by side at the ferry rail, and ahead of them the island rising out of the haze, a dark hump of rock with a lighthouse and a scatter of lit windows climbing a hill. Blue hour, last orange light on the water.',
+      characters: ['noor', 'player'],
       placeholder: { palette: ['#2b3a55', '#e8a87c', '#1c2a3a'], motif: 'water' },
     },
     {
       id: 'cg_noor_piano',
       title: 'After Hours',
-      characters: ['noor'],
+      background: 'low_tide_bar_closed',
+      description:
+        'Noor at the battered upright piano in the closed bar, lit by one lamp and strings of fairy lights, seen in three-quarter view from behind, hands on the keys, curls loose. Her face is visible in the mirror behind the bar, and so is the protagonist standing in the doorway.',
+      characters: ['noor', 'player'],
       placeholder: { palette: ['#0f0c14', '#c08a5a', '#08060a'], motif: 'bar' },
     },
     {
       id: 'cg_cove_glow',
       title: 'Bloom',
+      background: 'cove_night',
+      description:
+        'June knee-deep in black sea water at night, trailing one hand through it. Blue-green bioluminescence blazes around her fingers and legs and lights her delighted face from below. Stars overhead; glowing footprints in the shallows in the foreground.',
       characters: ['june'],
       placeholder: { palette: ['#03060c', '#1fd0c0', '#02040a'], motif: 'shore' },
     },
     {
       id: 'cg_vera_ledgers',
       title: 'Night Audit',
-      characters: ['vera'],
+      background: 'hotel_lobby_late',
+      description:
+        "Vera and the protagonist side by side behind the hotel reception desk in the middle of the night, under a single green banker's lamp, ledgers open in front of them. She is reaching past him for a pencil; neither is looking at the other.",
+      characters: ['vera', 'player'],
       placeholder: { palette: ['#1d1612', '#d8a65e', '#0e0a08'], motif: 'interior' },
     },
     {
       id: 'cg_sienna_shed',
       title: 'Where She Started',
-      characters: ['sienna'],
+      background: 'fish_factory_day',
+      description:
+        'Sienna standing in front of a small boat shed with a faded blue door, half turned away, thumb on the thread bracelet at her wrist. The derelict fish factory and a grey sea behind; the protagonist a few steps back, watching her. Flat overcast light.',
+      characters: ['sienna', 'player'],
       placeholder: { palette: ['#7d8a93', '#d48aa6', '#3a3730'], motif: 'exterior' },
     },
     {
       id: 'cg_storm_boathouse',
       title: 'The Boat',
+      background: 'boathouse_storm',
+      description:
+        'A torch beam cutting through rain inside a flooded stone boathouse, landing on an old blue-hulled wooden lobster boat on the slipway. Vera in the foreground with her back to camera, frozen, soaked. Lightning through the open sea doors.',
       characters: ['vera'],
       placeholder: { palette: ['#05070b', '#5a7088', '#020305'], motif: 'storm' },
     },
     {
       id: 'cg_margit_photo',
       title: 'Today',
+      background: 'ferry_deck_dusk',
+      description:
+        'A phone-camera photograph, slightly tilted: a wiry 68-year-old woman in a yellow oilskin on a ferry deck in grey early-morning light, cropped iron-grey hair blowing, sharp blue eyes looking straight into the camera. Behind her, a white passenger-lounge wall with a digital clock.',
       characters: [],
       placeholder: { palette: ['#0c1018', '#a7b4c8', '#05070b'], motif: 'water' },
     },

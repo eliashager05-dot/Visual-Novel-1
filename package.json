@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "validate": "vitest run src/data",
     "brief": "tsx scripts/render-brief.ts",
-    "renders": "tsx scripts/check-renders.ts"
+    "renders": "tsx scripts/check-renders.ts",
+    "generate": "tsx scripts/ai/generate.ts",
+    "studio": "tsx scripts/ai/studio.ts"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
