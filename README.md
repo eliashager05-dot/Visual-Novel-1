@@ -15,5 +15,16 @@ npm run build
 - Story content: `src/data/` (characters, scenes, chapters, asset manifest)
 - Engine (pure TypeScript, UI-agnostic): `src/engine/`
 
-**Status:** Phase 1 (engine foundation) is complete. The current UI is a temporary engine harness, which
-Phase 2 replaces with the cinematic interface.
+**Status:** Phases 1 and 2 are complete: the narrative engine and the cinematic interface (main menu,
+stage, dialogue, choices, history, auto, skip, transitions). Placeholder art is procedural until final 3D
+renders are integrated. Next is Phase 3: saving and loading, settings, relationship menu and gallery.
+
+**Controls:** Click, Space or Enter to continue · A auto · S or hold Ctrl to skip read text · H or
+right-click to hide the interface · L or wheel up for history · Esc for the menu · backtick for the debug
+panel (dev builds only).
+
+| Main menu | Dialogue | Expressions & relationship notice |
+|---|---|---|
+| ![Main menu](docs/screenshots/main-menu.png) | ![Dialogue](docs/screenshots/dialogue.png) | ![Expression](docs/screenshots/expression-and-toast.png) |
+
+*Placeholder art is procedural; final 3D renders drop in through `src/data/characterArt.ts` and `src/data/assets.ts`.*

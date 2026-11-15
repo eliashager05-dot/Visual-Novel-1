@@ -32,6 +32,7 @@ export function validateContent(content: GameContent): ValidationIssue[] {
     if (c.role === 'major' && c.expressions.length < EXPRESSIONS.length) {
       warn(where, `major character is missing expressions: ${EXPRESSIONS.filter((e) => !c.expressions.includes(e)).join(', ')}`);
     }
+    if (!content.characterArt[key]) err(where, 'no entry in characterArt (needed to draw the character)');
     const ms = new Set<string>();
     for (const m of c.milestones) {
       if (ms.has(m.id)) err(where, `duplicate milestone "${m.id}"`);

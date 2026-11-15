@@ -34,3 +34,32 @@ export interface AudioDefinition {
   title: string;
   src?: string;
 }
+
+export type HairStyle = 'bun' | 'curls_scarf' | 'pixie' | 'bob' | 'bald_beard';
+
+/** Look of the procedural stand-in sprite. Locked per character for consistency. */
+export interface SilhouetteSpec {
+  hair: HairStyle;
+  hairColor: string;
+  skin: string;
+  outfit: string;
+  outfitAccent: string;
+  /** Relative height; 1 = average. Keeps the cast's proportions consistent. */
+  height: number;
+  /** Relative shoulder width; 1 = average. */
+  build?: number;
+}
+
+/**
+ * How a character is drawn. Final renders are found by convention:
+ * `${basePath}/${pose}/${expression}.webp`, with optional per-sprite overrides.
+ * If a file is missing or fails to load, the placeholder is drawn instead.
+ */
+export interface CharacterArt {
+  character: string;
+  basePath?: string;
+  extension?: 'webp' | 'avif' | 'png';
+  /** `pose/expression` → URL overrides. */
+  sprites?: Record<string, string>;
+  silhouette: SilhouetteSpec;
+}

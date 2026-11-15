@@ -140,6 +140,8 @@ The DSL produces plain `Step` objects, so a scene can equally be a `.json` file 
 - **Character:** create `src/data/characters/name.ts` and add it to `src/data/characters/index.ts`.
 - **Chapter:** add an entry to `src/data/story/chapters.ts`.
 - **Art or audio:** add an id to `src/data/assets.ts`, with `src` set once the file exists.
+- **Character renders:** set `basePath` for the character in `src/data/characterArt.ts` and export files as
+  `<basePath>/<pose>/<expression>.webp`. Any file that is missing falls back to the placeholder.
 - Run `npm test`. The validator and branch walker will flag mistakes.
 
 ---
@@ -162,7 +164,7 @@ The DSL produces plain `Step` objects, so a scene can equally be a `.json` file 
 
 ## 4. Implementation roadmap
 
-### Phase 1: Foundation ✅ (this commit)
+### Phase 1: Foundation ✅
 - Vite + React 18 + TypeScript (strict) + Tailwind v4 + Zustand + Framer Motion, with Vitest for tests.
 - Type system for characters, scenes, conditions, effects, game state, assets and engine events.
 - Scene compiler, scene manager and interpreter (`dialogueEngine`): lines, thoughts, narration, title
@@ -174,7 +176,29 @@ The DSL produces plain `Step` objects, so a scene can equally be a `.json` file 
 - A Zustand game store and a persistent store (read lines, gallery, endings).
 - A temporary engine harness UI that drives the real engine.
 
-### Phase 2: Visual novel interface
+### Phase 2: Visual novel interface ✅
+Delivered:
+- A fixed 1920×1080 design canvas, uniformly scaled and letterboxed (`GameViewport`).
+- An age gate and content notice on first launch.
+- A cinematic main menu with name entry and a fullscreen toggle. Continue, Load, Gallery and Settings
+  are added in Phase 3, when they actually work.
+- The stage: drifting backgrounds that cross-dissolve, sprites with enter/exit, slot movement, speaker
+  focus (the others dim) and an idle "breathing" motion, and a full-scene image layer.
+- Fade, black and white transitions that hold the old frame until the screen is covered (`useDeferredView`),
+  plus a flash.
+- Dialogue box: speaker name plate and accent line, a typewriter with punctuation pauses that finishes on
+  click, a "next" indicator, serif narration, and an italic "thinking" style for inner thoughts.
+- Choice menu: mouse, number keys and arrows + Enter, locked options with hints, timed choices, and the
+  previous line kept visible.
+- History/backlog, auto mode, skip mode (read text only; stops at unread lines and choices), hide UI,
+  and a pause menu.
+- Relationship and milestone notices phrased in story terms ("Noor will remember that.").
+- An error boundary, plus a dev-only debug panel (backtick) and the `window.__halcyon` store handles.
+- Procedural placeholders: deterministic painted backgrounds per id, and a stylised figure per character
+  (hair, skin, outfit, height and build locked in `characterArt.ts`) showing all nine expressions and
+  pose props. `assetResolver` plus `ImageWithFallback` swap in real renders automatically.
+
+Originally planned scope:
 - A cinematic main menu (new game with name entry, continue, load, gallery, settings, quit to title).
 - The Stage: layered background, CG and sprite layers with Framer Motion enter/exit, screen transitions
   (fade, dissolve, black, white, flash) driven by engine events.

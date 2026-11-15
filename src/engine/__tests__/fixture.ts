@@ -31,12 +31,18 @@ export const char = (id: string, age = 25): CharacterDefinition => ({
   milestones: [{ id: 'm1', title: 'M1', description: 'd' }],
 });
 
+const art = (character: string) => ({
+  character,
+  silhouette: { hair: 'bob' as const, hairColor: '#000', skin: '#fff', outfit: '#333', outfitAccent: '#666', height: 1 },
+});
+
 const a = speaker('a');
 
 export function makeFixture(): GameContent {
   return {
     defaultPlayerName: 'Default',
     characters: { a: char('a'), b: char('b') },
+    characterArt: { a: art('a'), b: art('b') },
     chapters: [{ id: 'ch1', title: 'One', startScene: 's1' }],
     backgrounds: { room: { id: 'room', name: 'Room', placeholder: { palette: ['#000', '#111', '#222'] } } },
     cgs: {},

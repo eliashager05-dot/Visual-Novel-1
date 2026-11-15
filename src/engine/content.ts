@@ -2,6 +2,7 @@ import type {
   AudioDefinition,
   BackgroundDefinition,
   CgDefinition,
+  CharacterArt,
   ChapterDefinition,
   CharacterDefinition,
   SceneDefinition,
@@ -10,6 +11,8 @@ import type {
 /** Everything the engine needs from the content layer. Pure data. */
 export interface GameContent {
   characters: Record<string, CharacterDefinition>;
+  /** Visual identity per character (renders or placeholder spec). */
+  characterArt: Record<string, CharacterArt>;
   scenes: Record<string, SceneDefinition>;
   chapters: ChapterDefinition[];
   backgrounds: Record<string, BackgroundDefinition>;
