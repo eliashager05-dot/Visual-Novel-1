@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
 import { ROOT, type AiConfig } from './config';
 
@@ -160,11 +160,11 @@ export async function generateImage(cfg: AiConfig, checkpoint: string, r: Genera
     const entry = ((await res.json()) as Record<string, HistoryEntry>)[id];
     if (!entry) continue; // still queued or running
     if (entry.status?.status_str === 'error') {
-      const msg = (entry.status.messages ?? [])
-        .filter((m) => m[0] === 'execution_error')
-        .map((m) => (m[1] as { exception_message?: string }).exception_message)
-        .join('; ');
-      throw new ComfyError(`ComfyUI failed while generating: ${msg || 'unknown error'}`);
+      const log = saveErrorLog(id, workflow, entry);
+      throw new ComfyError(
+        `ComfyUI failed while generating: ${describeFailure(entry)}\n` +
+          `The full error report is in ${log}. The black ComfyUI window also shows it in red.`,
+      );
     }
     const image = Object.values(entry.outputs ?? {}).flatMap((o) => o.images ?? [])[0];
     if (!image) {
@@ -180,5 +180,56 @@ export async function generateImage(cfg: AiConfig, checkpoint: string, r: Genera
 
 interface HistoryEntry {
   outputs?: Record<string, { images?: { filename: string; subfolder?: string; type?: string }[] }>;
-  status?: { status_str?: string; completed?: boolean; messages?: [string, unknown][] };
+  status?: { status_str?: string; completed?: boolean; messages?: unknown[] };
+}
+
+interface ErrorDetail {
+  exception_message?: string;
+  exception_type?: string;
+  node_type?: string;
+  node_id?: string;
+  message?: string;
+  error?: string | { message?: string };
+}
+
+/**
+ * Pulls a readable reason out of a failed history entry. ComfyUI has reported
+ * errors in slightly different shapes across versions, so this looks at every
+ * message rather than assuming one format.
+ */
+export function describeFailure(entry: HistoryEntry): string {
+  const found: string[] = [];
+  for (const m of entry.status?.messages ?? []) {
+    // Usually [type, data]; sometimes { type, data } or the data object itself.
+    let type = '';
+    let data: unknown = m;
+    if (Array.isArray(m)) [type, data] = [String(m[0] ?? ''), m[1]];
+    else if (m && typeof m === 'object' && 'type' in m) {
+      type = String((m as { type: unknown }).type);
+      data = (m as { data?: unknown }).data ?? m;
+    }
+    if (!/error|interrupt/i.test(type) && !(data && typeof data === 'object' && 'exception_message' in data)) continue;
+    const d = (data ?? {}) as ErrorDetail;
+    const text =
+      d.exception_message ?? d.message ?? (typeof d.error === 'string' ? d.error : d.error?.message) ?? (type.includes('interrupt') ? 'interrupted' : '');
+    const where = d.node_type ? ` (in ${d.node_type}${d.node_id ? ` #${d.node_id}` : ''})` : '';
+    const kind = d.exception_type ? `${d.exception_type}: ` : '';
+    if (text || kind) found.push(`${kind}${String(text).trim()}${where}`);
+  }
+  if (found.length) return found.join('; ');
+  const raw = JSON.stringify(entry.status ?? {});
+  return `no error message was included. Status: ${raw.length > 300 ? raw.slice(0, 300) + '…' : raw}`;
+}
+
+/** Writes everything about a failed job to a file the user can send, and returns its path. */
+function saveErrorLog(id: string, workflow: unknown, entry: HistoryEntry): string {
+  const dir = join(ROOT, 'render-candidates');
+  const path = join(dir, 'last-error.json');
+  try {
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(path, JSON.stringify({ prompt_id: id, when: new Date().toISOString(), status: entry.status, workflow }, null, 2));
+  } catch {
+    // Logging must never hide the real error.
+  }
+  return 'render-candidates\\last-error.json';
 }
