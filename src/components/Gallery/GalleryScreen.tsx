@@ -58,7 +58,7 @@ export function GalleryScreen({ onClose, onReplay }: { onClose: () => void; onRe
                   <button key={c.id} onClick={() => setViewing(c.id)} className="group overflow-hidden rounded-2xl border border-white/[0.08] text-left hover:border-[#e8c88f]/50">
                     <div className="relative h-[187px] w-full overflow-hidden">
                       <div className="absolute left-0 top-0 origin-top-left" style={{ width: 1920, height: 1080, transform: 'scale(0.173)' }}>
-                        <CgImage id={c.id} />
+                        <CgImage id={c.id} still />
                       </div>
                     </div>
                     <div className="bg-black/60 px-4 py-3 font-serif text-[22px] italic text-white/85">{c.title}</div>

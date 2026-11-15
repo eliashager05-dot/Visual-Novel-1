@@ -8,6 +8,7 @@ import { existsSync, mkdirSync, readdirSync, renameSync, statSync } from 'node:f
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { VIDEO_EXT, videoId } from '../src/lib/assetIndex';
 import { content } from '../src/data';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -107,6 +108,36 @@ for (const { folder, label, ids } of folders) {
 
   const have = new Set([...seen.keys()].filter((id) => ids.includes(id)));
   console.log(`  → ${have.size} of ${ids.length} ${label} delivered`);
+
+  // Animated clips: <id>.mp4 / .webm loop, <id>.once.mp4 plays once.
+  const clips = existsSync(dir) ? readdirSync(dir).filter((f) => VIDEO_EXT.test(f)) : [];
+  const clipIds = new Map<string, string>();
+  for (const file of clips) {
+    const id = videoId(file)!;
+    const size = statSync(join(dir, file)).size;
+    const notes: string[] = [];
+    if (!ids.includes(id)) {
+      const guess = ids.map((x) => [x, distance(x, id)] as const).sort((a, b) => a[1] - b[1])[0];
+      notes.push(`ERROR  not a known ${label.replace(/s$/, '')} name${guess && guess[1] <= 6 ? ` — did you mean "${guess[0]}"?` : ''}`);
+      errors++;
+    }
+    if (clipIds.has(id)) {
+      notes.push(`ERROR  a second clip for "${id}" (also ${clipIds.get(id)}) — keep only one`);
+      errors++;
+    }
+    clipIds.set(id, file);
+    if (ids.includes(id) && !seen.has(id)) {
+      notes.push('WARN   no still image with the same name — add one so there is no blank frame before the clip starts');
+      warnings++;
+    }
+    if (size > 40 * 1024 * 1024) {
+      notes.push(`WARN   ${mb(size)} is large for a short clip`);
+      warnings++;
+    }
+    const mode = /\.once\.[a-z0-9]+$/i.test(file) ? 'plays once' : 'loops';
+    console.log(notes.length ? `  ${file}\n    ${notes.join('\n    ')}` : `  ${file}  ok (clip, ${mode}, ${mb(size)})`);
+  }
+  if (clips.length) console.log(`  → ${[...clipIds.keys()].filter((id) => ids.includes(id)).length} animated`);
 }
 
 console.log(

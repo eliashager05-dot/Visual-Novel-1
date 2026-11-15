@@ -20,6 +20,12 @@ const hasFile = (folder: string, id: string) => {
   return existsSync(dir) && readdirSync(dir).some((f) => EXT.test(f) && f.replace(EXT, '') === id);
 };
 const isDone = (folder: string, id: string, src?: string) => Boolean(src) || hasFile(folder, id);
+const VIDEO = /\.(mp4|webm)$/i;
+/** True if an animated clip for this id is in src/assets/<folder> ("<id>.mp4" or "<id>.once.mp4"). */
+const hasClip = (folder: string, id: string) => {
+  const dir = ASSETS + folder;
+  return existsSync(dir) && readdirSync(dir).some((f) => VIDEO.test(f) && f.replace(VIDEO, '').replace(/\.once$/i, '') === id);
+};
 const mark = (done: boolean) => (done ? '✅ rendered' : '⬜ to do');
 
 const locationOf = (bg: string) => locations.find((l) => l.background === bg);
@@ -177,7 +183,7 @@ for (const u of sceneUses) {
   for (const id of own) {
     const s = content.shots[id]!;
     const used = [...(shotScenes.get(id) ?? [])];
-    p(`#### \`${s.id}\` · ${mark(isDone('shots', s.id, s.src))}`);
+    p(`#### \`${s.id}\` · ${mark(isDone('shots', s.id, s.src))}${hasClip('shots', s.id) ? ' · 🎬 animated' : ''}`);
     p();
     p(`- **Set / lighting:** ${setOf(s.background)?.name ?? '?'} — ${content.backgrounds[s.background]?.name ?? s.background}`);
     p(`- **Camera:** ${s.camera.replace('_', ' ')}`);

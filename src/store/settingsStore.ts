@@ -8,6 +8,8 @@ export interface Settings {
   dialogueStyle: DialogueStyle;
   /** Show "X will remember that." notices. */
   relationshipNotices: boolean;
+  /** Play animated clips where they exist; off = always show the still. */
+  animations: boolean;
   /** Characters per second; 0 = instant. */
   textSpeed: number;
   /** Base pause (ms) after a line finishes before auto mode advances. */
@@ -25,6 +27,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   dialogueStyle: 'cinematic',
   relationshipNotices: true,
+  animations: true,
   textSpeed: 45,
   autoDelay: 1200,
   autoPerChar: 28,

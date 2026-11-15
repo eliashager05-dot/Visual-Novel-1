@@ -18,9 +18,9 @@ export function StageThumbnail({ thumb, width }: { thumb: SaveThumb; width: numb
     <div className="relative overflow-hidden bg-neutral-900" style={{ width, height: 1080 * scale }}>
       <div className="absolute left-0 top-0 origin-top-left" style={{ width: 1920, height: 1080, transform: `scale(${scale})` }}>
         {thumb.cg ? (
-          <CgImage id={thumb.cg} />
+          <CgImage id={thumb.cg} still />
         ) : thumb.shot ? (
-          <ShotImage id={thumb.shot} showBrief={false} />
+          <ShotImage id={thumb.shot} showBrief={false} still />
         ) : (
           <>
             {thumb.background && <BackgroundImage id={thumb.background} />}

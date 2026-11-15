@@ -115,6 +115,9 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
                 <span className="text-white/40">Unavailable</span>
               </Field>
             )}
+            <Field label="Animated scenes" hint="Play animated clips where a scene has one. Turn off to always show the still image.">
+              <Toggle label="Animated scenes" value={s.animations} onChange={(v) => s.update({ animations: v })} />
+            </Field>
           </>
         )}
 

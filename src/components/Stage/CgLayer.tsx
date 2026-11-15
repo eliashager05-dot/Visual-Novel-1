@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { content } from '@/data';
-import { cgSrc } from '@/lib/assetResolver';
-import { ImageWithFallback } from './ImageWithFallback';
+import { cgSrc, cgVideo } from '@/lib/assetResolver';
+import { MediaWithFallback } from './MediaWithFallback';
 import { PlaceholderBackground } from './placeholders/PlaceholderBackground';
 
 /** Full-frame illustration ("CG") shown above sprites. */
@@ -24,11 +24,13 @@ export function CgLayer({ id }: { id: string | null }) {
   );
 }
 
-export function CgImage({ id }: { id: string }) {
+export function CgImage({ id, still = false }: { id: string; still?: boolean }) {
   const def = content.cgs[id];
   if (!def) return null;
   return (
-    <ImageWithFallback
+    <MediaWithFallback
+      video={cgVideo(id)}
+      stillOnly={still}
       src={cgSrc(id)}
       alt={def.title}
       className="absolute inset-0 h-full w-full object-cover"

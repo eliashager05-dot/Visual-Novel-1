@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { content } from '@/data';
-import { shotSrc } from '@/lib/assetResolver';
+import { shotSrc, shotVideo } from '@/lib/assetResolver';
 import type { CameraFraming, ShotDefinition } from '@/types';
 import { SLOT_X, SPRITE_H, SPRITE_W } from '../CharacterRenderer/CharacterRenderer';
-import { ImageWithFallback } from './ImageWithFallback';
+import { MediaWithFallback } from './MediaWithFallback';
 import { PlaceholderBackground } from './placeholders/PlaceholderBackground';
 import { PlaceholderCharacter } from './placeholders/PlaceholderCharacter';
 
@@ -27,11 +27,13 @@ export function ShotLayer({ id }: { id: string | null }) {
   );
 }
 
-export function ShotImage({ id, showBrief = true }: { id: string; showBrief?: boolean }) {
+export function ShotImage({ id, showBrief = true, still = false }: { id: string; showBrief?: boolean; still?: boolean }) {
   const def = content.shots[id];
   if (!def) return null;
   return (
-    <ImageWithFallback
+    <MediaWithFallback
+      video={shotVideo(id)}
+      stillOnly={still}
       src={shotSrc(id)}
       alt={def.description}
       className="absolute inset-0 h-full w-full object-cover"

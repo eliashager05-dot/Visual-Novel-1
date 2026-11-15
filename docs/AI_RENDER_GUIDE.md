@@ -204,7 +204,58 @@ watermarks. `negative` adds to it; it cannot remove from it.
 
 ---
 
-## 10. Rules
+## 10. Animations (short clips)
+
+The game plays a short clip in place of a still wherever you add one. You make the clip in ComfyUI from a
+still you have already chosen, so the character keeps the look you picked.
+
+### How the game uses clips
+
+Save the clip **next to the still, with the same name**:
+
+| File | What the game does |
+|---|---|
+| `src/assets/shots/c1_ferry_noor_laugh.mp4` | Loops for as long as that shot is on screen |
+| `src/assets/shots/c1_ferry_noor_laugh.once.mp4` | Plays once, then holds its last frame (for actions: turning, standing up) |
+
+- `.mp4` and `.webm` both work. Keep the still: it is shown while the clip loads and if a clip cannot play.
+- Clips have no sound, and always play muted.
+- **Settings → Display → Animated scenes** turns all clips off.
+- `npm.cmd run renders` checks clip names too, and `npm.cmd run brief` marks animated shots with 🎬.
+- The same works for illustrations, in `src/assets/cg/`.
+
+### Your first clip, by hand
+
+Do one by hand first. It tells us whether your card can do it and how long a clip takes.
+
+1. **Pick a simple moment:** one person, small movement. For example `c1_ferry_noor_laugh` (Noor
+   laughing) or `c1_harbour_vera_close` (Vera's close-up). Avoid hands, two people touching, and big
+   head turns for now.
+2. **Find the still you chose.** If you already ran `--optimize`, use the full-size original in
+   `render-masters\shots\`. Otherwise it is in `src\assets\shots\`.
+3. **Open the template.** In ComfyUI: **Templates → Video**, and pick an **image-to-video** template for
+   **Wan 2.2 5B** (the name may differ slightly between versions; look for "Wan 2.2", "5B" and "image to
+   video"). If ComfyUI says models are missing, let it download them. That is several GB.
+4. **Load your still** in the template's *Load Image* box.
+5. **Describe only the movement** in the positive prompt, briefly. For example:
+   `she laughs and tips her head back, wind moves her curls, waves glitter behind her, slow camera push-in, realistic`
+6. **Keep it small at first.** Leave the template's defaults, or use about **832 × 480** and the
+   template's default length (a few seconds). Bigger and longer needs more video memory.
+7. Press **Run** and **note how long it takes**.
+8. The clip is saved in `ComfyUI_windows_portable\ComfyUI\output\` (sometimes in a `video` folder
+   inside it). Copy it into the game as shown above, for example `src\assets\shots\c1_ferry_noor_laugh.mp4`.
+9. Start the game (`npm.cmd run dev`) and play to that line.
+
+**If it runs out of memory:** close other programs that use the graphics card, lower the size, or make
+the clip shorter. **If movement looks wrong:** run it again (each run is different), or describe less
+movement. Small, slow motion looks most natural.
+
+**Then tell me** how long one clip took and how it looked. If it is usable, I will add an **Animate**
+button to the review page, so you can make and compare clips the same way you choose images.
+
+---
+
+## 11. Rules
 
 - Every person in every image is an adult and must look like one.
 - Do not use the name or likeness of a real person in a prompt or a note.
@@ -214,7 +265,7 @@ watermarks. `negative` adds to it; it cannot remove from it.
 
 ---
 
-## 11. What to send me
+## 12. What to send me
 
 I cannot see your results. After the portraits, and again after the first scene, send screenshots of the
 review page. From those I can tune the character descriptions, the style wording, the framing words and
