@@ -31,4 +31,4 @@ F5 / F9 for quick save / load · Esc for the menu · backtick for the debug pane
 |---|---|---|
 | ![Main menu](docs/screenshots/main-menu.png) | ![Dialogue](docs/screenshots/dialogue.png) | ![Expression](docs/screenshots/expression-and-toast.png) |
 
-*Placeholder art is procedural and only previews composition. The target look is photoreal 3D renders (see ART_DIRECTION.md), which drop in through `src/data/shots.ts`, `characterArt.ts` and `assets.ts` without story changes.*
+*Placeholder art is procedural and only previews composition. The target look is photoreal 3D renders (see ART_DIRECTION.md). Renders are drop-in: save an image as `src/assets/shots/<shotId>.webp` and the game shows it, with no code changes.*

@@ -11,7 +11,7 @@ import { CharacterLayer } from '../CharacterRenderer/CharacterRenderer';
 import { ChoiceMenu } from '../ChoiceMenu/ChoiceMenu';
 import { CinematicDialogue } from '../DialogueBox/CinematicDialogue';
 import { DialogueBox } from '../DialogueBox/DialogueBox';
-import { QuickMenu } from '../DialogueBox/QuickMenu';
+import { Hud } from '../DialogueBox/Hud';
 import { DebugPanel } from '../Overlays/DebugPanel';
 import { EndCard } from '../Overlays/EndCard';
 import { HistoryPanel } from '../Overlays/HistoryPanel';
@@ -72,14 +72,15 @@ export function GameScreen() {
       {!hideUi && p.kind === 'line' && (
         <>
           <Dialogue line={p.line} lineId={game.lineCount} />
-          <QuickMenu cinematic={cinematic} />
+          <Hud raised={!cinematic} />
         </>
       )}
       {!hideUi && p.kind === 'choice' && (
         <>
-          <div className="pointer-events-none absolute inset-0 bg-black/30 transition-opacity" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-[1000px] bg-gradient-to-l from-black/35 to-transparent" />
           {lastLine && <Dialogue line={lastLine} lineId={-1} dimmed />}
           <ChoiceMenu choice={p.choice} onChoose={choose} />
+          <Hud raised={!cinematic} />
         </>
       )}
       {(auto || skip) && !hideUi && (

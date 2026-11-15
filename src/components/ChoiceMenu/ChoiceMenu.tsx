@@ -49,16 +49,14 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
 
   return (
     <motion.div
-      className="absolute inset-x-0 top-[150px] bottom-[300px] flex flex-col items-center justify-center gap-[18px]"
+      className="absolute right-0 top-[150px] bottom-[330px] flex flex-col items-end justify-center gap-[14px]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
       onClick={(e) => e.stopPropagation()}
     >
       {choice.prompt && (
-        <div className="mb-3 font-serif text-[34px] italic text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-          {choice.prompt}
-        </div>
+        <div className="vn-subtitle vn-outline mb-2 mr-[60px] text-[30px] font-semibold italic text-[#f3ead8]">{choice.prompt}</div>
       )}
       {choice.options.map((o, i) => (
         <motion.button
@@ -66,32 +64,31 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
           disabled={!o.enabled}
           onClick={() => onChoose(o.id)}
           onMouseEnter={() => o.enabled && setFocus(i)}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 * i, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.07 * i, duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
           className={[
-            'group relative flex w-[960px] items-center gap-6 rounded-2xl border px-8 py-[18px] text-left backdrop-blur-md transition-colors duration-200',
-            o.enabled
-              ? focus === i
-                ? 'border-[#e8c88f]/60 bg-[rgba(30,24,16,0.88)] text-white'
-                : 'border-white/10 bg-[rgba(8,10,15,0.78)] text-white/90 hover:border-[#e8c88f]/50'
-              : 'cursor-not-allowed border-white/5 bg-[rgba(8,10,15,0.5)] text-white/30',
+            'vn-subtitle group relative flex w-[780px] items-center gap-5 rounded-l-xl py-[13px] pl-6 pr-[60px] text-left transition-all duration-150',
+            o.enabled ? (focus === i ? 'text-white' : 'text-white/90') : 'cursor-not-allowed text-white/35',
           ].join(' ')}
+          style={{
+            background:
+              focus === i && o.enabled
+                ? 'linear-gradient(90deg, rgba(46,36,20,0.94) 0%, rgba(30,24,14,0.86) 70%, rgba(20,16,10,0.55) 100%)'
+                : 'linear-gradient(90deg, rgba(10,10,14,0.88) 0%, rgba(10,10,14,0.78) 70%, rgba(10,10,14,0.45) 100%)',
+            boxShadow: focus === i && o.enabled ? 'inset 3px 0 0 #e8c88f' : 'inset 3px 0 0 rgba(255,255,255,0.12)',
+          }}
         >
-          <span
-            className={[
-              'w-6 text-center text-[20px] font-light tabular-nums',
-              focus === i && o.enabled ? 'text-[#e8c88f]' : 'text-white/30',
-            ].join(' ')}
-          >
-            {i + 1}
-          </span>
-          <span className="flex-1 text-[28px] leading-snug">{o.text}</span>
-          {!o.enabled && <span className="text-[16px] italic text-white/35">{o.lockedHint ?? 'Unavailable'}</span>}
+          <svg viewBox="0 0 24 24" className={['h-7 w-7 shrink-0 transition-colors', focus === i && o.enabled ? 'text-[#e8c88f]' : 'text-white/55'].join(' ')} aria-hidden>
+            <path d="M5 6l6.5 6L5 18M12.5 6l6.5 6-6.5 6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="flex-1 text-[28px] font-semibold leading-snug">{o.text}</span>
+          {!o.enabled && <span className="max-w-[240px] text-right text-[16px] italic text-white/40">{o.lockedHint ?? 'Unavailable'}</span>}
+          <span className="w-5 text-center text-[16px] tabular-nums text-white/30">{i + 1}</span>
         </motion.button>
       ))}
       {choice.timeout && (
-        <div className="mt-2 h-[3px] w-[960px] overflow-hidden rounded bg-white/10">
+        <div className="mr-[60px] mt-2 h-[3px] w-[720px] overflow-hidden rounded bg-white/15">
           <motion.div
             className="h-full bg-[#e8c88f]"
             initial={{ width: '100%' }}

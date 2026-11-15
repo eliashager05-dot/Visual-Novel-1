@@ -37,7 +37,7 @@ export function DialogueBox({
       <div
         className="absolute inset-0 rounded-[28px] border border-white/[0.07] shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-md"
         style={{
-          background: `linear-gradient(180deg, rgba(10,12,18,${boxOpacity * 0.82}) 0%, rgba(6,7,11,${boxOpacity}) 100%)`,
+          background: `linear-gradient(180deg, rgba(10,12,18,${0.5 + boxOpacity * 0.4}) 0%, rgba(6,7,11,${0.6 + boxOpacity * 0.4}) 100%)`,
           opacity: dimmed ? 0.55 : 1,
         }}
       />

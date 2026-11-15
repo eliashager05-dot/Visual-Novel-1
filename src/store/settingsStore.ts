@@ -31,7 +31,7 @@ export const DEFAULT_SETTINGS: Settings = {
   skipUnread: false,
   musicVolume: 0.7,
   sfxVolume: 0.8,
-  boxOpacity: 0.82,
+  boxOpacity: 0.45,
   ageConfirmed: false,
 };
 
