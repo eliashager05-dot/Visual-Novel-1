@@ -22,6 +22,9 @@ Companion documents:
 To check your card: Task Manager → Performance → GPU. The name is at the top right, the memory under
 "Dedicated GPU memory".
 
+**An RTX 2080 (8 GB) is enough.** It sits at the minimum, so read section 5 on working within 8 GB before
+your first group shot.
+
 **If you do not have an NVIDIA card,** tell me before buying anything. The realistic route is then to
 export the characters to Blender and render with Cycles, which supports other cards; the rest of this
 guide still applies.
@@ -91,10 +94,37 @@ session so every image is rendered the same way.
 
 ---
 
-## 5. Build your first character
+## 5. Working within 8 GB of video memory
 
-Start with **Noor**: she is the first person the player meets. Open her section in
-[CHARACTER_SHEETS.md](CHARACTER_SHEETS.md) and keep it beside you.
+Iray is fast only while the whole scene fits in the graphics card's memory. If it does not fit, DAZ
+silently switches to the processor and a 10-minute render becomes an hour. With 8 GB:
+
+- **One or two characters per shot is comfortable.** Most shots in the brief are exactly that.
+- **Group shots** (the dinner table, the candle-lit lobby) are the risk. For those:
+  - give background characters smaller textures, since they are out of focus anyway;
+  - or render the wide shot with fewer people in frame and let the close-ups carry the scene.
+- **Hide everything the camera cannot see** before rendering: rooms behind the camera, furniture out of
+  frame, the back half of a set. In the *Scene* pane, click the eye icon next to an item.
+- **Lower texture memory:** *Render Settings → Advanced → Texture Compression*. Lowering the thresholds
+  makes DAZ compress more textures, which saves memory at a small cost in fine detail.
+- **Close the Iray preview** in the viewport before a final render, and switch the viewport back to
+  *Texture Shaded*. The preview holds memory of its own.
+- **Restart DAZ Studio** if renders that used to be quick turn slow: memory is not always released
+  between renders.
+- **How to tell it happened:** the render window's progress text stops mentioning your graphics card and
+  the image resolves very slowly. Cancel, simplify the scene, and start again.
+
+---
+
+## 6. Build your first character
+
+Start with **the protagonist**. He is in more shots than anyone else, and the first image of the game
+is of him, so he is worth the most care. Then build **Noor**, the first person he meets. Open the
+character's section in [CHARACTER_SHEETS.md](CHARACTER_SHEETS.md) and keep it beside you. The steps
+below use Noor as the example; they are the same for everyone.
+
+For the protagonist, start from the Genesis 9 base with a masculine shape. Players name him themselves,
+so nothing in any render may show a name for him.
 
 1. **Load the base figure.** *Smart Content* pane → Figures → Genesis 9. Double-click it.
 2. **Shape.** With the figure selected, open the *Shaping* pane. Adjust the face and body dials toward
@@ -134,7 +164,7 @@ Doing this once per character is what keeps "Noor, happy" identical in every sce
 
 ---
 
-## 6. Build your first set
+## 7. Build your first set
 
 The first set in the production order is the **car ferry deck**; its description and lighting are under
 "Sets and lighting" in [RENDER_BRIEF.md](RENDER_BRIEF.md).
@@ -151,10 +181,11 @@ The first set in the production order is the **car ferry deck**; its description
 
 ---
 
-## 7. Render your first shot
+## 8. Render your first shot
 
-Pick the first shot under "Shots" in the brief: `c1_ferry_establish`. Then the first with a character:
-`c1_ferry_noor_call`.
+Pick the first shot under "Shots" in the brief: `c1_ferry_establish`, the empty deck. Then the first
+with a character: `c1_ferry_player_rail`, the protagonist alone at the rail. The steps below use the
+first two-person shot, `c1_ferry_noor_call`, as the example.
 
 1. **Open the set** (`sets/ferry.duf`).
 2. **Bring in the character:** *File → Merge*, choose `characters/noor.duf`. Apply the outfit the shot
@@ -171,7 +202,7 @@ Pick the first shot under "Shots" in the brief: `c1_ferry_establish`. Then the f
    | medium | 50 mm | Waist or knees up |
    | close | 85 mm | Head and shoulders |
    | extreme close | 100 mm or more | The face fills the frame |
-   | over shoulder | 50 mm | Past the player's shoulder, their face out of frame |
+   | over shoulder | 50 mm | Past the protagonist's shoulder (soft, in the foreground) to the person he is facing (sharp) |
 
 6. **Depth of field:** in the camera's parameters turn *Depth of Field* on, set the *Focal Distance* to
    the character's eyes, and lower the *F/Stop* until the background softens. Close-ups want a soft
@@ -184,7 +215,7 @@ Pick the first shot under "Shots" in the brief: `c1_ferry_establish`. Then the f
 
 ---
 
-## 8. Put it in the game
+## 9. Put it in the game
 
 1. Copy the PNG into the game's `src/assets/shots/` folder.
 2. In a terminal in the game folder, check your files:
@@ -204,32 +235,33 @@ Illustrations work the same way, in `src/assets/cg/`.
 
 ---
 
-## 9. How to work through the chapter
+## 10. How to work through the chapter
 
 Follow the **Production order** table in the brief, one row per sitting. Every shot in a row shares a set,
 its lighting and the characters' outfits, so you set those up once and then only move the camera, the pose
 and the expression.
 
-| Milestone | Rows | What you need to build | Images |
-|---|---|---|---|
-| **1. The opening** | The Crossing, The Harbour | Noor, Vera; ferry deck, harbour | 13 shots, 1 illustration |
-| **2. The first evening** | The Halcyon → The Low Tide | June, Sienna, Bram; exterior, lobby, kitchen, corridor, Room 12, dining room, bar | 26 shots |
-| **3. The first night** | The four night scenes | The cove | 9 shots, 3 illustrations |
-| **4. Day two** | Ninety Days → Before the Storm | Terrace, car, fish factory | 19 shots, 1 illustration |
-| **5. The storm and the ending** | The Storm → Stop Looking | Boathouse, Margit's room | 22 shots, 2 illustrations |
+The **Milestones** table at the top of [RENDER_BRIEF.md](RENDER_BRIEF.md) groups the rows into five
+stages and lists, for each, which characters and sets you need to build first and how many images it
+contains. It is regenerated from the story, so it is always current.
 
-Finish milestone 1 completely before starting milestone 2. It gives you two characters, two sets and a
-playable opening that looks like the finished game, and it will tell you how long the rest will take.
+Finish milestone 1 completely before starting milestone 2. It needs three characters (the protagonist,
+Noor and Vera) and two sets, gives you a playable opening that looks like the finished game, and will
+tell you how long the rest will take.
+
+For conversations, alternate the camera the way films do: a shot of one person, then the reverse shot of
+the other, with an occasional two-shot to show where they are standing. The brief is already written
+that way.
 
 ---
 
-## 10. Consistency checklist
+## 11. Consistency checklist
 
 Before saving any render, check it against the character's reference renders:
 
 - Same face shape, eye colour, skin tone and hair as the reference?
-- Every signature detail present (Vera's eyebrow scar, Noor's single earring, Sienna's bracelet, June's
-  watch, Bram's burn scars)?
+- Every signature detail present (the protagonist's stubble and, outdoors on day one, his headphones;
+  Vera's eyebrow scar; Noor's single earring; Sienna's bracelet; June's watch; Bram's burn scars)?
 - The outfit this scene calls for, and no other?
 - Noor's orange scarf: on for the ferry, dinner and bar; **gone** from the piano scene onward.
 - Expression in character? (Check the "Acting" row.)
@@ -238,7 +270,7 @@ Before saving any render, check it against the character's reference renders:
 
 ---
 
-## 11. When something looks wrong
+## 12. When something looks wrong
 
 | Problem | Likely cause and fix |
 |---|---|
@@ -254,7 +286,7 @@ Before saving any render, check it against the character's reference renders:
 
 ---
 
-## 12. When you have your first render
+## 13. When you have your first render
 
 Send me a screenshot of it in the game. I can then adjust the subtitle size and position, the framing
 guidance and the brief to fit how your renders actually look.

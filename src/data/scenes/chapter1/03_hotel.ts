@@ -60,6 +60,7 @@ export const c1Hotel = scene('c1_hotel', 'ch1', 'The Halcyon', [
   bram(`So. You're the kid.`, 'neutral'),
   me(`I'm the kid.`),
   bram(`Sit. Eat. Talk after. Dinner's at eight, this is so you don't faint before it.`),
+  shot('c1_kitchen_player'),
   narrate(`Fish soup, bread with a crust you could knock on, butter with salt crystals in it. Bram watches you eat the way a mechanic listens to an engine.`),
   shot('c1_kitchen_bram_close'),
   bram(`She talked about you, you know.`, 'sad'),

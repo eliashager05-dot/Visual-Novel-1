@@ -65,7 +65,9 @@ export const c1LowTide = scene('c1_low_tide', 'ch1', 'The Low Tide', [
   sienna(`And you must be {player}. Sienna Marlowe.`, 'neutral'),
   sienna(`Don't worry, I'm not going to talk business in a bar. It's vulgar, and the acoustics are terrible.`, 'happy'),
   narrate(`She takes a napkin, writes a figure on it with a fountain pen, and slides it across. It has more zeroes than the hotel has guests.`),
+  shot('c1_bar_player_napkin'),
   sienna(`I just wanted to see your face when you read it.`, 'flirty'),
+  shot('c1_bar_sienna_close'),
 
   choice('c1_sienna_offer', [
     option('listen', `"I'm listening."`, {

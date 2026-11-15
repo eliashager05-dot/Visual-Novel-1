@@ -7,7 +7,7 @@
 import { existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { content } from '../src/data';
-import { locations, photoOnlyCharacters, renderSheets, sets } from '../src/data/renderSheets';
+import { locations, milestones, photoOnlyCharacters, renderSheets, sets } from '../src/data/renderSheets';
 import { SceneManager } from '../src/engine/sceneManager';
 
 const manager = new SceneManager(content);
@@ -80,8 +80,48 @@ p('**Delivering a render:** save it as a 1920×1080 image named after its id, in
 p('`src/assets/cg/` (illustrations). `.png`, `.jpg`, `.webp` and `.avif` all work. The game picks it up with no code');
 p('changes. Run `npm run renders` to check names and sizes.');
 p();
-p('**Point of view:** the player character is never shown from the front. Shots are first-person, or over the');
-p("player's shoulder with the face out of frame. Hands and arms may appear; keep them neutral and unadorned.");
+p('**The protagonist is visible.** He appears in two-shots, over-the-shoulder shots and his own reaction shots.');
+p('Players name him themselves, so no render may show his name. His look is fixed: see his character sheet.');
+p();
+
+// --- Milestones -------------------------------------------------------------
+p('## Milestones');
+p();
+p('Finish each milestone completely before starting the next. Milestone 1 gives you a playable opening that');
+p('looks like the finished game, and tells you how long the rest will take.');
+p();
+p('| # | Milestone | Scenes | Characters to build | Sets to build | Shots | Illustrations | Done |');
+p('|---|---|---|---|---|---|---|---|');
+{
+  const builtChars = new Set<string>();
+  const builtSets = new Set<string>();
+  milestones.forEach((m, i) => {
+    const uses = sceneUses.filter((u) => m.scenes.includes(u.id));
+    const own = uses.flatMap((u) => u.shots.filter((s) => shotFirstScene.get(s) === u.id));
+    const cgCount = uses.reduce((n, u) => n + u.cgs.length, 0);
+    const newChars: string[] = [];
+    const newSets: string[] = [];
+    for (const u of uses) {
+      for (const cId of u.characters) {
+        if (!builtChars.has(cId)) {
+          builtChars.add(cId);
+          newChars.push(content.characters[cId]?.shortName ?? charName(cId));
+        }
+      }
+      for (const s of u.shots) {
+        const set = setOf(content.shots[s]!.background);
+        if (set && !builtSets.has(set.id)) {
+          builtSets.add(set.id);
+          newSets.push(set.name);
+        }
+      }
+    }
+    const done = own.filter((s) => isDone('shots', s, content.shots[s]?.src)).length;
+    p(
+      `| ${i + 1} | **${m.name}** | ${uses.map((u) => u.title).join(', ')} | ${newChars.join(', ') || '—'} | ${newSets.join(', ') || '—'} | ${own.length} | ${cgCount || '—'} | ${done}/${own.length} |`,
+    );
+  });
+}
 p();
 
 // --- Production order -----------------------------------------------------
@@ -209,6 +249,11 @@ for (const sheet of renderSheets) {
   const shotCount = allShots.filter((s) => s.characters.some((x) => x.id === sheet.character)).length;
   c(`## ${def.name}`);
   c();
+  if (def.role === 'protagonist') {
+    c(`The player character. Players choose his name (default "${content.defaultPlayerName}"), so never show a name for him in a render.`);
+    c('He is in more shots than anyone else: **build him first**, and take the most care over him.');
+    c();
+  }
   c(`**Age ${def.age} · ${def.occupation} · ${sheet.heightCm} cm · appears in ${shotCount} shots**`);
   c();
   c(`> ${def.personality}`);
@@ -250,11 +295,7 @@ c('## Seen only in photographs');
 c();
 for (const ph of photoOnlyCharacters) c(`- **${ph.name}.** ${ph.description}`);
 c();
-c('## The player');
-c();
-c('The player character is never shown from the front, so there is nothing to build beyond a neutral pair of');
-c('hands and forearms and a plain dark coat sleeve for over-the-shoulder shots.');
-c();
+
 writeFileSync(new URL('../docs/CHARACTER_SHEETS.md', import.meta.url), cs.join('\n'));
 
 console.log(

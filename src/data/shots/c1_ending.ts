@@ -11,6 +11,8 @@ export const c1EndingShots = [
     'Insert: a faded 30-year-old photograph pinned above the desk — Margit in her late thirties laughing on the deck of a blue lobster boat named ELIN, a young woman of about twenty beside her with an arm round her shoulders, holding up a large fish. Both adults. Charts with a circled mooring around it. 100 mm.'),
   S('c1_margit_ledger', 'margit_room_night', 'close', [],
     'Insert: an open ledger in a desk drawer, neat fountain-pen columns, entries "N.H. — 600", "J.C. — 1,200", and "S.M. — final. Paid in full." under candlelight. 100 mm macro.'),
-  S('c1_room_dawn', 'player_room_night', 'wide', [],
-    'Room 12 at four in the morning after the storm: calm sea, pre-dawn blue at the window, a small pale shell on the nightstand next to a phone that is lighting up. 28 mm.'),
+  S('c1_room_dawn', 'player_room_night', 'wide', [P('player', 'neutral', { pose: 'seated' })],
+    'Room 12 at four in the morning after the storm: calm sea and pre-dawn blue at the window. The protagonist sitting on the edge of the bed, still dressed, elbows on his knees. On the nightstand, a phone that is about to light up. 28 mm.'),
+  S('c1_cliff_player', 'player_room_night', 'close', [P('player', 'surprised', { pose: 'seated' })],
+    'The protagonist\'s face lit only by a phone screen in the dark room: eyes wide, lips parted, utterly still. 85 mm.'),
 ];

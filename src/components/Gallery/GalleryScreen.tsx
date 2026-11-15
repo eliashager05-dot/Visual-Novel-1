@@ -21,7 +21,7 @@ export function GalleryScreen({ onClose, onReplay }: { onClose: () => void; onRe
   const unlockedScenes = usePersistentStore((s) => s.unlockedScenes);
 
   const cgs = Object.values(content.cgs);
-  const people = Object.values(content.characters);
+  const people = Object.values(content.characters).filter((d) => d.role !== 'protagonist');
   const replayable = Object.values(content.scenes).filter((s) => s.replayable);
 
   useEffect(() => {

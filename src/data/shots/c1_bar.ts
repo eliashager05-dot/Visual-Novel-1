@@ -9,8 +9,10 @@ export const c1BarShots = [
     'Sienna descending the stone stairs into the bar: camel coat, sharp dark bob, red lipstick, heels on old stone; heads turning at the tables. Cold night air behind her, warm bar light in front. 35 mm, low angle.'),
   S('c1_bar_noor_tense', 'low_tide_bar_night', 'close', [P('noor', 'neutral', { pose: 'bar', facing: 'left' })],
     'Noor\'s smile fixed in place, eyes hard, hands polishing an already-clean glass. 85 mm.'),
-  S('c1_bar_sienna_close', 'low_tide_bar_night', 'close', [P('sienna', 'flirty', { pose: 'coat' })],
-    'Sienna on the stool beside the player, sliding a napkin with a handwritten figure across the bar with two fingers, amused half-smile, thread bracelet visible on her wrist. 85 mm.'),
+  S('c1_bar_sienna_close', 'low_tide_bar_night', 'medium', [P('sienna', 'flirty', { pose: 'coat', position: 'left', facing: 'right' }), P('player', 'neutral', { pose: 'seated', position: 'right', facing: 'left' })],
+    'Two-shot at the bar: Sienna on the stool beside the protagonist, sliding a napkin with a handwritten figure across the timber with two fingers, amused half-smile; her thread bracelet visible on her wrist. He looks from the napkin to her. 50 mm.'),
   S('c1_bar_noor_after', 'low_tide_bar_night', 'close', [P('noor', 'sad', { pose: 'bar' })],
     'Noor after Sienna leaves: the performance gone, tired, looking at the stairs. Fairy lights soft behind. 85 mm.'),
+  S('c1_bar_player_napkin', 'low_tide_bar_night', 'close', [P('player', 'surprised', { pose: 'seated' })],
+    'The protagonist reading the figure on the napkin: eyebrows up, a slow breath out through his nose. Amber bar lights as bokeh behind him. 85 mm.'),
 ];

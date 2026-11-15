@@ -108,6 +108,13 @@ function Hair({ spec, layer }: { spec: SilhouetteSpec; layer: 'back' | 'front' }
       ) : (
         <path d="M212 196 Q208 104 300 100 Q392 104 388 196 Q350 134 300 158 Q252 132 212 196Z" fill={c} />
       );
+    case 'short_wavy':
+      return layer === 'back' ? null : (
+        <g fill={c}>
+          <path d="M214 214 Q200 96 300 92 Q398 96 386 210 Q378 160 352 146 Q322 172 286 150 Q252 176 232 158 Q220 180 214 214Z" />
+          <path d="M240 318 Q300 350 360 318 Q332 334 300 336 Q268 334 240 318Z" opacity={0.35} />
+        </g>
+      );
     case 'bald_beard':
       return layer === 'back' ? null : (
         <path d="M228 236 Q232 330 300 340 Q368 330 372 236 Q350 280 300 284 Q250 280 228 236Z" fill={c} />

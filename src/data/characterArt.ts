@@ -9,6 +9,11 @@ import type { CharacterArt } from '@/types';
 export const characterArt = byId<CharacterArt & { id: string }>(
   [
     {
+      id: 'player',
+      character: 'player',
+      silhouette: { hair: 'short_wavy', hairColor: '#2b2320', skin: '#d9b99a', outfit: '#3d4a44', outfitAccent: '#59616a', height: 1.05, build: 1.1 },
+    },
+    {
       id: 'vera',
       character: 'vera',
       silhouette: { hair: 'bun', hairColor: '#cdbf9e', skin: '#e9d2c0', outfit: '#262c38', outfitAccent: '#3a4357', height: 1.04, build: 0.96 },

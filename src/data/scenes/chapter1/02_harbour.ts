@@ -26,12 +26,13 @@ export const c1Harbour = scene('c1_harbour', 'ch1', 'The Harbour', [
   ),
 
   vera('I will be direct, since we will be making decisions together. Margit left me the other forty-nine percent.', 'neutral'),
+  shot('c1_harbour_player'),
   think('Ah. So that\'s why the sign is so neat. She\'s been rehearsing this.'),
 
   choice('c1_vera_first', [
     option('undecided', '"I haven\'t decided anything yet."', {
       effects: [trust('vera', 4), affinity('vera', 2)],
-      steps: [vera('Good. Then you can still be persuaded.', 'neutral', { pose: 'standing' })],
+      steps: [shot('c1_harbour_vera_close'), vera('Good. Then you can still be persuaded.', 'neutral', { pose: 'standing' })],
     }),
     option('sell', '"Honestly? I\'ll probably sell."', {
       effects: [trust('vera', 3), affinity('vera', -3), setFlag('player_leans_sell')],

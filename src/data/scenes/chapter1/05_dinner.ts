@@ -60,6 +60,7 @@ export const c1Dinner = scene('c1_dinner', 'ch1', 'Dinner', [
 
   shot('c1_dining_wide'),
   bram(`So what is it you do, kid? When you're not inheriting things.`, 'neutral'),
+  shot('c1_dinner_player'),
   think(`There it is. The question I've been dodging for six weeks.`),
   choice('c1_dinner_job', [
     option('honest', `Tell them the truth: the studio closed.`, {
@@ -67,6 +68,7 @@ export const c1Dinner = scene('c1_dinner', 'ch1', 'Dinner', [
       steps: [
         me(`I'm a sound engineer. Was. I mixed records at a studio in the city for nine years.`),
         me(`It closed in June. The building's going to be flats. I spent my last day there helping them carry the mixing desk out to a van.`),
+        shot('c1_dining_wide'),
         june(`That's sad.`, 'sad'),
         june(`Sorry. I'm told people usually say something more useful than "that's sad".`, 'embarrassed'),
         me(`No. It was sad. That's the right word.`),
@@ -78,6 +80,7 @@ export const c1Dinner = scene('c1_dinner', 'ch1', 'Dinner', [
       effects: [affinity('bram', 1), setFlag('dodged_studio')],
       steps: [
         me(`I'm between studios. Taking a sabbatical. Exploring opportunities in the hospitality sector.`),
+        shot('c1_dining_wide'),
         bram(`Sounds like unemployed with extra syllables.`, 'laughing'),
         me(`…It does, doesn't it.`),
         june(`What did you do before you were between things?`, 'neutral'),
@@ -88,6 +91,7 @@ export const c1Dinner = scene('c1_dinner', 'ch1', 'Dinner', [
       effects: [affinity('june', 2), affinity('vera', 1), setFlag('told_listener')],
       steps: [
         me(`I listen to things. Professionally. Records, mostly. Nine years making other people's songs sound like what they meant.`),
+        shot('c1_dining_wide'),
         june(`So you notice frequencies.`, 'surprised'),
         me(`I notice everything. It's a curse at parties.`),
         june(`Same.`, 'happy'),

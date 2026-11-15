@@ -73,6 +73,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
           shot('c1_storm_chase'),
           narrate(`You go out into the rain. The cliff path has become a stream. Ahead, a shape without a torch takes the steps two at a time, like someone who knows every one of them by heart.`),
           narrate(`You slip. By the time you look up, they're gone.`),
+          shot('c1_storm_scarf'),
           narrate(`On the step where you fell lies something soft and sodden. You pick it up: an orange scarf.`),
           think(`I've seen this scarf. Yesterday, on the ferry.`),
           shot('c1_boathouse_vera_after'),
@@ -193,6 +194,7 @@ export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
 
   shot('c1_noor_candle'),
   narrate(`Later, when most of the others have drifted upstairs with candles, Noor is alone by the bar door, staring down at the black water on the steps.`),
+  shot('c1_candle_player'),
   when(
     C.flag('vera_found_scarf'),
     [narrate(`On the stairs, Vera pressed the scarf into your hands without a word. It's in your pocket now, still wet.`)],
@@ -206,6 +208,7 @@ export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
         effects: [trust('noor', 6), affinity('noor', 2), setFlag('noor_confessed_march')],
         steps: [
           me(`I found this in the boathouse.`),
+          shot('c1_noor_candle'),
           noor(`…I lost that last night. I thought it was behind the bar.`, 'surprised'),
           me(`Noor.`),
           noor(`I wasn't there tonight. I swear on — on anything you like. I was in the bar with a mop.`, 'worried'),
@@ -218,6 +221,7 @@ export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
       option('accuse', `"Were you in the boathouse tonight?"`, {
         effects: [trust('noor', -4), affinity('noor', -3), setFlag('accused_noor'), setFlag('noor_hint_vera_key')],
         steps: [
+          shot('c1_noor_candle'),
           noor(`What? No! I was mopping the—`, 'angry'),
           narrate(`She sees the scarf in your hand, and her face goes very still.`),
           noor(`Where did you get that.`, 'worried'),

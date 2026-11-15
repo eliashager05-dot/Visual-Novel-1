@@ -33,6 +33,8 @@ export function validateContent(content: GameContent): ValidationIssue[] {
       warn(where, `major character is missing expressions: ${EXPRESSIONS.filter((e) => !c.expressions.includes(e)).join(', ')}`);
     }
     if (!content.characterArt[key]) err(where, 'no entry in characterArt (needed to draw the character)');
+    if (c.role === 'protagonist' && key !== 'player') err(where, "the protagonist's id must be \"player\"");
+    if (key === 'player' && c.role !== 'protagonist') err(where, 'id "player" is reserved for the protagonist');
     const ms = new Set<string>();
     for (const m of c.milestones) {
       if (ms.has(m.id)) err(where, `duplicate milestone "${m.id}"`);

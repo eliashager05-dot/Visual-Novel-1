@@ -21,10 +21,13 @@ export const c1OpeningShots: ShotDefinition[] = [
     {
       id: 'c1_ferry_noor_call',
       background: 'ferry_deck_dusk',
-      camera: 'medium',
-      characters: [{ id: 'noor', pose: 'leaning', expression: 'worried', position: 'right', facing: 'left' }],
+      camera: 'over_shoulder',
+      characters: [
+        { id: 'noor', pose: 'leaning', expression: 'worried', position: 'right', facing: 'left' },
+        { id: 'player', pose: 'leaning', expression: 'neutral', position: 'farLeft', facing: 'right' },
+      ],
       description:
-        'Noor further along the rail, three-quarter profile, phone pressed to her ear, other hand gripping the rail. Scarf slipping, curls blowing in the wind. Shot from the player’s POV down the length of the rail, foreground railing out of focus. 50 mm.',
+        'Over the protagonist’s shoulder: he is soft-focus in the left foreground at the rail (back of his head, headphones round his neck), looking down the deck at Noor, who is sharp: three-quarter profile, phone pressed to her ear, other hand gripping the rail. Scarf slipping, curls blowing in the wind. 50 mm.',
     },
     {
       id: 'c1_ferry_noor_turns',
@@ -46,9 +49,12 @@ export const c1OpeningShots: ShotDefinition[] = [
       id: 'c1_ferry_noor_beside',
       background: 'ferry_deck_dusk',
       camera: 'medium',
-      characters: [{ id: 'noor', pose: 'leaning', expression: 'neutral', position: 'left', facing: 'right' }],
+      characters: [
+        { id: 'noor', pose: 'leaning', expression: 'neutral', position: 'left', facing: 'right' },
+        { id: 'player', pose: 'leaning', expression: 'neutral', position: 'right', facing: 'left' },
+      ],
       description:
-        'Two-shot from behind the player’s shoulder: Noor now beside them at the rail, forearms on the steel, looking at the water rather than at camera. Quiet, companionable. 35 mm.',
+        'Two-shot at the rail, seen from the sea side: Noor on the left with her forearms on the steel, looking at the water; the protagonist beside her, turned slightly toward her, listening. Quiet, companionable. 35 mm.',
     },
     {
       id: 'c1_ferry_noor_flirty',
@@ -112,8 +118,37 @@ export const c1OpeningShots: ShotDefinition[] = [
       id: 'c1_harbour_walk',
       background: 'harbour_dusk',
       camera: 'wide',
-      characters: [{ id: 'vera', pose: 'standing', expression: 'neutral', position: 'center', facing: 'left' }],
+      characters: [
+        { id: 'vera', pose: 'standing', expression: 'neutral', position: 'center', facing: 'left' },
+        { id: 'player', pose: 'standing', expression: 'neutral', position: 'right', facing: 'left' },
+      ],
       description:
-        'From behind: Vera carrying the player’s bag up a steep cobbled street toward the hotel on the hill. The Halcyon’s lit windows at the top of frame. Long shadows from street lamps. 28 mm.',
+        'From behind: Vera carrying the protagonist’s duffel up a steep cobbled street; he follows a step behind, hands in his jacket pockets, looking up at the Halcyon’s lit windows at the top of frame. Long shadows from street lamps. 28 mm.',
     },
-  ];
+  
+  // --- The protagonist ------------------------------------------------------
+  {
+    id: 'c1_ferry_player_rail',
+    background: 'ferry_deck_dusk',
+    camera: 'medium',
+    characters: [{ id: 'player', pose: 'leaning', expression: 'neutral', position: 'center', facing: 'right' }],
+    description:
+      'The protagonist alone at the stern rail at dusk: waxed jacket collar up, headphones round his neck, reading a soft, much-folded letter. Wind in his hair, the island small on the horizon behind him. This is the player’s first look at him. 50 mm.',
+  },
+  {
+    id: 'c1_ferry_player_reaction',
+    background: 'ferry_deck_dusk',
+    camera: 'close',
+    characters: [{ id: 'player', pose: 'leaning', expression: 'happy', position: 'center', facing: 'right' }],
+    description:
+      'The protagonist turning from the rail toward Noor: a dry half-smile, one eyebrow slightly raised. Dusk rim light on his cheek and stubble. 85 mm.',
+  },
+  {
+    id: 'c1_harbour_player',
+    background: 'harbour_dusk',
+    camera: 'medium',
+    characters: [{ id: 'player', pose: 'standing', expression: 'surprised', position: 'center', facing: 'camera' }],
+    description:
+      'The protagonist at the bottom of the ferry ramp, duffel on his shoulder, headphones round his neck, reading his own name on Vera’s sign with weary amusement. Harbour lamps and the ferry behind him. 50 mm.',
+  },
+];

@@ -111,6 +111,7 @@ export const c1JuneLowTide = scene('c1_june_lowtide', 'ch1', 'Low Tide', [
       effects: [affinity('june', 4), trust('june', 3), milestone('june', 'field_partner')],
       steps: [
         narrate(`For forty minutes you are a very good ladder. June calls out numbers. When the notebook gets soaked, you write them on your forearm in biro.`),
+        shot('c1_lowtide_player_arm'),
         june(`You wrote them on your arm.`, 'surprised'),
         me(`The notebook got wet.`),
         june(`That's the most scientific thing anyone has done for me in a year.`, 'laughing'),

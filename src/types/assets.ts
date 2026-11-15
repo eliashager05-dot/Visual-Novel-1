@@ -65,7 +65,7 @@ export interface ShotDefinition {
   src?: string;
 }
 
-export type HairStyle = 'bun' | 'curls_scarf' | 'pixie' | 'bob' | 'bald_beard';
+export type HairStyle = 'bun' | 'curls_scarf' | 'pixie' | 'bob' | 'bald_beard' | 'short_wavy';
 
 /** Look of the procedural stand-in sprite. Locked per character for consistency. */
 export interface SilhouetteSpec {

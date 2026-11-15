@@ -33,7 +33,9 @@ export function createNewGame(
   if (!startScene) throw new Error('No start scene: define at least one chapter');
 
   const relationships: GameState['relationships'] = {};
-  for (const def of Object.values(content.characters)) relationships[def.id] = createRelationship(def);
+  for (const def of Object.values(content.characters)) {
+    if (def.role !== 'protagonist') relationships[def.id] = createRelationship(def);
+  }
 
   const state: GameState = {
     schemaVersion: SAVE_SCHEMA_VERSION,

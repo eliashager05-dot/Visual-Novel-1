@@ -7,7 +7,7 @@ const TOAST_MS = 3200;
 export function Toasts() {
   const toasts = useUi((s) => s.toasts);
   return (
-    <div className="pointer-events-none absolute right-[48px] top-[44px] z-[70] flex flex-col items-end gap-3">
+    <div className="pointer-events-none absolute right-[44px] top-[96px] z-[70] flex flex-col items-end gap-3">
       <AnimatePresence>
         {toasts.map((t) => (
           <ToastItem key={t.id} t={t} />

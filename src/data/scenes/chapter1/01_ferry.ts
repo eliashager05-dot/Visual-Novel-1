@@ -15,6 +15,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   narrate(
     'The ferry to Halcyon Point runs twice a day in summer and once a day the rest of the year. Nobody mentioned it would smell this strongly of diesel and wet rope.',
   ),
+  shot('c1_ferry_player_rail'),
   think('Three weeks ago I didn\'t know this island existed. Now I own half a hotel on it. Slightly more than half.'),
   narrate('The solicitor\'s letter has gone soft from folding. Margit Elin Halloran. Presumed deceased. Fifty-one percent.'),
   think(
@@ -32,6 +33,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
     option('ask', 'Ask if she\'s alright.', {
       effects: [affinity('noor', 5), trust('noor', 3), setFlag('noor_ferry_asked')],
       steps: [
+        shot('c1_ferry_player_reaction'),
         me('Rough call?'),
         shot('c1_ferry_noor_turns'),
         stranger('Oh — God, was I loud? I was loud. Every gull on this boat now knows my business.', 'surprised'),
@@ -46,6 +48,7 @@ export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
     option('joke', 'Try to lighten the mood.', {
       effects: [affinity('noor', 3), setFlag('noor_ferry_joked')],
       steps: [
+        shot('c1_ferry_player_reaction'),
         me('For what it\'s worth, I hear the island has excellent ocean views. From every side.'),
         shot('c1_ferry_noor_turns'),
         stranger('…Was that a joke? Was that a geography joke?', 'surprised'),

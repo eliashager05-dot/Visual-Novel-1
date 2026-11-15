@@ -48,7 +48,8 @@ export interface CharacterDefinition {
   shortName?: string;
   /** Hard requirement: every character must be 21+. Enforced by the content validator. */
   age: number;
-  role: 'major' | 'supporting';
+  /** 'protagonist' is the player character: staged in shots, but never a relationship. Its id must be 'player'. */
+  role: 'major' | 'supporting' | 'protagonist';
   romanceable: boolean;
   /** Accent colour for name plate and UI highlights (CSS colour). */
   color: string;

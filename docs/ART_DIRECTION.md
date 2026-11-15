@@ -56,8 +56,8 @@ keeps performance trivial, at any render quality, and lets the art pipeline chan
 - **Time per image:** roughly 5–20 minutes of render time for a lit interior with one or two characters,
   plus the time to pose it. Budget 20–40 finished images per working day once characters and sets exist.
 - **Before the first scene:** build and approve each character (about a day each), and assemble each
-  location (half a day to a day each). Chapter One uses 5 characters and about 12 locations.
-- **Chapter One as currently briefed:** 89 shots and 7 illustrations. To match the benchmark's density of
+  location (half a day to a day each). Chapter One uses 6 characters, including the protagonist, and 15 sets.
+- **Chapter One as currently briefed:** 100 shots and 7 illustrations. To match the benchmark's density of
   roughly one image per line or two, the shot list would grow to about 250–450.
 
 ### First render, step by step

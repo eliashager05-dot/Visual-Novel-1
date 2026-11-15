@@ -269,6 +269,7 @@ export const c1NightLetter = scene('c1_night_letter', 'ch1', 'For When You Arriv
   think(`Look under the tide.`),
   narrate(`Something else slides out of the envelope and into your palm: a small, pale spiral shell, polished smooth from handling.`),
   think(`The shell. The one I gave back to her when I was six. She kept it for twenty years.`),
+  shot('c1_letter_player'),
   narrate(`You hold it to your ear, the way she showed you.`),
   think(`The storm inside it. Still there.`),
   effects(setFlag('read_letter'), setFlag('has_shell')),

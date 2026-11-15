@@ -10,6 +10,55 @@ import type { LocationBrief, RenderSheet, SetBrief } from '@/types';
 
 export const renderSheets: RenderSheet[] = [
   {
+    character: 'player',
+    heightCm: 181,
+    build: 'Tall and lean, slightly underfed, good shoulders he does not use: he slouches, hands in pockets. Not a gym body.',
+    face: 'Long face, straight strong nose with a slight bump, defined jaw under two days of dark stubble, heavy-lidded eyes, a mouth that rests in a dry half-smile.',
+    skin: 'Light olive, pale from years indoors, visible tired shadows under the eyes. A few faint acne scars on the left cheek in close-ups.',
+    eyes: 'Hazel-green, heavy-lidded, attentive. He looks at mouths and hands when people talk: he is listening.',
+    hair: 'Very dark brown (#2b2320), loose waves, overgrown by a couple of months: falls across the forehead and curls over the ears and collar.',
+    makeup: 'None. Stubble is constant across both days.',
+    signature: [
+      'Closed-back studio headphones (matte black, worn) round his neck whenever he is travelling or outdoors on day one.',
+      'Two days of stubble, never clean-shaven.',
+      'Hair across the forehead; he pushes it back when thinking.',
+    ],
+    wardrobe: [
+      {
+        id: 'player_travel',
+        name: 'Arrival',
+        description: 'Dark green waxed field jacket, charcoal henley, black jeans, scuffed brown leather boots. Headphones round his neck, a canvas duffel bag.',
+        scenes: ['c1_ferry', 'c1_harbour', 'c1_hotel'],
+      },
+      {
+        id: 'player_evening',
+        name: 'Evening',
+        description: 'The charcoal henley with sleeves pushed to the elbow, black jeans, boots. No jacket, no headphones.',
+        scenes: ['c1_corridor', 'c1_dinner', 'c1_low_tide', 'c1_first_night', 'c1_night_vera', 'c1_night_noor', 'c1_night_letter'],
+      },
+      {
+        id: 'player_cove',
+        name: 'Night cove',
+        description: 'The waxed jacket over the henley, jeans rolled to the knee, barefoot in the water.',
+        scenes: ['c1_night_june'],
+      },
+      {
+        id: 'player_day2',
+        name: 'Day two',
+        description: 'Faded blue-grey crew-neck sweatshirt, black jeans, boots. After the cove (low-tide path): mud to the knees and biro numbers on the left forearm.',
+        scenes: ['c1_morning', 'c1_sienna_drive', 'c1_june_lowtide', 'c1_dusk'],
+      },
+      {
+        id: 'player_storm',
+        name: 'Storm',
+        description: 'The waxed jacket over the sweatshirt, soaked, hair plastered flat. Indoors afterwards: jacket off, a towel round his neck, hair drying in every direction.',
+        scenes: ['c1_storm', 'c1_aftermath', 'c1_margit_room', 'c1_cliffhanger'],
+      },
+    ],
+    acting:
+      'Still and watchful. He reacts a beat late and small: a raised eyebrow, a breath of a laugh through the nose. Tilts his head slightly when listening. Rubs the back of his neck when unsure. The player projects onto him, so keep his expressions readable but never broad.',
+  },
+  {
     character: 'vera',
     heightCm: 176,
     build: 'Tall and lean, long neck, straight posture, narrow shoulders held square. Athletic rather than soft.',
@@ -249,4 +298,13 @@ export const locations: LocationBrief[] = [
   { background: 'fish_factory_day', set: 'factory', lighting: 'Flat grey overcast, soft shadowless light, muted colour.' },
   { background: 'boathouse_storm', set: 'boathouse', lighting: 'Storm at night. Torch beams as the only key light, lightning through the doors, rain and sea spray in the air.' },
   { background: 'margit_room_night', set: 'margit', lighting: 'Candlelight only: one or two candles, warm and close, the edges of the room dark.' },
+];
+
+/** Production milestones: groups of scenes to finish together, in order. */
+export const milestones: { name: string; scenes: string[] }[] = [
+  { name: 'The opening', scenes: ['c1_ferry', 'c1_harbour'] },
+  { name: 'The first evening', scenes: ['c1_hotel', 'c1_corridor', 'c1_dinner', 'c1_low_tide'] },
+  { name: 'The first night', scenes: ['c1_first_night', 'c1_night_vera', 'c1_night_noor', 'c1_night_june', 'c1_night_letter'] },
+  { name: 'Day two', scenes: ['c1_morning', 'c1_sienna_drive', 'c1_june_lowtide', 'c1_dusk'] },
+  { name: 'The storm and the ending', scenes: ['c1_storm', 'c1_aftermath', 'c1_margit_room', 'c1_cliffhanger'] },
 ];

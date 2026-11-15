@@ -23,7 +23,7 @@ npm run build
 **Status:** Phases 1–4 are complete. Chapter One, "Low Tide", is fully playable: about 22–24 minutes,
 20 scenes, 30+ choices, four exclusive first-night scenes, a storm, and a cliffhanger. It runs on the
 cinematic engine with saves, rollback, relationships and gallery. Placeholder art is procedural until the
-89 briefed shots in `docs/RENDER_BRIEF.md` are rendered. Next is Phase 5: audio and polish. Story bible:
+100 briefed shots in `docs/RENDER_BRIEF.md` are rendered. Next is Phase 5: audio and polish. Story bible:
 [`docs/STORY_CH1.md`](docs/STORY_CH1.md).
 
 **Controls:** Click, Space or Enter to continue · Backspace to go back · A auto · S or hold Ctrl to skip

@@ -22,7 +22,8 @@ export function DebugPanel() {
         {game.pointer.scene} #{game.pointer.index} · lines {game.lineCount}
       </div>
       {Object.values(content.characters).map((d) => {
-        const r = game.relationships[d.id]!;
+        const r = game.relationships[d.id];
+        if (!r) return null; // the protagonist has no relationship entry
         return (
           <div key={d.id}>
             <span style={{ color: d.color }}>{d.id}</span> aff {r.affinity} · trust {r.trust} · {getTier(d, r.affinity).label}

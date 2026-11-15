@@ -112,6 +112,7 @@ export const c1Cliffhanger = scene('c1_cliffhanger', 'ch1', 'Stop Looking', [
   narrate(`You lie down without undressing. Outside, a gull tries out the first note of the morning, decides against it.`),
   sfx('phone_message'),
   narrate(`Your phone lights up on the nightstand.`),
+  shot('c1_cliff_player'),
   narrate(`Unknown number. No text. Just a photograph.`),
   cg('cg_margit_photo'),
   narrate(`The ferry deck. The same rail you leaned on yesterday. A woman in a yellow oilskin, grey hair whipping in the wind, looking straight into the camera.`),

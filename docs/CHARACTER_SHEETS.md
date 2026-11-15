@@ -8,6 +8,45 @@ Every character is an adult and must read clearly as one. See [DAZ_GUIDE.md](DAZ
 **Reference renders to make first, per character** (neutral studio light, plain grey backdrop): face front,
 face three-quarter, face profile, full body front, full body back. Compare every later render against them.
 
+## The Protagonist
+
+The player character. Players choose his name (default "Rowan"), so never show a name for him in a render.
+He is in more shots than anyone else: **build him first**, and take the most care over him.
+
+**Age 25 · Sound engineer, out of work; owns 51% of the Halcyon · 181 cm · appears in 33 shots**
+
+> A listener. Dry, self-deprecating, slower to speak than the people around him and more observant than they expect. Kind by default, stubborn when cornered. Notices sounds before he notices faces.
+
+| | |
+|---|---|
+| **Build** | Tall and lean, slightly underfed, good shoulders he does not use: he slouches, hands in pockets. Not a gym body. |
+| **Face** | Long face, straight strong nose with a slight bump, defined jaw under two days of dark stubble, heavy-lidded eyes, a mouth that rests in a dry half-smile. |
+| **Skin** | Light olive, pale from years indoors, visible tired shadows under the eyes. A few faint acne scars on the left cheek in close-ups. |
+| **Eyes** | Hazel-green, heavy-lidded, attentive. He looks at mouths and hands when people talk: he is listening. |
+| **Hair** | Very dark brown (#2b2320), loose waves, overgrown by a couple of months: falls across the forehead and curls over the ears and collar. |
+| **Make-up** | None. Stubble is constant across both days. |
+| **Acting** | Still and watchful. He reacts a beat late and small: a raised eyebrow, a breath of a laugh through the nose. Tilts his head slightly when listening. Rubs the back of his neck when unsure. The player projects onto him, so keep his expressions readable but never broad. |
+
+**Always visible when in frame:**
+
+- Closed-back studio headphones (matte black, worn) round his neck whenever he is travelling or outdoors on day one.
+- Two days of stubble, never clean-shaven.
+- Hair across the forehead; he pushes it back when thinking.
+
+**Wardrobe:**
+
+| Outfit | What it is | Scenes |
+|---|---|---|
+| **Arrival** | Dark green waxed field jacket, charcoal henley, black jeans, scuffed brown leather boots. Headphones round his neck, a canvas duffel bag. | The Crossing, The Harbour, The Halcyon |
+| **Evening** | The charcoal henley with sleeves pushed to the elbow, black jeans, boots. No jacket, no headphones. | Room 7, Dinner, The Low Tide, The First Night, Night Audit, After Hours, For When You Arrive |
+| **Night cove** | The waxed jacket over the henley, jeans rolled to the knee, barefoot in the water. | Bloom |
+| **Day two** | Faded blue-grey crew-neck sweatshirt, black jeans, boots. After the cove (low-tide path): mud to the knees and biro numbers on the left forearm. | Ninety Days, Coast Road, Low Tide, Before the Storm |
+| **Storm** | The waxed jacket over the sweatshirt, soaked, hair plastered flat. Indoors afterwards: jacket off, a towel round his neck, hair drying in every direction. | The Storm, Candles, Margit's Room, Stop Looking |
+
+**Expressions needed in Chapter One:** happy, neutral, sad, surprised, worried.
+
+**Poses needed:** leaning, seated, standing.
+
 ## Vera Lindqvist
 
 **Age 29 · General manager of the Halcyon Hotel · 176 cm · appears in 26 shots**
@@ -82,7 +121,7 @@ face three-quarter, face profile, full body front, full body back. Compare every
 
 ## Dr. Juniper Castell
 
-**Age 31 · Marine ecologist, long-term guest in Room 7 · 158 cm · appears in 15 shots**
+**Age 31 · Marine ecologist, long-term guest in Room 7 · 158 cm · appears in 16 shots**
 
 > Literal, honest to a fault, socially clumsy and wildly enthusiastic about things nobody else notices. Doesn't understand flirting until three days later. Unexpectedly fearless in physical danger; terrified of parties.
 
@@ -110,7 +149,7 @@ face three-quarter, face profile, full body front, full body back. Compare every
 | **Indoors** | Oversized sage-green wool jumper with sleeves over her hands, faded black leggings, thick socks or field boots. | Dinner |
 | **After the storm** | The jumper, damp, under a grey hotel blanket round her shoulders; laptop on her knees. | Candles |
 
-**Expressions needed in Chapter One:** happy, neutral, sad, surprised, worried.
+**Expressions needed in Chapter One:** happy, laughing, neutral, sad, surprised, worried.
 
 **Poses needed:** notebook, wetsuit.
 
@@ -183,8 +222,3 @@ face three-quarter, face profile, full body front, full body back. Compare every
 
 - **Margit Halloran (present day, 68).** Wiry, weather-beaten, sharp blue eyes, cropped iron-grey hair. Yellow oilskin. Seen only in the final phone photograph on the ferry deck, looking straight into the camera.
 - **Margit Halloran (thirty years ago, late thirties) and an unknown young woman (about twenty).** A faded colour photograph on the deck of the blue lobster boat ELIN. Margit dark-haired and laughing; the young woman has an arm round her shoulders and holds up a large fish. Both are adults. The young woman's face should be clear but must not resemble any current character.
-
-## The player
-
-The player character is never shown from the front, so there is nothing to build beyond a neutral pair of
-hands and forearms and a plain dark coat sleeve for over-the-shoulder shots.
