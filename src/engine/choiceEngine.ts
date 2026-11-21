@@ -1,4 +1,4 @@
-import type { EngineEvent, GameState, PresentedChoice } from '@/types';
+import type { ChoiceHint, Effect, EngineEvent, GameState, PresentedChoice } from '@/types';
 import { evaluateCondition } from './conditions';
 import { applyEffects } from './effects';
 import type { CompiledOption, Instruction } from './sceneCompiler';
@@ -16,11 +16,13 @@ export function presentChoice(instr: ChoiceInstruction, state: GameState): Prese
     .map((o) => {
       const enabled = !o.condition || evaluateCondition(o.condition, state);
       if (!enabled && !o.showWhenLocked) return null;
+      const hints = hintsFor(o.effects ?? [], state);
       return {
         id: o.id,
         text: interpolate(o.text, state),
         enabled,
         ...(enabled || !o.lockedHint ? {} : { lockedHint: o.lockedHint }),
+        ...(hints.length ? { hints } : {}),
       };
     })
     .filter((o): o is NonNullable<typeof o> => o !== null);
@@ -31,6 +33,24 @@ export function presentChoice(instr: ChoiceInstruction, state: GameState): Prese
     options,
     timeout: instr.timeout,
   };
+}
+
+/** Sums an option's relationship effects per character and stat. */
+export function hintsFor(effects: Effect[], state: GameState): ChoiceHint[] {
+  const out: ChoiceHint[] = [];
+  const find = (character: string, stat: ChoiceHint['stat']) => out.find((h) => h.character === character && h.stat === stat);
+  for (const e of effects) {
+    if (e.type !== 'affinity' && e.type !== 'trust' && e.type !== 'milestone') continue;
+    const known = state.relationships[e.character]?.met ?? false;
+    if (e.type === 'milestone') {
+      if (!find(e.character, 'milestone')) out.push({ character: e.character, stat: 'milestone', known });
+      continue;
+    }
+    const h = find(e.character, e.type);
+    if (h) h.delta = (h.delta ?? 0) + e.delta;
+    else out.push({ character: e.character, stat: e.type, delta: e.delta, known });
+  }
+  return out.filter((h) => h.stat === 'milestone' || h.delta !== 0);
 }
 
 /**

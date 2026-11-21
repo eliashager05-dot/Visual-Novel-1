@@ -117,6 +117,9 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
             <Field label="Skip unread text" hint="When off, skip mode stops at lines you haven't read yet.">
               <Toggle label="Skip unread text" value={s.skipUnread} onChange={(v) => s.update({ skipUnread: v })} />
             </Field>
+            <Field label="Walkthrough hints" hint="Show on each choice who will like it (▲) or not (▼). People you have not met yet appear as ???.">
+              <Toggle label="Walkthrough hints" value={s.walkthrough} onChange={(v) => s.update({ walkthrough: v })} />
+            </Field>
             <Field label="Relationship notices" hint={'Short notes such as "Vera will remember that." after important choices.'}>
               <Toggle label="Relationship notices" value={s.relationshipNotices} onChange={(v) => s.update({ relationshipNotices: v })} />
             </Field>

@@ -12,12 +12,24 @@ export interface DisplayedLine {
   key: string;
 }
 
+/** What an option does to a relationship, for walkthrough mode. */
+export interface ChoiceHint {
+  character: CharacterId;
+  stat: 'affinity' | 'trust' | 'milestone';
+  /** Summed change for affinity and trust; absent for milestones. */
+  delta?: number;
+  /** False if the player has not met this character yet (show "???"). */
+  known: boolean;
+}
+
 /** A choice option as presented to the player (condition already evaluated). */
 export interface PresentedOption {
   id: string;
   text: string;
   enabled: boolean;
   lockedHint?: string;
+  /** Relationship consequences of picking it. Shown only when walkthrough mode is on. */
+  hints?: ChoiceHint[];
 }
 
 export interface PresentedChoice {

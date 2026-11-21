@@ -10,6 +10,8 @@ export interface Settings {
   relationshipNotices: boolean;
   /** Play animated clips where they exist; off = always show the still. */
   animations: boolean;
+  /** Show on each choice who will like or dislike it. */
+  walkthrough: boolean;
   /** Characters per second; 0 = instant. */
   textSpeed: number;
   /** Base pause (ms) after a line finishes before auto mode advances. */
@@ -30,6 +32,7 @@ export const DEFAULT_SETTINGS: Settings = {
   dialogueStyle: 'cinematic',
   relationshipNotices: true,
   animations: true,
+  walkthrough: false,
   textSpeed: 45,
   autoDelay: 1200,
   autoPerChar: 28,

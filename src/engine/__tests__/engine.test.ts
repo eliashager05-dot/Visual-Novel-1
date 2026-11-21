@@ -42,6 +42,18 @@ describe('dialogue engine', () => {
     expect(advance(m, s).state).toBe(s);
   });
 
+  it('describes each option\'s relationship effects for walkthrough mode', () => {
+    const { m, state } = start();
+    const s = advance(m, state).state;
+    if (s.presentation.kind !== 'choice') throw new Error('expected a choice');
+    const kind = s.presentation.choice.options.find((o) => o.id === 'kind')!;
+    expect(kind.hints).toEqual([
+      { character: 'a', stat: 'affinity', delta: 25, known: true },
+      { character: 'a', stat: 'milestone', known: true },
+    ]);
+    expect(s.presentation.choice.options.find((o) => o.id === 'leave')!.hints).toBeUndefined();
+  });
+
   it('applies effects, runs inline branches and evaluates conditional dialogue', () => {
     const { m, state } = start();
     const atChoice = advance(m, state).state;

@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import type { PresentedChoice } from '@/types';
+import { content } from '@/data';
+import { useSettings } from '@/store/settingsStore';
+import type { ChoiceHint, PresentedChoice } from '@/types';
 import { useUi } from '@/store/uiStore';
 
 /**
@@ -12,6 +14,7 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
   const enabled = choice.options.filter((o) => o.enabled);
   const [focus, setFocus] = useState(-1);
   const overlay = useUi((s) => s.overlay);
+  const walkthrough = useSettings((s) => s.walkthrough);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -82,7 +85,10 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
           <svg viewBox="0 0 24 24" className={['h-7 w-7 shrink-0 transition-colors', focus === i && o.enabled ? 'text-[#e8c88f]' : 'text-white/55'].join(' ')} aria-hidden>
             <path d="M5 6l6.5 6L5 18M12.5 6l6.5 6-6.5 6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span className="flex-1 text-[28px] font-semibold leading-snug">{o.text}</span>
+          <span className="flex flex-1 flex-col">
+            <span className="text-[28px] font-semibold leading-snug">{o.text}</span>
+            {walkthrough && o.hints && <Hints hints={o.hints} />}
+          </span>
           {!o.enabled && <span className="max-w-[240px] text-right text-[16px] italic text-white/40">{o.lockedHint ?? 'Unavailable'}</span>}
           <span className="w-5 text-center text-[16px] tabular-nums text-white/30">{i + 1}</span>
         </motion.button>
@@ -98,5 +104,27 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
         </div>
       )}
     </motion.div>
+  );
+}
+
+/** Walkthrough chips: "Noor ▲▲", "Vera trust ▼", "Sienna ✦". */
+function Hints({ hints }: { hints: ChoiceHint[] }) {
+  return (
+    <span className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[17px] font-semibold">
+      {hints.map((h) => {
+        const def = content.characters[h.character];
+        const name = h.known ? (def?.shortName ?? def?.name ?? h.character) : '???';
+        const color = h.known ? def?.color : '#9a9a9a';
+        const size = Math.abs(h.delta ?? 0);
+        const arrows = h.stat === 'milestone' ? '✦' : (h.delta! > 0 ? '▲' : '▼').repeat(size >= 7 ? 3 : size >= 4 ? 2 : 1);
+        const label = h.stat === 'trust' ? ' trust' : h.stat === 'milestone' ? ' moment' : '';
+        return (
+          <span key={h.character + h.stat} style={{ color }} className={h.delta !== undefined && h.delta < 0 ? 'opacity-80' : ''}>
+            {name}
+            <span className="font-normal opacity-70">{label}</span> {arrows}
+          </span>
+        );
+      })}
+    </span>
   );
 }
