@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, hide, jump, me, music, narrate, option, scene, setFlag, setVar, sfx, shot, speaker,
-  think, trust, when,
+  affinity, bg, C, choice, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, setVar, sfx,
+  shot, speaker, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -10,6 +10,7 @@ const bram = speaker('bram');
 
 export const c1Dinner = scene('c1_dinner', 'ch1', 'Dinner', [
   bg('dining_room_night', 'fade'),
+  fx({ flicker: 'lamp', dust: true }),
   music('old_rooms', 2),
   shot('c1_dining_wide'),
   narrate(`The dining room was built for a hundred guests. Tonight it holds one long table by the fire, set for six, and a silence the size of the other ninety-four.`),

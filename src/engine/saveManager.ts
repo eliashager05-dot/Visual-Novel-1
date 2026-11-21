@@ -114,6 +114,8 @@ export function migrateRecord(raw: unknown): SaveRecord {
   // v1 → v2 placeholder: saves written before shots existed lack stage.shot.
   if (rec.state.stage.shot === undefined) rec.state.stage.shot = null;
   if (rec.thumb && rec.thumb.shot === undefined) rec.thumb.shot = null;
+  // v2 → v3: saves written before weather effects lack stage.fx.
+  if (rec.state.stage.fx === undefined) rec.state.stage.fx = null;
   rec.schemaVersion = SAVE_SCHEMA_VERSION;
   rec.state.schemaVersion = SAVE_SCHEMA_VERSION;
   return rec;

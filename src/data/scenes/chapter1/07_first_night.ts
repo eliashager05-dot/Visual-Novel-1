@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  think, trust, when,
+  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx,
+  shot, speaker, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -37,6 +37,7 @@ export const c1FirstNight = scene('c1_first_night', 'ch1', 'The First Night', [
 // --- Vera: the night audit ----------------------------------------------
 export const c1NightVera = scene('c1_night_vera', 'ch1', 'Night Audit', [
   bg('hotel_lobby_late', 'dissolve'),
+  fx({ flicker: 'lamp' }),
   music('night_audit', 2),
   shot('c1_vera_desk_wide'),
   narrate(`The lobby is dark except for a green-shaded lamp at reception. Vera is behind the desk in a grey cardigan, hair half down, reading glasses on, walled in by ledgers.`),
@@ -123,6 +124,7 @@ export const c1NightVera = scene('c1_night_vera', 'ch1', 'Night Audit', [
 // --- Noor: after hours --------------------------------------------------
 export const c1NightNoor = scene('c1_night_noor', 'ch1', 'After Hours', [
   bg('low_tide_bar_closed', 'dissolve'),
+  fx({ dust: true }),
   music('night_piano', 2),
   sfx('piano_note'),
   shot('c1_noor_piano_back'),
@@ -199,6 +201,7 @@ export const c1NightNoor = scene('c1_night_noor', 'ch1', 'After Hours', [
 // --- June: the glow -----------------------------------------------------
 export const c1NightJune = scene('c1_night_june', 'ch1', 'Bloom', [
   bg('cove_night', 'dissolve'),
+  fx({ sparkle: true }),
   music('bloom', 3),
   shot('c1_cove_night_wide'),
   narrate(`The path down to the cove is steeper in the dark than it looked from the window. Then sand, cold and packed, and the hush of very small waves.`),

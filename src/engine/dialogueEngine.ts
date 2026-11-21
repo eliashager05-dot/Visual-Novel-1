@@ -13,8 +13,8 @@ import { hashString, interpolate } from './text';
  * `events` (sounds, transitions, toasts). Nothing in here touches the DOM.
  */
 
-/** v2: stage.shot added. */
-export const SAVE_SCHEMA_VERSION = 2;
+/** v2: stage.shot added. v3: stage.fx added. */
+export const SAVE_SCHEMA_VERSION = 3;
 export const HISTORY_LIMIT = 400;
 /** Guards against authoring mistakes like an unconditional goto loop. */
 const MAX_INSTRUCTIONS_PER_ADVANCE = 10_000;
@@ -41,7 +41,7 @@ export function createNewGame(
     schemaVersion: SAVE_SCHEMA_VERSION,
     player: { name: opts.playerName.trim() || content.defaultPlayerName },
     pointer: { scene: startScene, index: 0 },
-    stage: { background: null, cg: null, shot: null, characters: [], music: null },
+    stage: { background: null, cg: null, shot: null, fx: null, characters: [], music: null },
     presentation: { kind: 'idle' },
     relationships,
     flags: {},
@@ -230,6 +230,10 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
         state.stage.shot = instr.id;
         break;
 
+      case 'fx':
+        state.stage.fx = instr.fx;
+        break;
+
       case 'transition':
         events.push({ type: 'transition', kind: instr.kind, duration: instr.duration });
         break;
@@ -260,7 +264,10 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
         break;
 
       case 'jump': {
+        const leaving = state.pointer.scene;
         state.pointer = manager.resolve(instr.target);
+        // Weather belongs to a scene: a new scene starts clear unless it sets its own.
+        if (instr.target.scene !== leaving) state.stage.fx = null;
         enterScene(manager, state, instr.target.scene, events);
         break;
       }

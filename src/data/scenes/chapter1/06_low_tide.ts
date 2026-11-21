@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot, speaker, think,
-  trust, when,
+  affinity, bg, C, choice, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot, speaker,
+  think, trust, when,
 } from '../../story/dsl';
 
 const noor = speaker('noor');
@@ -8,6 +8,7 @@ const sienna = speaker('sienna');
 
 export const c1LowTide = scene('c1_low_tide', 'ch1', 'The Low Tide', [
   bg('low_tide_bar_night', 'fade'),
+  fx({ dust: true, flicker: 'lamp' }),
   music('low_tide', 2),
   shot('c1_bar_wide'),
   narrate(`The Low Tide is down a flight of stone steps, under the hotel's foundations: a vaulted cellar, a bar made from a ship's timber, fairy lights tangled in old fishing nets, and in the corner a battered upright piano with a sign taped to it: PLEASE DON'T.`),

@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker, think, trust,
-  when,
+  affinity, bg, C, choice, effects, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker,
+  think, trust, when,
 } from '../../story/dsl';
 
 const sienna = speaker('sienna');
@@ -14,6 +14,7 @@ const bram = speaker('bram');
  */
 export const c1Dusk = scene('c1_dusk', 'ch1', 'Before the Storm', [
   bg('hotel_exterior_night', 'dissolve'),
+  fx({ fog: 'light' }),
   music('old_rooms', 2),
   shot('c1_dusk_porch'),
   narrate(`By six the wind has teeth. The sky over the sea has gone from bruise to black, and the Halcyon's porch lights have come on early, swinging on their chains.`),
@@ -78,6 +79,7 @@ export const c1Dusk = scene('c1_dusk', 'ch1', 'Before the Storm', [
   ),
 
   bg('low_tide_bar_night'),
+  fx({ dust: true }),
   shot('c1_dusk_noor_shutters'),
   narrate(`Down at the Low Tide, Noor is dragging sandbags against the bar's street door, swearing at each one by name.`),
   noor(`This one's Gerald. Gerald is the heaviest. Gerald has never once helped me.`, 'angry'),

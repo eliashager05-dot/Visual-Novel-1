@@ -25,6 +25,7 @@ import type {
   SceneDefinition,
   SpriteTransition,
   StagePosition,
+  StageFx,
   Step,
   TransitionKind,
 } from '@/types';
@@ -82,6 +83,8 @@ export const move = (character: string, position: StagePosition): Step => ({ typ
 export const cg = (id: string | null): Step => ({ type: 'cg', id });
 /** Switch to a full-frame render (see data/shots). `shot(null)` returns to sprite staging. */
 export const shot = (id: string | null): Step => ({ type: 'shot', id });
+/** Weather and light over the image, e.g. `fx({ rain: 'heavy', lightning: true })`; `fx(null)` clears. */
+export const fx = (effects: StageFx | null): Step => ({ type: 'fx', fx: effects });
 export const transition = (kind: TransitionKind, duration?: number): Step => ({ type: 'transition', kind, duration });
 export const music = (track: string | null, fade?: number): Step => ({ type: 'music', track, fade });
 export const sfx = (id: string): Step => ({ type: 'sfx', id });

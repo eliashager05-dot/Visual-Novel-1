@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  think, trust, when,
+  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx,
+  shot, speaker, think, trust, when,
 } from '../../story/dsl';
 
 const sienna = speaker('sienna');
@@ -84,6 +84,7 @@ export const c1SiennaDrive = scene('c1_sienna_drive', 'ch1', 'Coast Road', [
 
   bg('island_road_day'),
   shot('c1_sienna_car_storm'),
+  fx({ rain: 'light' }),
   narrate(`She drives you back as the clouds come in from the west, black and low and fast.`),
   sienna(`Weather's turning. Storm warning tonight. Tell Vera to bring the boats in—`, 'worried'),
   sienna(`Habit. Sorry. There's only the one boat at the Halcyon, isn't there. And it's gone.`, 'sad'),
@@ -143,6 +144,7 @@ export const c1JuneLowTide = scene('c1_june_lowtide', 'ch1', 'Low Tide', [
     ]),
   ]),
 
+  fx({ rain: 'light' }),
   shot('c1_june_front'),
   narrate(`The wind changes while you're climbing out. The sky over the sea goes the colour of a bruise.`),
   june(`That's a front. A big one. I need my sensors out of the water before—`, 'worried'),

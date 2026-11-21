@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { content } from '@/data';
 import { shotSrc, shotVideo } from '@/lib/assetResolver';
+import { useSettings } from '@/store/settingsStore';
 import type { CameraFraming, ShotDefinition } from '@/types';
 import { SLOT_X, SPRITE_H, SPRITE_W } from '../CharacterRenderer/CharacterRenderer';
 import { MediaWithFallback } from './MediaWithFallback';
@@ -20,10 +21,41 @@ export function ShotLayer({ id }: { id: string | null }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35, ease: 'easeInOut' }}
         >
-          <ShotImage id={id} />
+          <CameraDrift id={id}>
+            <ShotImage id={id} />
+          </CameraDrift>
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+/**
+ * A slow, barely-noticeable camera move on still shots, chosen from the
+ * framing: wide shots pan, closer shots push in. Clips already move, so they
+ * are left alone.
+ */
+function CameraDrift({ id, children }: { id: string; children: React.ReactNode }) {
+  const animations = useSettings((s) => s.animations);
+  const def = content.shots[id];
+  if (!animations || !def || shotVideo(id)) return <div className="absolute inset-0">{children}</div>;
+  const dir = id.length % 2 === 0 ? 1 : -1;
+  // Pixels on the 1920×1080 design canvas (percentages are not animated reliably).
+  const move =
+    def.camera === 'wide'
+      ? { scale: [1.06, 1.06], x: [-28 * dir, 28 * dir] }
+      : def.camera === 'medium' || def.camera === 'over_shoulder'
+        ? { scale: [1.01, 1.05], x: [0, 12 * dir] }
+        : { scale: [1.0, 1.035], y: [0, -7] };
+  return (
+    <motion.div
+      className="absolute inset-0"
+      data-drift={def.camera}
+      animate={move}
+      transition={{ duration: 24, ease: 'easeInOut', repeat: Infinity, repeatType: 'mirror' }}
+    >
+      {children}
+    </motion.div>
   );
 }
 

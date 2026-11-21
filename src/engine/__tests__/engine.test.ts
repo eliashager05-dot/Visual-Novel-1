@@ -6,7 +6,7 @@ import { validateContent } from '../validator';
 import { getTier, isRevealed, visibleProfile } from '../relationshipEngine';
 import { char, makeFixture } from './fixture';
 import type { GameState } from '@/types';
-import { bg, end, jump, label, narrate, scene, shot } from '@/data/story/dsl';
+import { bg, end, fx, jump, label, narrate, scene, shot } from '@/data/story/dsl';
 
 const lineText = (s: GameState) => (s.presentation.kind === 'line' ? s.presentation.line.text : null);
 
@@ -152,6 +152,28 @@ describe('shots', () => {
   it('emits characterMet once', () => {
     const { events } = start();
     expect(events.filter((e) => e.type === 'characterMet')).toEqual([{ type: 'characterMet', character: 'a' }]);
+  });
+});
+
+describe('stage effects', () => {
+  it('sets effects, keeps them across background changes, clears them on a new scene', () => {
+    const c = makeFixture();
+    c.scenes.wx = scene('wx', 'ch1', 'Weather', [
+      bg('room'),
+      fx({ rain: 'heavy', lightning: true }),
+      narrate('one'),
+      bg('room'),
+      narrate('two'),
+      jump('s2'),
+    ]);
+    const m = new SceneManager(c);
+    let s = createNewGame(m, { playerName: 'x', startScene: 'wx' }).state;
+    expect(s.stage.fx).toEqual({ rain: 'heavy', lightning: true });
+    s = advance(m, s).state;
+    expect(s.stage.fx).toEqual({ rain: 'heavy', lightning: true });
+    s = advance(m, s).state;
+    expect(s.pointer.scene).toBe('s2');
+    expect(s.stage.fx).toBeNull();
   });
 });
 

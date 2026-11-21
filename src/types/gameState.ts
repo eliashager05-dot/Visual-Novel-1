@@ -10,10 +10,25 @@ export interface StageCharacter {
 }
 
 /** Everything needed to redraw the screen exactly — stored in saves. */
+/** Atmosphere laid over the image: weather and light. Serialisable; saved with the game. */
+export interface StageFx {
+  rain?: 'light' | 'heavy' | 'window';
+  lightning?: boolean;
+  fog?: 'light' | 'heavy';
+  /** Flickering light source in the scene. */
+  flicker?: 'candle' | 'lamp';
+  /** Floating dust or sea spray catching the light. */
+  dust?: boolean;
+  /** Glowing points in water (bioluminescence). */
+  sparkle?: boolean;
+}
+
 export interface StageState {
   background: string | null;
   cg: string | null;
   shot: string | null;
+  /** Weather and light effects; cleared when a new scene starts. */
+  fx: StageFx | null;
   characters: StageCharacter[];
   music: string | null;
 }

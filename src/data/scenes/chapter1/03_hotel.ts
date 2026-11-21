@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, hide, jump, me, music, narrate, option, scene, setFlag, shot, speaker, think,
-  transition, trust, when,
+  affinity, bg, C, choice, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, shot, speaker,
+  think, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -9,6 +9,7 @@ const bram = speaker('bram');
 export const c1Hotel = scene('c1_hotel', 'ch1', 'The Halcyon', [
   hide('*'),
   bg('hotel_exterior_night', 'fade'),
+  fx({ fog: 'light' }),
   music('old_rooms', 3),
   shot('c1_hotel_facade'),
   narrate(`The Halcyon sits at the top of the hill as if it is still waiting for 1926 to come back. Four storeys of white stone gone grey, a glass porch, a neon sign with one dead letter: THE HAL YON.`),
@@ -17,6 +18,7 @@ export const c1Hotel = scene('c1_hotel', 'ch1', 'The Halcyon', [
   vera(`The C fell off in March. We are on a waiting list for a C.`, 'neutral'),
 
   bg('hotel_lobby_evening'),
+  fx({ dust: true }),
   shot('c1_lobby_wide'),
   narrate(`Inside: black-and-white tiles, a staircase that curls up into shadow, armchairs that have outlived several owners. It smells of beeswax and the sea.`),
   vera(`Reception. Lounge. The dining room is through there. The bar is downstairs, with its own entrance, so the guests we do not want can avoid the guests we do.`),
@@ -55,6 +57,7 @@ export const c1Hotel = scene('c1_hotel', 'ch1', 'The Halcyon', [
   vera(`Bram will have kept something warm. He always keeps something warm. It is the only thing he and Margit never argued about.`),
 
   bg('hotel_kitchen_night'),
+  fx({ fog: 'light' }),
   shot('c1_kitchen_bram'),
   narrate(`The kitchen is the only room in the building that looks like it's winning. Copper pans, a range the size of a car, and a broad, grey-bearded man stirring something that smells like the best decision you've made all month.`),
   bram(`So. You're the kid.`, 'neutral'),

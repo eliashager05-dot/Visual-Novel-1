@@ -1,4 +1,5 @@
 import type { CharacterId, Expression, StagePosition } from './character';
+import type { StageFx } from './gameState';
 
 // ---------------------------------------------------------------------------
 // Conditions — a small, serialisable predicate language for branching.
@@ -93,6 +94,8 @@ export type Step =
   | { type: 'cg'; id: string | null }
   /** Full-frame render; replaces sprite staging until cleared or the background changes. */
   | { type: 'shot'; id: string | null }
+  /** Weather and light over the image, until changed or the scene ends. `null` clears. */
+  | { type: 'fx'; fx: StageFx | null }
   | { type: 'transition'; kind: TransitionKind; duration?: number }
   | { type: 'music'; track: string | null; fade?: number }
   | { type: 'sfx'; id: string }

@@ -1,6 +1,6 @@
 import {
-  bg, C, cg, choice, effects, end, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker, think, title,
-  transition, trust, when,
+  bg, C, cg, choice, effects, end, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker,
+  think, title, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -8,6 +8,7 @@ const vera = speaker('vera');
 // --- Margit's room -------------------------------------------------------
 export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
   bg('hotel_corridor_night', 'fade'),
+  fx({ flicker: 'candle' }),
   music('mystery', 3),
   when(
     C.trust('vera', { gte: 18 }),
@@ -41,6 +42,7 @@ export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
   ),
 
   bg('margit_room_night'),
+  fx({ flicker: 'candle', dust: true }),
   sfx('key_turn'),
   shot('c1_margit_room_wide'),
   narrate(`Margit's room smells of lavender and cold pipe tobacco. Books in three languages. A barometer stuck on CHANGE. And under the window, a desk covered in everything she didn't tell anyone.`),
@@ -99,6 +101,7 @@ export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
 // --- Cliffhanger ---------------------------------------------------------
 export const c1Cliffhanger = scene('c1_cliffhanger', 'ch1', 'Stop Looking', [
   bg('player_room_night', 'fade'),
+  fx(null),
   music(null, 3),
   shot('c1_room_dawn'),
   narrate(`It's nearly four when you get back to room twelve. The storm has blown itself out. The sea is quiet, the radiator is quiet, and the whole building seems to be holding its breath.`),

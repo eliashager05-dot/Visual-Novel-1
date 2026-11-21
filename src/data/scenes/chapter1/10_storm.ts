@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, hide, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker, think,
-  transition, trust, when,
+  affinity, bg, C, cg, choice, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, sfx, shot,
+  speaker, think, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -13,11 +13,13 @@ const sienna = speaker('sienna');
 export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
   hide('*'),
   bg('hotel_exterior_storm', 'fade'),
+  fx({ rain: 'heavy', lightning: true }),
   music('storm', 2),
   sfx('thunder'),
   shot('c1_storm_facade'),
   narrate(`By eight the storm has the island by the collar. Rain comes sideways. The sea throws itself at the cliff, and the Halcyon groans like a ship at anchor.`),
   bg('hotel_lobby_evening'),
+  fx({ rain: 'window', lightning: true }),
   shot('c1_storm_lobby'),
   narrate(`In the lobby, Vera is on the phone to the harbourmaster. Bram is taping the porch windows in big X shapes, muttering to the glass.`),
   vera(`…Yes. Thank you, Arne. Goodnight.`, 'neutral'),
@@ -26,6 +28,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
   sfx('power_down'),
   transition('black', 1.6),
   bg('lobby_candlelight', 'none'),
+  fx({ rain: 'window', lightning: true, flicker: 'candle' }),
   shot('c1_storm_dark'),
   narrate(`Then every light in the building goes out at once.`),
   narrate(`In the dark: the clock. The rain. Vera swearing softly in Swedish. The scratch of Bram striking a match.`),
@@ -41,6 +44,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
   ),
 
   bg('boathouse_storm'),
+  fx({ rain: 'heavy', lightning: true }),
   sfx('rain_heavy'),
   shot('c1_boathouse_run'),
   narrate(`The boathouse sits at the bottom of a hundred stone steps cut into the cliff. You go down them in the dark, by torchlight, with the sea snatching at the lowest ones.`),
@@ -70,6 +74,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
       option('chase', `Chase the figure.`, {
         effects: [setFlag('chased_figure'), setFlag('found_scarf')],
         steps: [
+          fx({ rain: 'heavy', lightning: true }),
           shot('c1_storm_chase'),
           narrate(`You go out into the rain. The cliff path has become a stream. Ahead, a shape without a torch takes the steps two at a time, like someone who knows every one of them by heart.`),
           narrate(`You slip. By the time you look up, they're gone.`),
@@ -123,6 +128,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
 // --- Aftermath -----------------------------------------------------------
 export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
   bg('lobby_candlelight', 'fade'),
+  fx({ flicker: 'candle', rain: 'window' }),
   music('aftermath', 3),
   shot('c1_candle_wide'),
   narrate(`The lobby by candlelight looks like a painting of itself. Bram has lit every candle in the building. The retired couple are playing cards by a hurricane lamp, still arguing, apparently delighted.`),

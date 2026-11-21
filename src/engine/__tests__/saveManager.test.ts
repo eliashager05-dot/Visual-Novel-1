@@ -97,8 +97,10 @@ describe('save manager', () => {
     old.schemaVersion = 1;
     delete old.state.stage.shot;
     delete old.thumb.shot;
+    delete old.state.stage.fx;
     const migrated = migrateRecord(old);
     expect(migrated.state.stage.shot).toBeNull();
+    expect(migrated.state.stage.fx).toBeNull();
     expect(migrated.thumb.shot).toBeNull();
   });
 

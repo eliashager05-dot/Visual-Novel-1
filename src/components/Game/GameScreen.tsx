@@ -23,6 +23,7 @@ import { ScreenCover } from '../Overlays/ScreenCover';
 import { TitleCard } from '../Overlays/TitleCard';
 import { BackgroundLayer } from '../Stage/BackgroundLayer';
 import { CgLayer } from '../Stage/CgLayer';
+import { EffectsLayer } from '../Stage/EffectsLayer';
 import { ShotLayer } from '../Stage/ShotLayer';
 import { useSettings } from '@/store/settingsStore';
 
@@ -66,6 +67,7 @@ export function GameScreen() {
       {!view.stage.shot && <CharacterLayer characters={view.stage.characters} speaker={speaker} />}
       <ShotLayer id={view.stage.shot} />
       <CgLayer id={view.stage.cg} />
+      {!view.stage.cg && <EffectsLayer fx={view.stage.fx} />}
       {/* Soft gradient so panel text stays legible over bright art (cinematic mode draws its own). */}
       {!hideUi && !cinematic && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[420px] bg-gradient-to-t from-black/55 to-transparent" />}
 
