@@ -24,6 +24,7 @@ export const bram: CharacterDefinition = {
   profile: [
     { id: 'role', label: 'Role', text: 'Cook. Has outlasted four ovens and three managers.' },
     { id: 'burns', label: 'Forecast', text: 'His burn scars ache before bad weather. They have never once been wrong.', unlockWhen: C.flag('saw_storm_arrive') },
+    { id: 'plates', label: 'Seven plates', text: 'Has cooked for one more than the hotel holds every night since April.', unlockWhen: C.visited('c2_evening') },
   ],
   milestones: [],
 };

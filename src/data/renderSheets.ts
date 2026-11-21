@@ -59,6 +59,27 @@ export const renderSheets: RenderSheet[] = [
         scenes: ['c1_storm', 'c1_aftermath', 'c1_margit_room', 'c1_cliffhanger'],
         prompt: 'soaked dark green waxed jacket over a blue-grey sweatshirt, wet hair plastered to his forehead',
       },
+      {
+        id: 'player_day3',
+        name: 'Day three',
+        description: 'Navy cable-knit jumper, black jeans, boots; the waxed field jacket open over it outdoors. No headphones.',
+        scenes: ['c2_morning', 'c2_east_wing', 'c2_noor_bar', 'c2_sienna_causeway', 'c2_vera_roof', 'c2_evening', 'c2_message'],
+        prompt: 'navy cable-knit jumper, black jeans, the dark green waxed field jacket open over it',
+      },
+      {
+        id: 'player_waders',
+        name: 'Slack water (waders)',
+        description: 'Borrowed green chest waders over the navy jumper, sleeves pushed up, soaked to the chest.',
+        scenes: ['c2_june_slack'],
+        prompt: 'borrowed dark green chest waders over a navy cable-knit jumper with the sleeves pushed up, wet',
+      },
+      {
+        id: 'player_night3',
+        name: 'The cave',
+        description: 'Waxed jacket zipped up over the navy jumper, a head torch hanging round his neck, damp hair.',
+        scenes: ['c2_slack_water'],
+        prompt: 'dark green waxed field jacket zipped up over a navy jumper, a head torch hanging round his neck, damp hair',
+      },
     ],
     acting:
       'Still and watchful. He reacts a beat late and small: a raised eyebrow, a breath of a laugh through the nose. Tilts his head slightly when listening. Rubs the back of his neck when unsure. The player projects onto him, so keep his expressions readable but never broad.',
@@ -107,6 +128,20 @@ export const renderSheets: RenderSheet[] = [
         description: 'The work outfit under a dark navy waterproof jacket, soaked through; hair coming out of its bun, wet strands on her face. Indoors afterwards: jacket off, shirt still damp, hair down and roughly towelled.',
         scenes: ['c1_storm', 'c1_aftermath'],
         prompt: 'soaked navy waterproof jacket over a white shirt, wet hair coming loose from its bun, wet strands across her face',
+      },
+      {
+        id: 'vera_day3',
+        name: 'Day three',
+        description: 'Fitted charcoal roll-neck jumper, navy trousers, sleeves pushed up; bun pinned up badly after a sleepless night, strands loose at both temples.',
+        scenes: ['c2_morning', 'c2_east_wing', 'c2_vera_roof', 'c2_evening', 'c2_late_vera'],
+        prompt: 'fitted charcoal roll-neck jumper, navy trousers, (hair pinned up in a loose low bun:1.25) with strands falling at both temples',
+      },
+      {
+        id: 'vera_night3',
+        name: 'Low water',
+        description: 'Navy waterproof jacket zipped over the charcoal roll-neck, torch in hand, hair coming loose from its bun.',
+        scenes: ['c2_message', 'c2_slack_water'],
+        prompt: 'navy waterproof jacket over a charcoal roll-neck jumper, hair coming loose from its bun',
       },
     ],
     acting:
@@ -157,6 +192,20 @@ export const renderSheets: RenderSheet[] = [
         scenes: ['c1_dusk', 'c1_aftermath'],
         prompt: 'rust-coloured long-sleeve top with the sleeves pushed up, dark jeans, curls tied back, no scarf',
       },
+      {
+        id: 'noor_day3',
+        name: 'Bailing out',
+        description: 'Black vest top under an open red flannel shirt with the sleeves rolled, jeans rolled to the knee, green wellies, curls piled up on her head. No scarf (unless she gets it back this afternoon).',
+        scenes: ['c2_morning', 'c2_noor_bar', 'c2_evening', 'c2_late_noor'],
+        prompt: 'black vest top under an open red flannel shirt with the sleeves rolled up, jeans rolled to the knee, curls piled up on her head',
+      },
+      {
+        id: 'noor_night3',
+        name: 'Low water',
+        description: 'The olive canvas jacket over the flannel shirt, jeans, boots; curls loose and windblown.',
+        scenes: ['c2_message', 'c2_slack_water'],
+        prompt: 'olive canvas jacket over an open red flannel shirt, dark jeans, curls loose and windblown',
+      },
     ],
     acting:
       'Big and warm. Talks with her hands, leans on things, tilts her head. Her "bar smile" (wide, practised) must look different from the real one (smaller, eyes creased, hand to mouth). When she is afraid she goes very still and keeps her hands busy.',
@@ -197,6 +246,27 @@ export const renderSheets: RenderSheet[] = [
         description: 'The jumper, damp, under a grey hotel blanket round her shoulders; laptop on her knees.',
         scenes: ['c1_aftermath'],
         prompt: 'sage-green wool jumper under a grey blanket around her shoulders, damp hair',
+      },
+      {
+        id: 'june_day3',
+        name: 'Day three',
+        description: 'Oversized sage-green wool jumper with the sleeves over her hands, black leggings, thick socks; damp hair.',
+        scenes: ['c2_morning', 'c2_evening', 'c2_late_june'],
+        prompt: 'oversized sage-green wool jumper with the sleeves over her hands, black leggings, damp tousled hair',
+      },
+      {
+        id: 'june_drysuit',
+        name: 'Slack water',
+        description: 'Black drysuit with teal seams, neoprene hood pushed back, a coil of yellow safety line over one shoulder.',
+        scenes: ['c2_june_slack'],
+        prompt: 'black drysuit with teal seams, neoprene hood pushed back, wet hair plastered flat',
+      },
+      {
+        id: 'june_night3',
+        name: 'Low water',
+        description: 'Dark blue down jacket over the sage jumper, a head torch on her forehead, a thermometer probe in her pocket.',
+        scenes: ['c2_message', 'c2_slack_water'],
+        prompt: 'dark blue down jacket over a sage-green jumper, a head torch on her forehead',
       },
     ],
     acting:
@@ -240,6 +310,20 @@ export const renderSheets: RenderSheet[] = [
         scenes: ['c1_aftermath'],
         prompt: 'rain-soaked camel coat, wet dishevelled hair, smudged mascara, no lipstick',
       },
+      {
+        id: 'sienna_day3',
+        name: 'Borrowed jumper',
+        description: 'Bram\'s enormous navy fisherman\'s jumper reaching her thighs, the collar of her cream silk blouse showing, black tailored trousers tucked into green wellies three sizes too big. Bob unstyled.',
+        scenes: ['c2_morning', 'c2_sienna_causeway', 'c2_evening', 'c2_late_sienna'],
+        prompt: "an enormous navy fisherman's jumper reaching her thighs over a cream silk blouse collar, black tailored trousers, oversized green wellies",
+      },
+      {
+        id: 'sienna_night3',
+        name: 'Low water',
+        description: 'The camel coat, dried and creased, over Bram\'s jumper; trousers, wellies.',
+        scenes: ['c2_message', 'c2_slack_water'],
+        prompt: "a creased camel wool coat over an enormous navy fisherman's jumper",
+      },
     ],
     acting:
       'Controlled and unhurried. Holds eye contact a beat too long. Smiles before she speaks. The armour drops three times in this chapter (the boat shed, off the record, the fire after the storm): in those shots, no smile, shoulders down, looking away.',
@@ -264,26 +348,47 @@ export const renderSheets: RenderSheet[] = [
         id: 'bram_kitchen',
         name: 'Kitchen',
         description: 'Navy fisherman\'s jumper with sleeves pushed up, white bib apron, dark work trousers, clogs.',
-        scenes: ['c1_hotel', 'c1_dinner', 'c1_morning', 'c1_dusk', 'c1_storm', 'c1_aftermath'],
+        scenes: ['c1_hotel', 'c1_dinner', 'c1_morning', 'c1_dusk', 'c1_storm', 'c1_aftermath', 'c2_morning', 'c2_evening'],
         prompt: "navy fisherman's jumper with the sleeves pushed up, white bib apron",
       },
     ],
     acting: 'Still and slow. Says little, so his face does the work: a raised eyebrow, a slow nod. His laugh is sudden and takes over his whole chest.',
     prompt: '61 year old man, big and broad-shouldered, dark brown skin, bald head, short full grey-white beard, deep lines around kind dark eyes, old pale burn scars on his forearms',
   },
+  {
+    character: 'margit',
+    heightCm: 170,
+    build: 'Wiry and narrow, strong hands, a sailor\'s straight back. Moves quickly and economically, like someone who has spent her life on a deck.',
+    face: 'Long weathered face deeply lined by wind and sun, high cheekbones, a thin determined mouth that rarely smiles and transforms her face when it does.',
+    skin: 'Fair, weather-beaten (#e2c3a8), ruddy across the cheekbones, sun spots on the backs of the hands.',
+    eyes: 'Pale ice-blue, sharp, amused, unblinking.',
+    hair: 'Iron-grey (#8d8f93), cropped very short, sticking up with salt.',
+    makeup: 'None, ever.',
+    signature: [
+      'The yellow oilskin bought in Bergen in 1994, patched at both elbows.',
+      'A short briar pipe; cherry tobacco.',
+      'Written on her left palm in faded biro: 1 SEPT.',
+    ],
+    wardrobe: [
+      {
+        id: 'margit_oilskin',
+        name: 'The cave',
+        description: 'Yellow oilskin jacket, hood up or down, over a darned grey fisherman\'s jumper; dark wool trousers; black rubber boots.',
+        scenes: ['c2_slack_water'],
+        prompt: "a patched yellow oilskin jacket over a darned grey fisherman's jumper",
+      },
+    ],
+    acting: 'Still, upright, entirely unsurprised. She looks people straight in the eye and lets the silence do the work. When she is moved she busies her hands: the pipe, the mug, the lantern.',
+    prompt: '68 year old woman, wiry and weather-beaten, cropped iron-grey hair, pale ice-blue eyes, long deeply lined face with high cheekbones, thin mouth',
+  },
 ];
 
 /** People who appear only in photographs. */
 export const photoOnlyCharacters = [
   {
-    name: 'Margit Halloran (present day, 68)',
+    name: 'Margit Halloran (thirty years ago, late thirties) and Saoirse Marlowe (about twenty)',
     description:
-      'Wiry, weather-beaten, sharp blue eyes, cropped iron-grey hair. Yellow oilskin. Seen only in the final phone photograph on the ferry deck, looking straight into the camera.',
-  },
-  {
-    name: 'Margit Halloran (thirty years ago, late thirties) and an unknown young woman (about twenty)',
-    description:
-      'A faded colour photograph on the deck of the blue lobster boat ELIN. Margit dark-haired and laughing; the young woman has an arm round her shoulders and holds up a large fish. Both are adults. The young woman\'s face should be clear but must not resemble any current character.',
+      'A faded colour photograph on the deck of the blue lobster boat ELIN. Margit dark-haired and laughing; the young woman has an arm round her shoulders and holds up a large fish. Both are adults. Chapter Two reveals the young woman is Sienna\'s mother, Saoirse: give her a faint family likeness to Sienna (dark hair, sharp cheekbones, the same tilt of the chin) without making them look like the same person.',
   },
 ];
 
@@ -303,6 +408,10 @@ export const sets: SetBrief[] = [
   { id: 'factory', name: 'Fish factory and boat shed', description: 'A derelict fish factory with a half-collapsed roof and rusted machinery; beside it, a small boat shed with a faded blue door and MARLOWE painted above it.' },
   { id: 'boathouse', name: 'Boathouse and cliff steps', description: 'A stone boathouse at the foot of a hundred steps cut into the cliff: large wooden sea doors, a side door, a slipway. On the slipway sits an old blue wooden lobster boat with ELIN painted on the stern in white.' },
   { id: 'margit', name: "Margit's room", description: 'A lived-in bedroom-study frozen in March: crowded bookshelves, a brass barometer, a pipe rack, a desk under the window covered in hand-drawn sea charts, photographs pinned above it.' },
+  { id: 'lido', name: 'The Halcyon Baths (east wing)', description: 'A 1926 indoor saltwater swimming bath, closed for twelve years: a long drained pool of green and white tiles, brass handrails and steps, a wooden diving board, changing cubicles with half-moon doors, a vaulted iron-and-glass roof with storm damage. A square iron hatch in the floor of the shallow end, new brass padlock.' },
+  { id: 'roof', name: 'The roof and the sign', description: 'The flat leaded roof of the hotel behind a stone parapet: chimney stacks, a water tank, tarpaulins, and the back of a huge 1950s neon sign on an iron frame spelling THE HALCYON, its C dark. The sea and the cove far below.' },
+  { id: 'causeway', name: 'The causeway and the Holm', description: 'A narrow stone causeway across a tidal inlet on the west of the island, its middle washed away by the storm. A dark modern car nose-down in the ditch. At the far end, the Holm: a tiny grassy islet with a roofless stone cottage.' },
+  { id: 'seacave', name: 'The sea cave under the east wing', description: 'A sea cave at the foot of the cliff, its mouth uncovered only at the lowest tides: wet black rock, an iron mooring ring, the old blue lobster boat ELIN tied up inside, a big green-painted 1920s pump with a bronze pipe running into the rock, iron rungs up to a hatch. A camp bed, a primus stove, a crate used as a table, a storm lantern.' },
 ];
 
 export const locations: LocationBrief[] = [
@@ -325,6 +434,14 @@ export const locations: LocationBrief[] = [
   { background: 'island_road_day', set: 'road', lighting: 'Daylight through car windows; clear at midday, then storm cloud and first rain on the drive back.' },
   { background: 'fish_factory_day', set: 'factory', lighting: 'Flat grey overcast, soft shadowless light, muted colour.' },
   { background: 'boathouse_storm', set: 'boathouse', lighting: 'Storm at night. Torch beams as the only key light, lightning through the doors, rain and sea spray in the air.' },
+  { background: 'player_room_morning', set: 'room12', lighting: 'Clean, bright morning after the storm: low sun through the window, crisp shadows of the window frame across the bed, cool blue fill.' },
+  { background: 'hotel_lobby_morning', set: 'lobby', lighting: 'Morning after the storm: daylight through open windows and the boarded porch, dust in the air, wet tiles reflecting the light. No lamps on.' },
+  { background: 'east_wing_lido', set: 'lido', lighting: 'Noon light falling in shafts through the broken glass roof onto dusty tiles; the rest in cool grey-green shade. A mirror of rainwater in the deep end.' },
+  { background: 'hotel_roof_day', set: 'roof', lighting: 'Late afternoon into golden hour: warm low sun from the sea side, long shadows, a pale sky. Ends at dusk with the neon lit.' },
+  { background: 'low_tide_bar_day', set: 'bar', lighting: 'Daylight down the stairs from the open street door as the key; the rest dim, every surface wet, reflections on the flooded floor. Fairy lights off.' },
+  { background: 'causeway_day', set: 'causeway', lighting: 'Bright, blustery afternoon: fast clouds, patches of sun moving across wet sand and the sea, strong wind.' },
+  { background: 'hotel_terrace_night', set: 'terrace', lighting: 'Night: a single reading lamp on a table as the warm key, moonlight on the sea below, cool blue fill. Pink glow from the neon sign above when it is lit.' },
+  { background: 'sea_cave_night', set: 'seacave', lighting: 'Night: a single storm lantern as the warm key, cold blue-green glow from the water as fill, deep black at the edges; mist in the air.' },
   { background: 'margit_room_night', set: 'margit', lighting: 'Candlelight only: one or two candles, warm and close, the edges of the room dark.' },
 ];
 
@@ -335,4 +452,7 @@ export const milestones: { name: string; scenes: string[] }[] = [
   { name: 'The first night', scenes: ['c1_first_night', 'c1_night_vera', 'c1_night_noor', 'c1_night_june', 'c1_night_letter'] },
   { name: 'Day two', scenes: ['c1_morning', 'c1_sienna_drive', 'c1_june_lowtide', 'c1_dusk'] },
   { name: 'The storm and the ending', scenes: ['c1_storm', 'c1_aftermath', 'c1_margit_room', 'c1_cliffhanger'] },
+  { name: 'Chapter Two: the morning and the east wing', scenes: ['c2_morning', 'c2_east_wing'] },
+  { name: 'Chapter Two: the afternoon', scenes: ['c2_noor_bar', 'c2_june_slack', 'c2_sienna_causeway', 'c2_vera_roof'] },
+  { name: 'Chapter Two: evening and slack water', scenes: ['c2_evening', 'c2_late_vera', 'c2_late_noor', 'c2_late_june', 'c2_late_sienna', 'c2_message', 'c2_slack_water'] },
 ];

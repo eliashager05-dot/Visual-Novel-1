@@ -114,6 +114,8 @@ export const photo = (thread: string, image: string, opts: { caption?: string; a
 });
 /** Opens the phone on a conversation; `phone(null)` puts it away. */
 export const phone = (thread: string | null): Step => ({ type: 'phone', thread });
+/** Shows a conversation under another name from now on; `null` goes back to the person's own name. */
+export const rename = (thread: string, name: string | null): Step => ({ type: 'contact', thread, name });
 
 // --- Flow ---------------------------------------------------------------
 export const label = (name: string): Step => ({ type: 'label', name });

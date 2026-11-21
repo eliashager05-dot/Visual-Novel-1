@@ -223,6 +223,9 @@ export function validateContent(content: GameContent): ValidationIssue[] {
           }
           break;
         }
+        case 'contact':
+          if (!content.characters[i.thread] && !content.contacts[i.thread]) err(where, `unknown phone contact "${i.thread}"`);
+          break;
         case 'clock':
           if (!(TIMES_OF_DAY as readonly string[]).includes(i.period)) err(where, `unknown time of day "${i.period}"`);
           if (typeof i.day === 'number' && (!Number.isInteger(i.day) || i.day < 1)) err(where, 'clock day must be a whole number from 1');

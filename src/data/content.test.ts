@@ -15,25 +15,37 @@ describe('story content', () => {
     for (const c of Object.values(content.characters)) expect(c.age).toBeGreaterThanOrEqual(21);
   });
 
-  // Chapter One branches into thousands of paths, so we sample: seeded random
-  // playthroughs must hit every option at least once and never error.
-  it('random playthroughs of every chapter reach the end, covering every option', () => {
-    for (const chapter of content.chapters) {
-      const r = sampleStory(manager, { startScene: chapter.startScene, runs: 1200, seed: 7 });
-      expect(r.errors.slice(0, 3), JSON.stringify(r.errors.slice(0, 3), null, 2)).toEqual([]);
-      expect(r.runs).toBe(1200);
-      expect(r.unreachableOptions).toEqual([]);
-      const scenesInChapter = Object.values(content.scenes).filter((s) => s.chapter === chapter.id).map((s) => s.id);
-      expect(scenesInChapter.filter((s) => !r.scenesReached.has(s))).toEqual([]);
-    }
-  }, 120_000);
+  // The story branches into thousands of paths, so we sample: seeded random
+  // playthroughs from the first scene, carried on into every later chapter as a
+  // player would, must hit every option at least once and never error.
+  it('random playthroughs of the whole story reach the end, covering every option and scene', () => {
+    const r = sampleStory(manager, { startScene: content.chapters[0]!.startScene, runs: 1200, seed: 7, followChapters: true });
+    expect(r.errors.slice(0, 3), JSON.stringify(r.errors.slice(0, 3), null, 2)).toEqual([]);
+    expect(r.runs).toBe(1200);
+    expect(r.unreachableOptions).toEqual([]);
+    expect(Object.keys(content.scenes).filter((s) => !r.scenesReached.has(s))).toEqual([]);
+    for (const c of content.chapters) expect(r.chapterLines[c.id]?.runs, `no run finished ${c.id}`).toBe(1200);
+  }, 180_000);
 
-  it('Chapter One is a 20–30 minute read on every path', () => {
-    const r = sampleStory(manager, { startScene: 'c1_ferry', runs: 300, seed: 11 });
-    // ~3.5 s per line at default text speed (typing + reading) → 340–515 lines.
-    expect(r.lines.min).toBeGreaterThanOrEqual(300);
-    expect(r.lines.max).toBeLessThanOrEqual(560);
+  // A later chapter must also play from a fresh state (e.g. a new player, or a
+  // save from before a flag existed): no errors, no dead ends.
+  it('every later chapter also plays cleanly when started cold', () => {
+    for (const chapter of content.chapters.slice(1)) {
+      const r = sampleStory(manager, { startScene: chapter.startScene, runs: 300, seed: 5 });
+      expect(r.errors.slice(0, 3), JSON.stringify(r.errors.slice(0, 3), null, 2)).toEqual([]);
+      expect(r.runs).toBe(300);
+    }
   }, 60_000);
+
+  it('each chapter is the intended length on every path', () => {
+    const r = sampleStory(manager, { startScene: 'c1_ferry', runs: 300, seed: 11, followChapters: true });
+    // ~3.5 s per line at default text speed (typing + reading).
+    // Chapter One: 20–30 minutes. Chapter Two: a tighter 12–20 minutes.
+    expect(r.chapterLines.ch1!.min).toBeGreaterThanOrEqual(300);
+    expect(r.chapterLines.ch1!.max).toBeLessThanOrEqual(560);
+    expect(r.chapterLines.ch2!.min).toBeGreaterThanOrEqual(190);
+    expect(r.chapterLines.ch2!.max).toBeLessThanOrEqual(400);
+  }, 120_000);
 });
 
 describe('production data', () => {

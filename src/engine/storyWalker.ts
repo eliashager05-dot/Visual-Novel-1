@@ -1,5 +1,5 @@
 import type { GameState } from '@/types';
-import { advance, choose, createNewGame } from './dialogueEngine';
+import { advance, choose, continueToChapter, createNewGame } from './dialogueEngine';
 import type { SceneManager } from './sceneManager';
 
 export interface WalkResult {
@@ -94,6 +94,8 @@ export interface SampleResult {
   errors: { path: string[]; message: string }[];
   /** Lines shown per playthrough (reading-length estimate). */
   lines: { min: number; max: number; avg: number };
+  /** The same, per chapter played. */
+  chapterLines: Record<string, { min: number; max: number; avg: number; runs: number }>;
 }
 
 /**
@@ -103,7 +105,14 @@ export interface SampleResult {
  */
 export function sampleStory(
   manager: SceneManager,
-  opts: { runs?: number; seed?: number; startScene?: string; maxLinesPerPath?: number } = {},
+  opts: {
+    runs?: number;
+    seed?: number;
+    startScene?: string;
+    maxLinesPerPath?: number;
+    /** At a chapter end that leads on, continue into the next chapter (as the player would). */
+    followChapters?: boolean;
+  } = {},
 ): SampleResult {
   const runs = opts.runs ?? 500;
   const maxLines = opts.maxLinesPerPath ?? 20_000;
@@ -114,8 +123,15 @@ export function sampleStory(
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+  // Coverage counts the chapters this sample can reach: the starting one, and the later ones when following.
+  const chapters = manager.content.chapters;
+  const startScene = opts.startScene ?? chapters[0]?.startScene ?? '';
+  const startChapter = manager.content.scenes[startScene]?.chapter;
+  const from = Math.max(0, chapters.findIndex((c) => c.id === startChapter));
+  const inScope = new Set((opts.followChapters ? chapters.slice(from) : chapters.slice(from, from + 1)).map((c) => c.id));
   const allOptions = new Set<string>();
   for (const s of manager.compileAll()) {
+    if (!inScope.has(manager.content.scenes[s.id]?.chapter ?? '')) continue;
     for (const i of s.instructions) if (i.type === 'choice') for (const o of i.options) allOptions.add(`${i.id}/${o.id}`);
   }
   const seen = new Set<string>();
@@ -126,16 +142,37 @@ export function sampleStory(
     unreachableOptions: [],
     errors: [],
     lines: { min: Infinity, max: 0, avg: 0 },
+    chapterLines: {},
   };
   let totalLines = 0;
+  const chapterTotals: Record<string, number> = {};
+  const recordChapter = (state: GameState, startLines: number) => {
+    const id = manager.content.scenes[state.pointer.scene]?.chapter ?? '?';
+    const n = state.lineCount - startLines;
+    const c = (result.chapterLines[id] ??= { min: Infinity, max: 0, avg: 0, runs: 0 });
+    c.min = Math.min(c.min, n);
+    c.max = Math.max(c.max, n);
+    c.runs++;
+    chapterTotals[id] = (chapterTotals[id] ?? 0) + n;
+  };
   for (let r = 0; r < runs; r++) {
     const path: string[] = [];
     try {
       let state = createNewGame(manager, { playerName: 'Tester', startScene: opts.startScene }).state;
+      let chapterStart = 0;
       for (let steps = 0; ; steps++) {
         if (steps > maxLines) throw new Error('path exceeded line limit (possible loop)');
         const p = state.presentation;
+        if (p.kind === 'end' && opts.followChapters && p.nextChapter && !p.ending) {
+          recordChapter(state, chapterStart);
+          path.push(`→ ${p.nextChapter}`);
+          // Count from before the new chapter runs: its first line is already shown on return.
+          chapterStart = state.lineCount;
+          state = continueToChapter(manager, state).state;
+          continue;
+        }
         if (p.kind === 'end') {
+          recordChapter(state, chapterStart);
           const key = p.ending ?? 'chapter_end';
           result.endings[key] = (result.endings[key] ?? 0) + 1;
           state.visitedScenes.forEach((v) => result.scenesReached.add(v));
@@ -152,15 +189,20 @@ export function sampleStory(
           seen.add(key);
           path.push(key);
           state = choose(manager, state, pick.id).state;
+          // The engine copies the whole state on every step; the sampler never reads the
+          // history log, so dropping it keeps each copy small and the runs fast.
+          state.history.length = 0;
           continue;
         }
         state = advance(manager, state).state;
+        state.history.length = 0;
       }
     } catch (e) {
       result.errors.push({ path, message: (e as Error).message });
     }
   }
   result.lines.avg = result.runs ? Math.round(totalLines / result.runs) : 0;
+  for (const [id, c] of Object.entries(result.chapterLines)) c.avg = Math.round(chapterTotals[id]! / c.runs);
   if (!result.runs) result.lines.min = 0;
   result.unreachableOptions = [...allOptions].filter((o) => !seen.has(o));
   return result;

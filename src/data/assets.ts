@@ -29,6 +29,15 @@ export const backgrounds = byId<BackgroundDefinition>(
     { id: 'boathouse_storm', name: 'Boathouse, storm', placeholder: { palette: ['#07090d', '#26303d', '#030405'], motif: 'storm' } },
     { id: 'lobby_candlelight', name: 'Lobby by candlelight', placeholder: { palette: ['#120c08', '#6e4524', '#080503'], motif: 'interior' } },
     { id: 'margit_room_night', name: "Margit's room", placeholder: { palette: ['#1a1410', '#584332', '#0c0907'], motif: 'room' } },
+    // Chapter Two
+    { id: 'player_room_morning', name: 'Room 12, morning', placeholder: { palette: ['#8fa3b8', '#e2cfb0', '#4a4f5a'], motif: 'room' } },
+    { id: 'hotel_lobby_morning', name: 'Lobby, the morning after', placeholder: { palette: ['#7d6a58', '#d6c2a0', '#3a2e24'], motif: 'interior' } },
+    { id: 'east_wing_lido', name: 'The Halcyon Baths', placeholder: { palette: ['#5f7d7a', '#c9d6cf', '#26302f'], motif: 'interior' } },
+    { id: 'hotel_roof_day', name: 'The roof', placeholder: { palette: ['#a9bccb', '#e8d9b8', '#4b4f55'], motif: 'exterior' } },
+    { id: 'low_tide_bar_day', name: 'The Low Tide, flooded', placeholder: { palette: ['#3a3540', '#8c7a6a', '#17141a'], motif: 'bar' } },
+    { id: 'causeway_day', name: 'The causeway', placeholder: { palette: ['#8d9fab', '#c4b598', '#3f4440'], motif: 'shore' } },
+    { id: 'hotel_terrace_night', name: 'Terrace, night', placeholder: { palette: ['#0c1420', '#3a4a66', '#05080d'], motif: 'night' } },
+    { id: 'sea_cave_night', name: 'The sea cave', placeholder: { palette: ['#03060a', '#1d4a52', '#020305'], motif: 'shore' } },
   ],
   'background',
 );
@@ -98,6 +107,61 @@ export const cgs = byId<CgDefinition>(
       characters: [],
       placeholder: { palette: ['#0c1018', '#a7b4c8', '#05070b'], motif: 'water' },
     },
+    // Chapter Two
+    {
+      id: 'cg_lido_vera',
+      title: 'The Deep End',
+      background: 'east_wing_lido',
+      description:
+        'Vera and the protagonist sitting side by side on the edge of the deep end of a drained 1920s swimming bath, legs hanging over the drop, seen from the far end of the empty pool. Green and white tiles, brass handrails, a broken glass roof letting a shaft of noon light fall across them; a thin mirror of rainwater on the pool floor below their feet. Her shoulder almost touching his.',
+      characters: ['vera', 'player'],
+      placeholder: { palette: ['#5f7d7a', '#e8e0c8', '#26302f'], motif: 'interior' },
+    },
+    {
+      id: 'cg_neon_roof',
+      title: 'The Missing C',
+      background: 'hotel_roof_day',
+      description:
+        'Dusk on the hotel roof: Vera and the protagonist sitting on the parapet beside a huge old neon sign that has just lit up in full for the first time in years, reading THE HALCYON in warm pink-orange light. He has a screwdriver in his hand and grease on his cheek; she is laughing, looking at the sign, not at him. The sea and the first stars behind them.',
+      characters: ['vera', 'player'],
+      placeholder: { palette: ['#2b3048', '#f08a6a', '#151826'], motif: 'night' },
+    },
+    {
+      id: 'cg_noor_song',
+      title: 'March',
+      background: 'low_tide_bar_day',
+      description:
+        'Noor on a beer crate in the half-flooded cellar bar, an acoustic guitar on her knee, wet floor reflecting daylight from the open street door above. Sleeves rolled, curls piled up, eyes closed as she sings. The protagonist sits on the stairs in the background, mop forgotten across his knees.',
+      characters: ['noor', 'player'],
+      placeholder: { palette: ['#3a3540', '#d9a066', '#17141a'], motif: 'bar' },
+    },
+    {
+      id: 'cg_june_pipe',
+      title: 'Slack Water',
+      background: 'cove_low_tide_day',
+      description:
+        'Waist-deep in grey-green water at the old iron mooring at slack tide: June in a black drysuit leaning over a bronze pipe mouth in the rock, cupped hands in a plume of shimmering warm water, steam rising off the surface in the cold air; the protagonist beside her in chest waders holding the safety line, both looking down at the same thing. Overcast silver light.',
+      characters: ['june', 'player'],
+      placeholder: { palette: ['#8fa6b5', '#d8e6e0', '#4b4a3f'], motif: 'shore' },
+    },
+    {
+      id: 'cg_sienna_holm',
+      title: 'The Holm',
+      background: 'causeway_day',
+      description:
+        'Sienna alone in the doorway of a roofless stone cottage on a tiny tidal islet, wind pulling at an enormous borrowed fisherman\'s jumper, one hand on the doorframe, the other closed around the thread bracelet on her wrist. Wet sand and seaweed between the islet and the broken causeway behind her. Grey sky, a break of sunlight on the sea.',
+      characters: ['sienna'],
+      placeholder: { palette: ['#8d9fab', '#e0d2b4', '#3f4440'], motif: 'shore' },
+    },
+    {
+      id: 'cg_margit_lantern',
+      title: 'Hello, Boy',
+      background: 'sea_cave_night',
+      description:
+        'Inside a sea cave at night: a wiry 68-year-old woman in a yellow oilskin, hood pushed back, cropped iron-grey hair, holding a storm lantern up at head height, the light carving her weathered face. Behind her an old blue lobster boat, ELIN, moored to an iron ring, and a big green-painted pump with a bronze pipe; faint blue-green light glows in the water at her feet. She looks straight at the viewer, unsmiling, completely unsurprised.',
+      characters: ['margit'],
+      placeholder: { palette: ['#03060a', '#e3c25a', '#020305'], motif: 'shore' },
+    },
   ],
   'cg',
 );
@@ -116,6 +180,7 @@ export const music = byId<AudioDefinition>(
     { id: 'coast_road', title: 'Coast Road', brief: 'Driving the island road: forward motion, open landscape, a touch of tension underneath. Guitar and strings, mid tempo. Loops.' },
     { id: 'storm', title: 'Storm', brief: 'The storm: dark, driving, urgent. Low strings, timpani rolls, pulsing synth; builds without resolving. Loops.' },
     { id: 'aftermath', title: 'Candles', brief: 'Candlelit lobby after the storm: exhausted calm, warm but uneasy. Solo cello or piano, very slow. Loops.' },
+    { id: 'slack_water', title: 'Slack Water', brief: 'Chapter Two\'s night theme: the still moment when the tide turns. Suspended and hushed, a held low note, slow pulses like a distant engine, a few clear piano notes over the top; tension without movement. Loops.' },
     { id: 'mystery', title: 'Under the Tide', brief: 'Discoveries and secrets: quiet suspense. Low drones, sparse plucked notes, a music-box hint. Loops.' },
   ],
   'music',

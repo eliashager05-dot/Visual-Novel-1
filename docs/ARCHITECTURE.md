@@ -125,7 +125,7 @@ scene('c1_harbour', 'ch1', 'The Harbour', [
     option('secret', '…', { condition: C.affinity('vera', { gte: 40 }), showWhenLocked: true }),
   ]),
   label('walk'),
-  jump('c1_hotel'),            // or end({ nextChapter: 'ch2' })
+  jump('c1_hotel'),            // or end({ chapterComplete: true, nextChapter: 'ch2' }): the end card then offers to continue
 ]);
 ```
 
@@ -147,6 +147,7 @@ reply('noor', 'On my way.'),                                           // the pl
 photo('unknown', 'cg_margit_photo'),                                   // a CG as a picture message (unlocks it)
 choice('c1_noor_text', [...]),                                         // a choice while the phone is open shows as reply bubbles
 phone(null),                                                           // put the phone away
+rename('unknown', 'Margit'),                                           // show a thread under another name (null: its own)
 ```
 
 Threads are character ids, or ids from `src/data/contacts.ts` for people who are not characters.
@@ -293,8 +294,15 @@ Chapter One, "Low Tide", is complete: 19 scenes, 100 briefed shots (with a visib
 exclusive first-night scenes. See [`STORY_CH1.md`](STORY_CH1.md) for the scene flow, every decision and
 its consequences, and the flags that carry into Chapter Two.
 
-Testing: the content test runs 1,200 seeded random playthroughs. It requires zero errors, every option of
-every choice to be reachable, every scene to be reached, and every path to fall within the length target.
+Chapter Two, "Slack Water", follows on from Chapter One's end card with everything carried over: 13 scenes,
+57 more shots and 6 illustrations, about 15 minutes per playthrough (200–260 lines), 26 decision points,
+an afternoon map with four exclusive scenes and four more before midnight, and the reveal of Margit. See
+[`STORY_CH2.md`](STORY_CH2.md).
+
+Testing: the content test runs 1,200 seeded random playthroughs from the first scene, continuing into each
+later chapter as a player would. It requires zero errors, every option of every choice to be reachable,
+every scene to be reached, and every chapter to fall within its length target on every path. Later
+chapters are also played from a fresh state.
 
 ### Phase 5: Polish
 - Audio: music cross-fades, SFX, UI sounds, per-channel volume.

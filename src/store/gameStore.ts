@@ -3,6 +3,7 @@ import { content } from '@/data';
 import {
   advance,
   choose,
+  continueToChapter,
   createNewGame,
   createSaveRecord,
   resume,
@@ -51,6 +52,8 @@ interface GameStore {
   markThreadRead: (thread: string) => void;
   quickLoad: () => void;
   quitToTitle: () => void;
+  /** On a chapter's end card: carry on into the next chapter with everything kept. */
+  continueChapter: () => void;
 }
 
 const notify = (text: string) => useUi.getState().pushToast({ tone: 'info', text });
@@ -194,6 +197,14 @@ export const useGameStore = create<GameStore>()((set, get) => {
     quickLoad: () => {
       if (!saveRepo.read('quick')) return notify('No quick save yet');
       get().load('quick');
+    },
+
+    continueChapter: () => {
+      const { game, mode } = get();
+      if (!game || mode !== 'story' || game.presentation.kind !== 'end' || !game.presentation.nextChapter) return;
+      // Starting a chapter is a new scene, so it autosaves; there is nothing to roll back to.
+      set({ past: [] });
+      commit(() => continueToChapter(sceneManager, game));
     },
 
     quitToTitle: () => set({ game: null, events: [], past: [], error: null, mode: 'story', replayScene: null }),

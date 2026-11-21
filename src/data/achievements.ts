@@ -1,7 +1,7 @@
 import type { AchievementDefinition } from '@/engine/achievements';
 import { C } from './story/dsl';
 
-/** Achievements for Chapter One. Add more per chapter; nothing else needs to change. */
+/** Achievements, per chapter. Add more freely; nothing else needs to change. */
 export const achievements: AchievementDefinition[] = [
   { id: 'arrived', title: 'Halcyon Point', description: 'Step off the ferry.', rule: { kind: 'scenesSeen', scenes: ['c1_harbour'] } },
   { id: 'ch1_done', title: 'Low Tide', description: 'Finish Chapter One.', rule: { kind: 'chapterComplete', chapter: 'ch1' } },
@@ -50,4 +50,27 @@ export const achievements: AchievementDefinition[] = [
       ),
     },
   },
+  // --- Chapter Two -------------------------------------------------------------
+  { id: 'ch2_done', title: 'Slack Water', description: 'Finish Chapter Two.', rule: { kind: 'chapterComplete', chapter: 'ch2' } },
+  {
+    id: 'every_tide',
+    title: 'Every Way the Tide Turns',
+    description: 'Spend the third afternoon with Noor, June, Sienna and Vera (over several playthroughs).',
+    rule: { kind: 'scenesSeen', scenes: ['c2_noor_bar', 'c2_june_slack', 'c2_sienna_causeway', 'c2_vera_roof'] },
+  },
+  {
+    id: 'before_midnight',
+    title: 'Before Midnight',
+    description: 'Spend the two hours before low water with each of them (over several playthroughs).',
+    rule: { kind: 'scenesSeen', scenes: ['c2_late_vera', 'c2_late_noor', 'c2_late_june', 'c2_late_sienna'] },
+  },
+  { id: 'deep_end', title: 'The Deep End', description: 'Ask Vera about Margit, not the money.', rule: { kind: 'condition', condition: C.milestone('vera', 'deep_end') } },
+  { id: 'missing_c', title: 'The Missing C', description: 'Fix the sign.', rule: { kind: 'condition', condition: C.milestone('vera', 'missing_c') } },
+  { id: 'the_song', title: 'March', description: 'Hear Noor\'s song about the night Margit went out.', rule: { kind: 'condition', condition: C.milestone('noor', 'the_song') } },
+  { id: 'cold_water', title: 'Cold Water', description: 'Go under with June at slack water.', rule: { kind: 'condition', condition: C.milestone('june', 'cold_water') } },
+  { id: 'saoirse', title: 'Her Mother\'s Daughter', description: 'Tell Sienna who was in the photograph.', hidden: true, rule: { kind: 'condition', condition: C.milestone('sienna', 'saoirse') } },
+  { id: 'seventh_plate', title: 'The Seventh Plate', description: 'Ask Bram who he is cooking for.', rule: { kind: 'condition', condition: C.flag('bram_told') } },
+  { id: 'margit_text', title: 'Three Dots', description: 'Ask the unknown number if it is Margit.', hidden: true, rule: { kind: 'condition', condition: C.flag('asked_margit_text') } },
+  { id: 'not_alone', title: 'Not Alone', description: 'Bring Vera to low water.', hidden: true, rule: { kind: 'condition', condition: C.flag('vera_met_margit') } },
+  { id: 'hand', title: 'Do Not Move', description: 'Ask Vera if you may hold her hand.', hidden: true, rule: { kind: 'condition', condition: C.flag('held_vera_hand') } },
 ];

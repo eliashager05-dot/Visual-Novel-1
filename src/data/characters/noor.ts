@@ -60,9 +60,16 @@ export const noor: CharacterDefinition = {
       text: 'Helped Margit with the ropes the night she disappeared, and promised to tell no one.',
       unlockWhen: C.flag('noor_confessed_march'),
     },
+    {
+      id: 'tank',
+      label: 'N.H.',
+      text: 'Margit paid off her debt, six hundred a month. In return, Noor kept the ELIN\'s tank full and asked no questions.',
+      unlockWhen: C.flag('noor_told_payments'),
+    },
   ],
   milestones: [
     { id: 'after_hours', title: 'After Hours', description: 'Noor played the piano for you after closing.' },
     { id: 'real_laugh', title: 'A Real Laugh', description: 'You made Noor laugh — the real one, not the bar one.' },
+    { id: 'the_song', title: 'March', description: 'Noor played you the song she wrote about the night Margit went out.' },
   ],
 };

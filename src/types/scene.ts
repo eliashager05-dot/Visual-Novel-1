@@ -106,6 +106,8 @@ export type Step =
    * (notice plus unread badge) without stopping the story.
    */
   | { type: 'text'; thread: string; from: 'them' | 'player'; text?: string; image?: string; as?: string; quiet?: boolean }
+  /** Changes the name a conversation is shown under; `null` goes back to the contact's own name. */
+  | { type: 'contact'; thread: string; name: string | null }
   /** Opens the phone on a conversation, or puts it away (`null`). */
   | { type: 'phone'; thread: string | null }
   /** Weather and light over the image, until changed or the scene ends. `null` clears. */

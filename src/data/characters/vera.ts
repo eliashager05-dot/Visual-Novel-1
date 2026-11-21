@@ -76,9 +76,17 @@ export const vera: CharacterDefinition = {
       text: 'Signed the form when the police took the ELIN to the mainland. She was there when it came back.',
       unlockWhen: C.flag('found_scarf'),
     },
+    {
+      id: 'swim',
+      label: 'Swimming',
+      text: 'Margit taught her to swim on the dry floor of an empty pool, then threw her in the cove. She swam out of spite.',
+      unlockWhen: C.visited('c2_east_wing'),
+    },
   ],
   milestones: [
     { id: 'first_truce', title: 'First Truce', description: 'You and Vera agreed not to make any decision about the hotel without each other.' },
     { id: 'night_shift', title: 'Night Shift', description: 'You covered the front desk so she could sleep. She noticed.' },
+    { id: 'deep_end', title: 'The Deep End', description: 'You asked about Margit, not the money. Vera told you how she learned to swim.' },
+    { id: 'missing_c', title: 'The Missing C', description: 'You fixed the sign Margit could never afford to.' },
   ],
 };

@@ -72,6 +72,25 @@ export function resume(manager: SceneManager, prev: GameState): EngineResult {
   return run(manager, state, []);
 }
 
+/**
+ * From a chapter's end card into the next chapter, keeping everything the
+ * player has done: relationships, flags, choices, phone. Only the screen is
+ * cleared, as at the start of a new game.
+ */
+export function continueToChapter(manager: SceneManager, prev: GameState, chapterId?: string): EngineResult {
+  const p = prev.presentation;
+  const target = chapterId ?? (p.kind === 'end' ? p.nextChapter : undefined);
+  const chapter = manager.content.chapters.find((c) => c.id === target);
+  if (!chapter) throw new Error(`There is no chapter "${target ?? '(none)'}" to continue to`);
+  const state = structuredClone(prev);
+  state.stage = { background: null, cg: null, shot: null, fx: null, phone: null, characters: [], music: null };
+  state.pointer = { scene: chapter.startScene, index: 0 };
+  state.presentation = { kind: 'idle' };
+  const events: EngineEvent[] = [{ type: 'music', track: null, fade: 1 }];
+  enterScene(manager, state, chapter.startScene, events);
+  return run(manager, state, events);
+}
+
 export function choose(manager: SceneManager, prev: GameState, optionId: string): EngineResult {
   if (prev.presentation.kind !== 'choice') throw new Error('choose() called while no choice is pending');
   const state = structuredClone(prev);
@@ -221,6 +240,11 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
         state.lineCount++;
         return { state, events };
       }
+
+      case 'contact':
+        if (instr.name) state.phone.names[instr.thread] = instr.name;
+        else delete state.phone.names[instr.thread];
+        break;
 
       case 'phone':
         state.stage.phone = instr.thread;

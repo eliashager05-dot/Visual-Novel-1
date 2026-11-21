@@ -66,9 +66,16 @@ export const sienna: CharacterDefinition = {
       text: 'Saw a boat\'s lights out past the cove at half seven, in the worst of the storm.',
       unlockWhen: C.flag('sienna_saw_lights'),
     },
+    {
+      id: 'mother',
+      label: 'Saoirse',
+      text: 'Her mother left the island when Sienna was twelve, and sold Margit the mooring licence in March without telling her.',
+      unlockWhen: C.milestone('sienna', 'saoirse'),
+    },
   ],
   milestones: [
     { id: 'off_record', title: 'Off the Record', description: 'Sienna told you something her employers wouldn\'t like.' },
     { id: 'bracelet', title: 'The Bracelet', description: 'You asked about the thread bracelet. She answered honestly.' },
+    { id: 'saoirse', title: 'Her Mother\'s Daughter', description: 'You told Sienna who was in Margit\'s photograph.' },
   ],
 };

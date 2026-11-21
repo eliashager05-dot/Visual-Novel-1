@@ -34,9 +34,12 @@ npm run build
 - Engine (pure TypeScript, UI-agnostic): `src/engine/`
 
 **Status:** Phases 1–4 are complete. Chapter One, "Low Tide", is fully playable: about 22–24 minutes,
-19 scenes, 30+ choices, four exclusive first-night scenes, a storm, and a cliffhanger. It runs on the
-cinematic engine with saves, rollback, relationships and gallery. Placeholder art is procedural until the
-100 briefed shots in `docs/RENDER_BRIEF.md` are rendered. Next is Phase 5: audio and polish. Story bible:
+19 scenes, 30+ choices, four exclusive first-night scenes, a storm, and a cliffhanger. Chapter Two,
+"Slack Water", continues from its end card: about 15 minutes, 13 scenes, 26 choices, and the truth about
+Margit ([`docs/STORY_CH2.md`](docs/STORY_CH2.md)). It runs on the
+cinematic engine with saves, rollback, relationships, gallery, achievements, music and sound, weather and
+light effects, a phone, a day clock, map choices and an optional walkthrough. Placeholder art is procedural
+until the 157 briefed shots in `docs/RENDER_BRIEF.md` are rendered. Story bible:
 [`docs/STORY_CH1.md`](docs/STORY_CH1.md).
 
 **Controls:** Click, Space or Enter to continue · Backspace to go back · A auto · S or hold Ctrl to skip

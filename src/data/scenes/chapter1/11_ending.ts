@@ -133,5 +133,5 @@ export const c1Cliffhanger = scene('c1_cliffhanger', 'ch1', 'Stop Looking', [
   transition('black', 2),
   phone(null),
   title('End of Chapter One', 'Low Tide'),
-  end({ chapterComplete: true }),
+  end({ chapterComplete: true, nextChapter: 'ch2' }),
 ], { replayable: true });

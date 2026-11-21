@@ -53,9 +53,16 @@ export const june: CharacterDefinition = {
       text: 'Thinks something under the old mooring is warming the mud and feeding the bloom — possibly something man-made.',
       unlockWhen: C.any(C.flag('june_mooring_hint'), C.flag('june_manmade_theory'), C.flag('june_knows_boat')),
     },
+    {
+      id: 'pipe',
+      label: 'The pipe',
+      text: 'A bronze pipe stamped HALCYON BATHS 1926 pours warm seawater into the cove. Someone keeps switching it on.',
+      unlockWhen: C.flag('june_found_pipe'),
+    },
   ],
   milestones: [
     { id: 'the_glow', title: 'The Glow', description: 'June showed you the cove at night.' },
     { id: 'field_partner', title: 'Field Partner', description: 'You helped June collect samples in bad weather.' },
+    { id: 'cold_water', title: 'Cold Water', description: 'You went into the sea with June at slack water.' },
   ],
 };

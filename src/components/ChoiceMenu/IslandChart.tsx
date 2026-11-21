@@ -103,6 +103,12 @@ export function IslandChart({ title }: { title: string }) {
         return <path key={i} d={`M${x},${y} l18,6`} stroke={INK} strokeWidth="2" strokeOpacity="0.55" />;
       })}
 
+      {/* The Holm and its causeway, off the west coast. */}
+      <path d="M296,468 L212,478" stroke={INK} strokeWidth="9" strokeOpacity="0.5" strokeLinecap="round" />
+      <path d="M296,468 L212,478" stroke={PAPER} strokeWidth="5" strokeLinecap="round" strokeDasharray="22 8" />
+      <ellipse cx="178" cy="482" rx="40" ry="26" fill={PAPER} stroke={INK} strokeWidth="2.2" />
+      <rect x="170" y="474" width="14" height="10" fill={INK} fillOpacity="0.6" />
+
       {/* Coast road. */}
       <path d={paths.road} fill="none" stroke={PAPER} strokeWidth="9" />
       <path d={paths.road} fill="none" stroke={INK} strokeOpacity="0.6" strokeWidth="2.4" strokeDasharray="10 7" />

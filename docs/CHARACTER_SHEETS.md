@@ -13,7 +13,7 @@ face three-quarter, face profile, full body front, full body back. Compare every
 The player character. Players choose his name (default "Rowan"), so never show a name for him in a render.
 He is in more shots than anyone else: **build him first**, and take the most care over him.
 
-**Age 25 · Sound engineer, out of work; owns 51% of the Halcyon · 181 cm · appears in 33 shots**
+**Age 25 · Sound engineer, out of work; owns 51% of the Halcyon · 181 cm · appears in 46 shots**
 
 > A listener. Dry, self-deprecating, slower to speak than the people around him and more observant than they expect. Kind by default, stubborn when cornered. Notices sounds before he notices faces.
 
@@ -42,6 +42,9 @@ He is in more shots than anyone else: **build him first**, and take the most car
 | **Night cove** | The waxed jacket over the henley, jeans rolled to the knee, barefoot in the water. | Bloom |
 | **Day two** | Faded blue-grey crew-neck sweatshirt, black jeans, boots. After the cove (low-tide path): mud to the knees and biro numbers on the left forearm. | Ninety Days, Coast Road, Low Tide, Before the Storm |
 | **Storm** | The waxed jacket over the sweatshirt, soaked, hair plastered flat. Indoors afterwards: jacket off, a towel round his neck, hair drying in every direction. | The Storm, Candles, Margit's Room, Stop Looking |
+| **Day three** | Navy cable-knit jumper, black jeans, boots; the waxed field jacket open over it outdoors. No headphones. | The Morning After, The East Wing, Bailing Out, The Causeway, The Missing C, Seven Plates, Low Water |
+| **Slack water (waders)** | Borrowed green chest waders over the navy jumper, sleeves pushed up, soaked to the chest. | The Mooring |
+| **The cave** | Waxed jacket zipped up over the navy jumper, a head torch hanging round his neck, damp hair. | Slack Water |
 
 **Expressions needed in Chapter One:** happy, neutral, sad, surprised, worried.
 
@@ -49,7 +52,7 @@ He is in more shots than anyone else: **build him first**, and take the most car
 
 ## Vera Lindqvist
 
-**Age 29 · General manager of the Halcyon Hotel · 176 cm · appears in 26 shots**
+**Age 29 · General manager of the Halcyon Hotel · 176 cm · appears in 40 shots**
 
 > Precise, dry, quietly funny once she stops guarding the door. Competence is her armour; she treats every problem as solvable by working harder. Deeply loyal, slow to forgive, and allergic to being pitied.
 
@@ -78,6 +81,8 @@ He is in more shots than anyone else: **build him first**, and take the most car
 | **Work** | White cotton shirt with sleeves rolled twice, navy waistcoat, dark trousers. No coat. | Dinner, Ninety Days |
 | **Night audit** | Soft grey cardigan over the white shirt, collar open one button, hair half down. Reading glasses at the desk only. | Night Audit, Margit's Room |
 | **Storm** | The work outfit under a dark navy waterproof jacket, soaked through; hair coming out of its bun, wet strands on her face. Indoors afterwards: jacket off, shirt still damp, hair down and roughly towelled. | The Storm, Candles |
+| **Day three** | Fitted charcoal roll-neck jumper, navy trousers, sleeves pushed up; bun pinned up badly after a sleepless night, strands loose at both temples. | The Morning After, The East Wing, The Missing C, Seven Plates, The Terrace |
+| **Low water** | Navy waterproof jacket zipped over the charcoal roll-neck, torch in hand, hair coming loose from its bun. | Low Water, Slack Water |
 
 **Expressions needed in Chapter One:** angry, embarrassed, neutral, sad, surprised, worried.
 
@@ -85,7 +90,7 @@ He is in more shots than anyone else: **build him first**, and take the most car
 
 ## Noor Haddad
 
-**Age 26 · Bartender at the Low Tide, the Halcyon's bar · 168 cm · appears in 17 shots**
+**Age 26 · Bartender at the Low Tide, the Halcyon's bar · 168 cm · appears in 24 shots**
 
 > Quick, teasing, generous, and much more perceptive than she lets on. Deflects anything serious with a joke, then circles back to it hours later when you have forgotten. Loves loudly; is terrified of being a disappointment.
 
@@ -114,14 +119,16 @@ He is in more shots than anyone else: **build him first**, and take the most car
 | **Behind the bar** | Cream work shirt with sleeves rolled to the elbow, dark jeans, bar towel over the shoulder. Orange scarf (day one only). | Dinner, The Low Tide |
 | **After hours** | Same shirt, top button undone, sleeves down and loose, no scarf, curls free. | After Hours |
 | **Day two** | Rust-coloured long-sleeve top, sleeves pushed up, dark jeans; curls tied back with a plain band. No scarf. Damp hair in the candle scenes. | Before the Storm, Candles |
+| **Bailing out** | Black vest top under an open red flannel shirt with the sleeves rolled, jeans rolled to the knee, green wellies, curls piled up on her head. No scarf (unless she gets it back this afternoon). | The Morning After, Bailing Out, Seven Plates, Wrong Notes |
+| **Low water** | The olive canvas jacket over the flannel shirt, jeans, boots; curls loose and windblown. | Low Water, Slack Water |
 
 **Expressions needed in Chapter One:** angry, flirty, happy, laughing, neutral, sad, surprised, worried.
 
-**Poses needed:** bar, leaning.
+**Poses needed:** bar, guitar, leaning.
 
 ## Dr. Juniper Castell
 
-**Age 31 · Marine ecologist, long-term guest in Room 7 · 158 cm · appears in 16 shots**
+**Age 31 · Marine ecologist, long-term guest in Room 7 · 158 cm · appears in 26 shots**
 
 > Literal, honest to a fault, socially clumsy and wildly enthusiastic about things nobody else notices. Doesn't understand flirting until three days later. Unexpectedly fearless in physical danger; terrified of parties.
 
@@ -148,14 +155,17 @@ He is in more shots than anyone else: **build him first**, and take the most car
 | **Field** | Black full-length wetsuit with teal seams, unzipped a few centimetres at the collar; bare feet or neoprene boots; head torch at night. | Room 7, Bloom, Low Tide, Before the Storm |
 | **Indoors** | Oversized sage-green wool jumper with sleeves over her hands, faded black leggings, thick socks or field boots. | Dinner |
 | **After the storm** | The jumper, damp, under a grey hotel blanket round her shoulders; laptop on her knees. | Candles |
+| **Day three** | Oversized sage-green wool jumper with the sleeves over her hands, black leggings, thick socks; damp hair. | The Morning After, Seven Plates, Room Seven |
+| **Slack water** | Black drysuit with teal seams, neoprene hood pushed back, a coil of yellow safety line over one shoulder. | The Mooring |
+| **Low water** | Dark blue down jacket over the sage jumper, a head torch on her forehead, a thermometer probe in her pocket. | Low Water, Slack Water |
 
 **Expressions needed in Chapter One:** happy, laughing, neutral, sad, surprised, worried.
 
-**Poses needed:** notebook, wetsuit.
+**Poses needed:** notebook, standing, wetsuit.
 
 ## Sienna Marlowe
 
-**Age 33 · Head of acquisitions, Aldane Group · 172 cm · appears in 10 shots**
+**Age 33 · Head of acquisitions, Aldane Group · 172 cm · appears in 19 shots**
 
 > Charming, strategic, warm in a way that might be technique and might be real — she isn't always sure herself. Enjoys a sparring partner. Hates being underestimated and hates being figured out even more.
 
@@ -182,14 +192,16 @@ He is in more shots than anyone else: **build him first**, and take the most car
 | **City** | Tailored camel wool coat, ivory silk blouse, high-waisted black trousers, black heels, a slim leather folder or handbag. | The Low Tide, Before the Storm |
 | **Coast road** | The camel coat open over a deep green silk blouse, black trousers, sunglasses pushed up into her hair, flat driving shoes. | Coast Road |
 | **Stranded** | The coat soaked dark, heels in her hand, bare feet; later the coat off and a coarse wool hotel blanket round her shoulders. | Candles |
+| **Borrowed jumper** | Bram's enormous navy fisherman's jumper reaching her thighs, the collar of her cream silk blouse showing, black tailored trousers tucked into green wellies three sizes too big. Bob unstyled. | The Morning After, The Causeway, Seven Plates, The Lounge |
+| **Low water** | The camel coat, dried and creased, over Bram's jumper; trousers, wellies. | Low Water, Slack Water |
 
-**Expressions needed in Chapter One:** flirty, happy, neutral, sad, worried.
+**Expressions needed in Chapter One:** embarrassed, flirty, happy, laughing, neutral, sad, worried.
 
-**Poses needed:** coat, standing.
+**Poses needed:** coat, leaning, standing.
 
 ## Bram Okafor
 
-**Age 61 · Cook at the Halcyon for thirty years · 185 cm · appears in 7 shots**
+**Age 61 · Cook at the Halcyon for thirty years · 185 cm · appears in 14 shots**
 
 > Gruff, patient, sentimental about food and nothing else (he claims). The island's memory.
 
@@ -212,13 +224,44 @@ He is in more shots than anyone else: **build him first**, and take the most car
 
 | Outfit | What it is | Scenes |
 |---|---|---|
-| **Kitchen** | Navy fisherman's jumper with sleeves pushed up, white bib apron, dark work trousers, clogs. | The Halcyon, Dinner, Ninety Days, Before the Storm, The Storm, Candles |
+| **Kitchen** | Navy fisherman's jumper with sleeves pushed up, white bib apron, dark work trousers, clogs. | The Halcyon, Dinner, Ninety Days, Before the Storm, The Storm, Candles, The Morning After, Seven Plates |
 
-**Expressions needed in Chapter One:** happy, neutral, sad, worried.
+**Expressions needed in Chapter One:** happy, neutral, sad, surprised, worried.
+
+**Poses needed:** standing.
+
+## Margit Halloran
+
+**Age 68 · Owner of the Halcyon for forty years. Officially missing at sea. · 170 cm · appears in 3 shots**
+
+> Formidable, funny, impatient with fools and with herself. Decides first and explains much later, if at all. Loves people by protecting them, which they do not always thank her for.
+
+| | |
+|---|---|
+| **Build** | Wiry and narrow, strong hands, a sailor's straight back. Moves quickly and economically, like someone who has spent her life on a deck. |
+| **Face** | Long weathered face deeply lined by wind and sun, high cheekbones, a thin determined mouth that rarely smiles and transforms her face when it does. |
+| **Skin** | Fair, weather-beaten (#e2c3a8), ruddy across the cheekbones, sun spots on the backs of the hands. |
+| **Eyes** | Pale ice-blue, sharp, amused, unblinking. |
+| **Hair** | Iron-grey (#8d8f93), cropped very short, sticking up with salt. |
+| **Make-up** | None, ever. |
+| **Acting** | Still, upright, entirely unsurprised. She looks people straight in the eye and lets the silence do the work. When she is moved she busies her hands: the pipe, the mug, the lantern. |
+
+**Always visible when in frame:**
+
+- The yellow oilskin bought in Bergen in 1994, patched at both elbows.
+- A short briar pipe; cherry tobacco.
+- Written on her left palm in faded biro: 1 SEPT.
+
+**Wardrobe:**
+
+| Outfit | What it is | Scenes |
+|---|---|---|
+| **The cave** | Yellow oilskin jacket, hood up or down, over a darned grey fisherman's jumper; dark wool trousers; black rubber boots. | Slack Water |
+
+**Expressions needed in Chapter One:** neutral, sad.
 
 **Poses needed:** standing.
 
 ## Seen only in photographs
 
-- **Margit Halloran (present day, 68).** Wiry, weather-beaten, sharp blue eyes, cropped iron-grey hair. Yellow oilskin. Seen only in the final phone photograph on the ferry deck, looking straight into the camera.
-- **Margit Halloran (thirty years ago, late thirties) and an unknown young woman (about twenty).** A faded colour photograph on the deck of the blue lobster boat ELIN. Margit dark-haired and laughing; the young woman has an arm round her shoulders and holds up a large fish. Both are adults. The young woman's face should be clear but must not resemble any current character.
+- **Margit Halloran (thirty years ago, late thirties) and Saoirse Marlowe (about twenty).** A faded colour photograph on the deck of the blue lobster boat ELIN. Margit dark-haired and laughing; the young woman has an arm round her shoulders and holds up a large fish. Both are adults. Chapter Two reveals the young woman is Sienna's mother, Saoirse: give her a faint family likeness to Sienna (dark hair, sharp cheekbones, the same tilt of the chin) without making them look like the same person.

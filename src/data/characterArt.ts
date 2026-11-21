@@ -38,6 +38,11 @@ export const characterArt = byId<CharacterArt & { id: string }>(
       character: 'bram',
       silhouette: { hair: 'bald_beard', hairColor: '#a8a29a', skin: '#6e4a32', outfit: '#3d4a52', outfitAccent: '#ddd6c8', height: 1.03, build: 1.18 },
     },
+    {
+      id: 'margit',
+      character: 'margit',
+      silhouette: { hair: 'pixie', hairColor: '#8d8f93', skin: '#e2c3a8', outfit: '#d9b23a', outfitAccent: '#6b6e72', height: 0.97, build: 0.9 },
+    },
   ],
   'character art',
 );
