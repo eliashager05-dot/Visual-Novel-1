@@ -29,6 +29,10 @@ export interface AiConfig {
   /** Optional path to your own ComfyUI workflow (API format) with %POSITIVE% etc. placeholders. */
   workflow: string;
   timeoutSeconds: number;
+  /** Your image-to-video workflow, exported from ComfyUI in API format. Used by the studio's Animate button. */
+  animateWorkflow: string;
+  /** Clips take much longer than images. */
+  animateTimeoutSeconds: number;
 }
 
 export const DEFAULT_CONFIG: AiConfig = {
@@ -47,6 +51,8 @@ export const DEFAULT_CONFIG: AiConfig = {
   loras: {},
   workflow: '',
   timeoutSeconds: 900,
+  animateWorkflow: 'ai-workflows/animate.json',
+  animateTimeoutSeconds: 3600,
 };
 
 /** Reads ai-render.config.json, creating it with defaults on first use. */

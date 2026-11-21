@@ -22,8 +22,9 @@ npm run build
   (`npm run generate -- --milestone 1`, then `npm run studio` to compare and choose)
 - Building them in DAZ Studio instead: [`docs/DAZ_GUIDE.md`](docs/DAZ_GUIDE.md)
 - Music and sound effects: drop files into `src/assets/music` and `src/assets/sounds`: [`docs/AUDIO_GUIDE.md`](docs/AUDIO_GUIDE.md)
-- Animated clips: save `<shotId>.mp4` (loops) or `<shotId>.once.mp4` (plays once) next to the still in
-  `src/assets/shots/`. How to make them: section 10 of the AI guide.
+- Animated clips: the render studio's **Animate** button makes them from your chosen stills with your own
+  ComfyUI video workflow (`ai-workflows/animate.json`), or save `<shotId>.mp4` (loops) /
+  `<shotId>.once.mp4` (plays once) next to the still yourself. Section 10 of the AI guide.
 - Character looks and wardrobe: [`docs/CHARACTER_SHEETS.md`](docs/CHARACTER_SHEETS.md)
 - Render checklist and production order (generated with `npm run brief`): [`docs/RENDER_BRIEF.md`](docs/RENDER_BRIEF.md)
 - Check your renders' names and sizes: `npm run renders` (add `-- --optimize` to convert them to WebP)

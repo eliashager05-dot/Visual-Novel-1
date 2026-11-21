@@ -1,5 +1,6 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, isAbsolute, join } from 'node:path';
+import { findClip, prepareAnimateWorkflow, type OutputFile } from '../../src/production/animateWorkflow';
 import { ROOT, type AiConfig } from './config';
 
 /**
@@ -129,9 +130,8 @@ function templateWorkflow(cfg: AiConfig, checkpoint: string, r: GenerateRequest)
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-/** Generates one image and returns it as PNG bytes, exactly as ComfyUI produced it. */
-export async function generateImage(cfg: AiConfig, checkpoint: string, r: GenerateRequest): Promise<Buffer> {
-  const workflow = cfg.workflow ? templateWorkflow(cfg, checkpoint, r) : builtInWorkflow(cfg, checkpoint, r);
+/** Queues a workflow and waits until ComfyUI has finished it. Returns its history entry. */
+async function runWorkflow(cfg: AiConfig, workflow: unknown, timeoutSeconds: number, what: string): Promise<HistoryEntry> {
   const queued = await call(cfg, '/prompt', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -140,20 +140,20 @@ export async function generateImage(cfg: AiConfig, checkpoint: string, r: Genera
   const queuedBody = (await queued.json().catch(() => ({}))) as {
     prompt_id?: string;
     error?: { message?: string };
-    node_errors?: Record<string, { errors?: { message?: string; details?: string }[] }>;
+    node_errors?: Record<string, { class_type?: string; errors?: { message?: string; details?: string }[] }>;
   };
   if (!queued.ok || !queuedBody.prompt_id) {
     const details = Object.values(queuedBody.node_errors ?? {})
-      .flatMap((n) => n.errors ?? [])
-      .map((e) => [e.message, e.details].filter(Boolean).join(': '))
+      .flatMap((n) => (n.errors ?? []).map((e) => ({ ...e, node: n.class_type })))
+      .map((e) => [e.node, e.message, e.details].filter(Boolean).join(': '))
       .join('; ');
     throw new ComfyError(`ComfyUI rejected the request: ${queuedBody.error?.message ?? queued.statusText}${details ? ` (${details})` : ''}`);
   }
 
   const id = queuedBody.prompt_id;
-  const deadline = Date.now() + cfg.timeoutSeconds * 1000;
+  const deadline = Date.now() + timeoutSeconds * 1000;
   for (;;) {
-    if (Date.now() > deadline) throw new ComfyError(`Timed out after ${cfg.timeoutSeconds} s waiting for ComfyUI.`);
+    if (Date.now() > deadline) throw new ComfyError(`Timed out after ${timeoutSeconds} s waiting for ComfyUI.`);
     await sleep(700);
     const res = await call(cfg, `/history/${id}`);
     if (!res.ok) continue;
@@ -162,24 +162,86 @@ export async function generateImage(cfg: AiConfig, checkpoint: string, r: Genera
     if (entry.status?.status_str === 'error') {
       const log = saveErrorLog(id, workflow, entry);
       throw new ComfyError(
-        `ComfyUI failed while generating: ${describeFailure(entry)}\n` +
+        `ComfyUI failed while generating ${what}: ${describeFailure(entry)}\n` +
           `The full error report is in ${log}. The black ComfyUI window also shows it in red.`,
       );
     }
-    const image = Object.values(entry.outputs ?? {}).flatMap((o) => o.images ?? [])[0];
-    if (!image) {
-      if (entry.status?.completed) throw new ComfyError('ComfyUI finished but returned no image.');
-      continue;
-    }
-    const q = new URLSearchParams({ filename: image.filename, subfolder: image.subfolder ?? '', type: image.type ?? 'output' });
-    const file = await call(cfg, `/view?${q}`);
-    if (!file.ok) throw new ComfyError(`Could not download the image from ComfyUI (${file.status}).`);
-    return Buffer.from(await file.arrayBuffer());
+    if (entry.status?.completed || entry.status?.status_str === 'success') return entry;
+    // Some versions list outputs before marking the job complete.
+    if (Object.keys(entry.outputs ?? {}).length) return entry;
   }
 }
 
+async function download(cfg: AiConfig, f: OutputFile): Promise<Buffer> {
+  const q = new URLSearchParams({ filename: f.filename, subfolder: f.subfolder ?? '', type: f.type ?? 'output' });
+  const file = await call(cfg, `/view?${q}`);
+  if (!file.ok) throw new ComfyError(`Could not download ${f.filename} from ComfyUI (${file.status}).`);
+  return Buffer.from(await file.arrayBuffer());
+}
+
+/** Generates one image and returns it as PNG bytes, exactly as ComfyUI produced it. */
+export async function generateImage(cfg: AiConfig, checkpoint: string, r: GenerateRequest): Promise<Buffer> {
+  const workflow = cfg.workflow ? templateWorkflow(cfg, checkpoint, r) : builtInWorkflow(cfg, checkpoint, r);
+  const entry = await runWorkflow(cfg, workflow, cfg.timeoutSeconds, 'the image');
+  const image = Object.values(entry.outputs ?? {}).flatMap((o) => (o.images as OutputFile[] | undefined) ?? [])[0];
+  if (!image) throw new ComfyError('ComfyUI finished but returned no image.');
+  return download(cfg, image);
+}
+
+// --- Animation -------------------------------------------------------------
+
+/** Where the animation workflow is, and whether it exists. */
+export function animateWorkflowPath(cfg: AiConfig): { path: string; exists: boolean } {
+  const path = isAbsolute(cfg.animateWorkflow) ? cfg.animateWorkflow : join(ROOT, cfg.animateWorkflow);
+  return { path, exists: Boolean(cfg.animateWorkflow) && existsSync(path) };
+}
+
+/** Sends a still to ComfyUI's input folder. Returns the name to put in a Load Image box. */
+export async function uploadImage(cfg: AiConfig, path: string): Promise<string> {
+  const form = new FormData();
+  const ext = path.split('.').pop()!.toLowerCase();
+  const type = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : `image/${ext}`;
+  form.append('image', new Blob([readFileSync(path)], { type }), `halcyon_${basename(path)}`);
+  form.append('overwrite', 'true');
+  const res = await call(cfg, '/upload/image', { method: 'POST', body: form });
+  const body = (await res.json().catch(() => ({}))) as { name?: string; subfolder?: string };
+  if (!res.ok || !body.name) throw new ComfyError(`ComfyUI did not accept the still (${res.status}).`);
+  return body.subfolder ? `${body.subfolder}/${body.name}` : body.name;
+}
+
+/**
+ * Animates one still with the user's image-to-video workflow. Returns the
+ * clip's bytes and its extension (mp4 or webm).
+ */
+export async function animateImage(
+  cfg: AiConfig,
+  r: { imagePath: string; prompt: string; negative: string; seed: number },
+): Promise<{ data: Buffer; ext: 'mp4' | 'webm' }> {
+  const wfPath = animateWorkflowPath(cfg);
+  if (!wfPath.exists) {
+    throw new ComfyError(`No animation workflow yet. Save one from ComfyUI as ${cfg.animateWorkflow} (see section 10 of the AI guide).`);
+  }
+  const image = await uploadImage(cfg, r.imagePath);
+  let workflow;
+  try {
+    workflow = prepareAnimateWorkflow(readFileSync(wfPath.path, 'utf8'), { image, prompt: r.prompt, negative: r.negative, seed: r.seed });
+  } catch (e) {
+    throw new ComfyError((e as Error).message);
+  }
+  const entry = await runWorkflow(cfg, workflow, cfg.animateTimeoutSeconds, 'the clip');
+  const { clip, other } = findClip((entry.outputs ?? {}) as Record<string, Record<string, unknown>>);
+  if (!clip) {
+    throw new ComfyError(
+      other.length
+        ? `The workflow saved ${other.join(', ')} but no MP4. Change its last box to Save Video with format "mp4" (or Video Combine with "video/h264-mp4"), save it again, and retry.`
+        : 'ComfyUI finished but the workflow saved no video. Check that it ends with a Save Video box.',
+    );
+  }
+  return { data: await download(cfg, clip), ext: /\.webm$/i.test(clip.filename) ? 'webm' : 'mp4' };
+}
+
 interface HistoryEntry {
-  outputs?: Record<string, { images?: { filename: string; subfolder?: string; type?: string }[] }>;
+  outputs?: Record<string, Record<string, unknown>>;
   status?: { status_str?: string; completed?: boolean; messages?: unknown[] };
 }
 

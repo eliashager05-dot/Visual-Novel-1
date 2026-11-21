@@ -181,6 +181,8 @@ The first run creates `ai-render.config.json` in the game folder. Edit it in any
 | `style` | empty | Replaces the style wording at the start of every prompt. |
 | `negative` | empty | Extra things to avoid, added to the built-in list. |
 | `loras` | `{}` | Per-character add-on models, for example `{ "noor": { "file": "noor.safetensors", "strength": 0.8 } }`. |
+| `animateWorkflow` | `ai-workflows/animate.json` | Your image-to-video workflow, used by the **Animate** button (section 10). |
+| `animateTimeoutSeconds` | 3600 | How long to wait for one clip before giving up. |
 | `workflow` | empty | Path to your own workflow in API format. Placeholders: `%POSITIVE%`, `%NEGATIVE%`, `%CHECKPOINT%` inside strings, and `"%SEED%"`, `"%WIDTH%"`, `"%HEIGHT%"`, `"%STEPS%"`, `"%CFG%"` as whole values. |
 
 The built-in list of things to avoid always includes minors, nudity, non-photographic styles, text and
@@ -250,8 +252,40 @@ Do one by hand first. It tells us whether your card can do it and how long a cli
 the clip shorter. **If movement looks wrong:** run it again (each run is different), or describe less
 movement. Small, slow motion looks most natural.
 
-**Then tell me** how long one clip took and how it looked. If it is usable, I will add an **Animate**
-button to the review page, so you can make and compare clips the same way you choose images.
+### The Animate button
+
+Once a clip made by hand looks right, the studio can make the rest for you. You only set it up once.
+
+1. **Save the workflow.** In ComfyUI, with the image-to-video template open that worked for you:
+   **Workflow → Export (API)**. (If you do not see it, turn on *Settings → Comfy → Dev mode* first.)
+2. Save it in the game folder as **`ai-workflows\animate.json`** (make the `ai-workflows` folder).
+3. **Make sure it saves an MP4.** The last box should be *Save Video* with format `mp4` (or *Video Combine*
+   with `video/h264-mp4`). Animated WEBP or GIF will not play in the game, and the studio will say so.
+4. Start the studio (`Render Studio.bat`). The top bar says **Animation workflow ready**.
+
+You do not need to edit the file. For each clip the studio puts the chosen still into the *Load Image*
+box, writes the prompt into the box connected to *positive*, and picks a new seed. Everything else (model,
+size, length, frames per second) stays as you set it in ComfyUI. For an unusual workflow you can mark the
+places yourself: `%IMAGE%`, `%PROMPT%` and `%NEGATIVE%` inside text, and `"%SEED%"` as a whole value.
+
+**In the studio**, every shot with a chosen image has an **Animation** row:
+
+| Control | What it does |
+|---|---|
+| Movement box | Describe only the movement, e.g. `she laughs and looks away, wind in her hair, slow push-in`. **Save movement** keeps it. Empty means gentle breathing, blinking and a slow push-in. |
+| **Animate** | Makes one new clip from the chosen still. Each click gives a different clip. The top bar shows how long it has been running. |
+| Clips | Hover to play, click to see it large. **Use this clip** puts it in the game. |
+| Loops / Plays once | How the game plays it. Changing it on a clip already in the game switches it straight away. |
+| **Remove clip from game** | The game shows the still again. Your clips are kept. |
+
+Clips are kept in `render-candidates\<kind>\<id>\clips\`. The one you use is copied next to the still as
+`<id>.mp4` (loops) or `<id>.once.mp4` (plays once), exactly as described above.
+
+**Good to know:**
+- One clip takes minutes, not seconds. You can keep choosing images meanwhile; jobs run one at a time.
+- If you choose a different still later, make a new clip: the old clip still shows the old picture.
+- The studio uses the movement text plus the shot's brief as the prompt; open *Prompt sent to the video
+  generator* to see it.
 
 ---
 

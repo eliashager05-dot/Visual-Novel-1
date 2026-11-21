@@ -8,10 +8,13 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { basename, join } from 'node:path';
 import { milestones } from '../../src/data/renderSheets';
 import { listRenderItems, type RenderItem } from '../../src/production/prompts';
-import { ComfyError } from './comfy';
+import { animateWorkflowPath, ComfyError, inspectComfy } from './comfy';
 import { loadConfig } from './config';
-import { generateVariants, openSession, promptFor, type Session } from './run';
-import { candidateDir, chosenFile, listCandidates, loadOverrides, loadPicks, saveOverride, useCandidate } from './store';
+import { animateClip, clipPromptFor, generateVariants, openSession, promptFor, type Session } from './run';
+import {
+  candidateDir, chosenFile, clipDir, gameClip, listCandidates, listClips, loadClipPicks, loadOverrides, loadPicks,
+  removeGameClip, saveOverride, useCandidate, useClip, type ClipMode,
+} from './store';
 
 const PORT = 5180;
 const cfg = loadConfig();
@@ -37,20 +40,27 @@ async function connect(force = false): Promise<Session | null> {
   return session;
 }
 
-// --- One-at-a-time generation queue ---------------------------------------
-const queue: { item: RenderItem; count: number }[] = [];
-let running: string | null = null;
+// --- One-at-a-time generation queue (images and clips) -----------------------
+type Job = { item: RenderItem; count: number; kind: 'image' | 'clip' };
+const queue: Job[] = [];
+let running: { id: string; kind: Job['kind']; since: number } | null = null;
 let jobError: string | null = null;
 async function work() {
   if (running) return;
   for (;;) {
     const job = queue.shift();
     if (!job) break;
-    running = job.item.id;
+    running = { id: job.item.id, kind: job.kind, since: Date.now() };
     try {
-      const s = await connect(true);
-      if (!s) throw new ComfyError(comfyError ?? 'ComfyUI is not available.');
-      await generateVariants(s, job.item, job.count);
+      if (job.kind === 'clip') {
+        // Clips only need ComfyUI to be reachable; the workflow names its own models.
+        await inspectComfy(cfg);
+        for (let k = 0; k < job.count; k++) await animateClip(cfg, job.item);
+      } else {
+        const s = await connect(true);
+        if (!s) throw new ComfyError(comfyError ?? 'ComfyUI is not available.');
+        await generateVariants(s, job.item, job.count);
+      }
       jobError = null;
     } catch (e) {
       jobError = `${job.item.id}: ${(e as Error).message}`;
@@ -59,6 +69,8 @@ async function work() {
   }
   running = null;
 }
+const isQueued = (id: string, kind: Job['kind']) =>
+  queue.some((q) => q.item.id === id && q.kind === kind) || (running?.id === id && running.kind === kind);
 
 // --- HTTP helpers ------------------------------------------------------------
 const json = (res: ServerResponse, body: unknown, status = 200) => {
@@ -77,8 +89,37 @@ const readBody = (req: IncomingMessage) =>
       }
     });
   });
+/** Only plain files are served; a folder or a missing name is "not found". */
+const isFile = (path: string | null): path is string => Boolean(path && existsSync(path) && statSync(path).isFile());
+
+/** Sends a clip, with byte ranges so the browser can seek and loop it. */
+const sendVideo = (req: IncomingMessage, res: ServerResponse, path: string | null) => {
+  if (!isFile(path)) {
+    res.writeHead(404);
+    res.end();
+    return;
+  }
+  const data = readFileSync(path);
+  const type = path.toLowerCase().endsWith('.webm') ? 'video/webm' : 'video/mp4';
+  const range = /bytes=(\d*)-(\d*)/.exec(req.headers.range ?? '');
+  if (range) {
+    const start = range[1] ? Number(range[1]) : 0;
+    const end = range[2] ? Math.min(Number(range[2]), data.length - 1) : data.length - 1;
+    res.writeHead(206, {
+      'content-type': type,
+      'content-range': `bytes ${start}-${end}/${data.length}`,
+      'accept-ranges': 'bytes',
+      'content-length': end - start + 1,
+      'cache-control': 'no-store',
+    });
+    res.end(data.subarray(start, end + 1));
+    return;
+  }
+  res.writeHead(200, { 'content-type': type, 'accept-ranges': 'bytes', 'content-length': data.length, 'cache-control': 'no-store' });
+  res.end(data);
+};
 const sendImage = (res: ServerResponse, path: string | null) => {
-  if (!path || !existsSync(path)) {
+  if (!isFile(path)) {
     res.writeHead(404);
     res.end();
     return;
@@ -93,9 +134,18 @@ async function state() {
   await connect();
   const overrides = loadOverrides();
   const picks = loadPicks();
+  const clipPicks = loadClipPicks();
+  const wf = animateWorkflowPath(cfg);
   return {
     comfy: session ? { ok: true, gpu: session.gpu, checkpoint: session.checkpoint } : { ok: false, error: comfyError },
-    job: { running, queued: queue.length, error: jobError },
+    job: {
+      running: running?.id ?? null,
+      kind: running?.kind ?? null,
+      seconds: running ? Math.round((Date.now() - running.since) / 1000) : 0,
+      queued: queue.length,
+      error: jobError,
+    },
+    animate: { ready: wf.exists, workflow: cfg.animateWorkflow },
     milestones: milestones.map((m, i) => ({ n: i + 1, name: m.name, scenes: m.scenes })),
     items: items.map((item) => {
       const chosen = chosenFile(item);
@@ -112,6 +162,15 @@ async function state() {
         picked: picks[item.id]?.file ?? null,
         confirmed: Boolean(chosen && picks[item.id]?.confirmed),
         candidates: listCandidates(item).map((p) => basename(p)),
+        canAnimate: item.kind !== 'refs' && Boolean(chosen),
+        motion: overrides[item.id]?.motion ?? '',
+        clipPrompt: item.kind === 'refs' ? '' : clipPromptFor(item),
+        clips: item.kind === 'refs' ? [] : listClips(item).map((p) => basename(p)),
+        clip: (() => {
+          const g = gameClip(item);
+          return g ? { mode: g.mode, file: clipPicks[item.id] ?? null } : null;
+        })(),
+        animating: isQueued(item.id, 'clip'),
       };
     }),
   };
@@ -134,13 +193,45 @@ const server = createServer(async (req, res) => {
       const [, , id = '', file = ''] = path.split('/');
       const item = byId.get(id);
       sendImage(res, item ? join(candidateDir(item), basename(file)) : null);
+    } else if (req.method === 'GET' && path.startsWith('/clip/')) {
+      const [, , id = '', file = ''] = path.split('/');
+      const item = byId.get(id);
+      sendVideo(req, res, item ? join(clipDir(item), basename(file)) : null);
+    } else if (req.method === 'POST' && path === '/api/animate') {
+      const body = await readBody(req);
+      const item = byId.get(String(body.id));
+      if (!item || item.kind === 'refs') return json(res, { error: 'not found' }, 404);
+      if (!animateWorkflowPath(cfg).exists) return json(res, { error: 'no animation workflow' }, 400);
+      if (!isQueued(item.id, 'clip')) queue.push({ item, count: 1, kind: 'clip' });
+      jobError = null;
+      void work();
+      json(res, { queued: queue.length });
+    } else if (req.method === 'POST' && path === '/api/use-clip') {
+      const body = await readBody(req);
+      const item = byId.get(String(body.id));
+      const file = item ? join(clipDir(item), basename(String(body.file))) : '';
+      const mode: ClipMode = body.mode === 'once' ? 'once' : 'loop';
+      if (!item || !existsSync(file)) return json(res, { error: 'not found' }, 404);
+      useClip(item, file, mode);
+      json(res, { ok: true });
+    } else if (req.method === 'POST' && path === '/api/remove-clip') {
+      const body = await readBody(req);
+      const item = byId.get(String(body.id));
+      if (!item) return json(res, { error: 'not found' }, 404);
+      removeGameClip(item);
+      json(res, { ok: true });
+    } else if (req.method === 'POST' && path === '/api/motion') {
+      const body = await readBody(req);
+      if (!byId.has(String(body.id))) return json(res, { error: 'not found' }, 404);
+      saveOverride(String(body.id), { motion: String(body.motion ?? '') });
+      json(res, { ok: true });
     } else if (req.method === 'POST' && path === '/api/generate') {
       const body = await readBody(req);
       const ids = Array.isArray(body.ids) ? (body.ids as string[]) : [];
       const count = Math.min(8, Math.max(1, Number(body.count) || 2));
       for (const id of ids) {
         const item = byId.get(id);
-        if (item && !queue.some((q) => q.item.id === id) && running !== id) queue.push({ item, count });
+        if (item && !isQueued(id, 'image')) queue.push({ item, count, kind: 'image' });
       }
       jobError = null;
       void work();
@@ -221,13 +312,19 @@ const PAGE = /* html */ `<!doctype html>
   .cand.picked img { border-color: var(--gold); }
   .cand button { margin-top: 6px; font-size: 13px; padding: 3px 12px; }
   #lightbox { position: fixed; inset: 0; background: #000e; display: none; align-items: center; justify-content: center; z-index: 20; cursor: zoom-out; }
-  #lightbox img { max-width: 96vw; max-height: 94vh; }
+  #lightbox img, #lightbox video { max-width: 96vw; max-height: 94vh; }
+  .anim { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .label { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .hint { color: #ffffff80; font-size: 13px; margin: -4px 0 8px; }
+  .cand video { height: 124px; border-radius: 6px; display: block; cursor: zoom-in; border: 2px solid transparent; background: #000; }
+  .cand.picked video { border-color: var(--gold); }
   #error { background: #5a1f1f; padding: 10px 24px; display: none; }
 </style></head><body>
 <header>
   <h1>Halcyon render studio</h1>
   <span id="comfy" class="pill">Connecting…</span>
   <span id="progress" class="pill"></span>
+  <span id="animate" class="pill"></span>
   <span id="job" class="pill busy" style="display:none"></span>
   <button id="stop" style="display:none">Stop</button>
   <label>Show <select id="filter"><option value="todo">to do</option><option value="all">all</option><option value="done">confirmed</option></select></label>
@@ -236,7 +333,7 @@ const PAGE = /* html */ `<!doctype html>
 </header>
 <div id="error"></div>
 <main id="main"></main>
-<div id="lightbox"><img alt=""></div>
+<div id="lightbox"><img alt=""><video controls loop muted playsinline></video></div>
 <script>
 var S = null, sigs = {};
 function el(tag, attrs, kids) {
@@ -251,8 +348,50 @@ function el(tag, attrs, kids) {
 }
 function post(path, body) { return fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).then(refresh); }
 function count() { return Number(document.getElementById('count').value); }
-function zoom(src) { var lb = document.getElementById('lightbox'); lb.querySelector('img').src = src; lb.style.display = 'flex'; }
-document.getElementById('lightbox').onclick = function () { this.style.display = 'none'; };
+function zoom(src, video) {
+  var lb = document.getElementById('lightbox'), img = lb.querySelector('img'), v = lb.querySelector('video');
+  img.style.display = video ? 'none' : ''; v.style.display = video ? '' : 'none';
+  if (video) { v.src = src; v.play(); } else img.src = src;
+  lb.style.display = 'flex';
+}
+document.getElementById('lightbox').onclick = function (e) {
+  if (e.target.tagName === 'VIDEO') return;
+  var v = this.querySelector('video'); v.pause(); v.removeAttribute('src');
+  this.style.display = 'none';
+};
+function duration(s) { return s >= 60 ? Math.floor(s / 60) + ' min ' + (s % 60) + ' s' : s + ' s'; }
+
+function animation(it) {
+  if (it.kind === 'refs') return null;
+  var motion = el('input', { type: 'text', placeholder: 'Movement for the clip, e.g. "she laughs and looks away, wind in her hair, slow push-in"', value: it.motion });
+  var mode = el('select', { title: 'How the game plays the clip' }, [el('option', { value: 'loop', text: 'Loops' }), el('option', { value: 'once', text: 'Plays once, then holds' })]);
+  if (it.clip) mode.value = it.clip.mode;
+  mode.onchange = function () { if (it.clip && it.clip.file) post('/api/use-clip', { id: it.id, file: it.clip.file, mode: mode.value }); };
+  var why = !it.canAnimate ? 'Choose an image for this shot first: the clip is made from it.'
+    : !S.animate.ready ? 'To animate, save your image-to-video workflow from ComfyUI as ' + S.animate.workflow + ' (AI guide, section 10).' : '';
+  var clips = el('div', { class: 'strip' }, it.clips.map(function (f) {
+    var src = '/clip/' + it.id + '/' + f, inGame = it.clip && it.clip.file === f;
+    var v = el('video', { src: src, muted: true, loop: true, playsinline: true, preload: 'metadata' });
+    v.muted = true;
+    v.onmouseenter = function () { v.play().catch(function () {}); };
+    v.onmouseleave = function () { v.pause(); };
+    v.onclick = function () { zoom(src, true); };
+    return el('div', { class: 'cand' + (inGame ? ' picked' : '') }, [v,
+      el('button', { class: inGame ? 'primary' : '', text: inGame ? 'In the game' : 'Use this clip', onclick: function () { post('/api/use-clip', { id: it.id, file: f, mode: mode.value }); } })]);
+  }));
+  return el('div', { class: 'anim' }, [
+    el('div', { class: 'label', text: 'Animation' + (it.clip ? ' · in the game, ' + (it.clip.mode === 'once' ? 'plays once' : 'loops') : '') }),
+    el('details', {}, [el('summary', { text: 'Prompt sent to the video generator' }), el('p', { text: it.clipPrompt })]),
+    el('div', { class: 'row' }, [motion,
+      el('button', { text: 'Save movement', onclick: function () { post('/api/motion', { id: it.id, motion: motion.value }); } }),
+      mode,
+      el('button', { class: 'primary', text: it.animating ? 'Animating…' : 'Animate', disabled: Boolean(why) || it.animating, title: why || 'Make one new clip from the chosen image', onclick: function () { post('/api/animate', { id: it.id }); } }),
+      it.clip ? el('button', { text: 'Remove clip from game', onclick: function () { post('/api/remove-clip', { id: it.id }); } }) : null
+    ]),
+    why ? el('div', { class: 'hint', text: why }) : null,
+    it.clips.length ? clips : null
+  ]);
+}
 document.getElementById('filter').onchange = function () { sigs = {}; document.getElementById('main').innerHTML = ''; render(); };
 document.getElementById('stop').onclick = function () { post('/api/stop', {}); };
 
@@ -267,7 +406,7 @@ function card(it) {
       el('button', { class: it.picked === f && it.confirmed ? 'primary' : '', text: it.picked === f ? (it.confirmed ? 'Chosen' : 'Keep this one') : 'Use this', onclick: function () { post('/api/use', { id: it.id, file: f }); } })
     ]);
   }));
-  var busy = S.job.running === it.id;
+  var busy = S.job.running === it.id && S.job.kind === 'image';
   return el('div', { class: 'card', id: 'card-' + it.id }, [chosen, el('div', {}, [
     el('div', { class: 'id', text: it.id + (it.kind === 'cg' ? '  ·  illustration: ' + it.title : it.kind === 'refs' ? '  ·  ' + it.title : '') }),
     el('div', { class: 'brief', text: it.brief }),
@@ -276,7 +415,8 @@ function card(it) {
       el('button', { text: 'Save note', onclick: function () { post('/api/extra', { id: it.id, extra: extra.value }); } }),
       el('button', { class: 'primary', text: busy ? 'Generating…' : 'Generate ' + count() + ' more', disabled: busy, onclick: function () { post('/api/generate', { ids: [it.id], count: count() }); } })
     ]),
-    strip
+    strip,
+    animation(it)
   ])]);
 }
 
@@ -290,7 +430,12 @@ function render() {
   var game = S.items.filter(function (i) { return i.kind !== 'refs'; });
   document.getElementById('progress').textContent = game.filter(function (i) { return i.confirmed; }).length + ' of ' + game.length + ' confirmed · ' + game.filter(function (i) { return i.chosen; }).length + ' have an image';
   var j = document.getElementById('job'), busy = S.job.running;
-  j.style.display = busy ? '' : 'none'; j.textContent = busy ? 'Generating ' + busy + (S.job.queued ? ' · ' + S.job.queued + ' waiting' : '') : '';
+  j.style.display = busy ? '' : 'none';
+  j.textContent = busy ? (S.job.kind === 'clip' ? 'Animating ' : 'Generating ') + busy + ' · ' + duration(S.job.seconds) + (S.job.queued ? ' · ' + S.job.queued + ' waiting' : '') : '';
+  var a = document.getElementById('animate');
+  a.className = 'pill ' + (S.animate.ready ? 'ok' : '');
+  a.textContent = S.animate.ready ? 'Animation workflow ready' : 'No animation workflow';
+  a.title = S.animate.ready ? S.animate.workflow : 'Save one from ComfyUI as ' + S.animate.workflow + ' (AI guide, section 10)';
   document.getElementById('stop').style.display = busy && S.job.queued ? '' : 'none';
 
   var ms = document.getElementById('milestones');
@@ -323,7 +468,8 @@ function render() {
     var list = groups[title];
     sec.querySelector('small').textContent = list.filter(function (i) { return i.confirmed; }).length + ' / ' + list.length + ' confirmed';
     list.forEach(function (it) {
-      var sig = JSON.stringify([it.chosen, it.picked, it.confirmed, it.candidates, it.extra, S.job.running === it.id]);
+      var sig = JSON.stringify([it.chosen, it.picked, it.confirmed, it.candidates, it.extra, S.job.running === it.id && S.job.kind,
+        it.clips, it.clip, it.motion, it.animating, it.canAnimate, S.animate.ready]);
       var existing = document.getElementById('card-' + it.id);
       if (existing && sigs[it.id] === sig) return;
       // Do not replace a card while its note is being typed.

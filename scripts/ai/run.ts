@@ -1,8 +1,9 @@
 import { milestones } from '../../src/data/renderSheets';
 import { buildPrompt, listRenderItems, type BuiltPrompt, type RenderItem } from '../../src/production/prompts';
-import { ComfyError, generateImage, inspectComfy, resolveCheckpoint } from './comfy';
+import { MOTION_NEGATIVE, motionPrompt } from '../../src/production/animateWorkflow';
+import { animateImage, ComfyError, generateImage, inspectComfy, resolveCheckpoint } from './comfy';
 import type { AiConfig } from './config';
-import { chosenFile, listCandidates, loadOverrides, saveCandidate, useCandidate } from './store';
+import { chosenFile, listCandidates, listClips, loadOverrides, saveCandidate, saveClip, useCandidate } from './store';
 
 export interface Session {
   cfg: AiConfig;
@@ -56,6 +57,24 @@ export async function generateVariants(
   }
   if (opts.install !== false && paths[0] && !chosenFile(item)) useCandidate(item, paths[0]);
   return paths;
+}
+
+/** The prompt a clip of this image is made with. */
+export function clipPromptFor(item: RenderItem): string {
+  return motionPrompt(item.brief, loadOverrides()[item.id]?.motion);
+}
+
+/**
+ * Makes one new animated clip from the image chosen for this shot, with the
+ * user's image-to-video workflow. Each clip gets a new seed. Returns its path.
+ */
+export async function animateClip(cfg: AiConfig, item: RenderItem): Promise<string> {
+  if (item.kind === 'refs') throw new ComfyError('Reference portraits are not animated.');
+  const still = chosenFile(item);
+  if (!still) throw new ComfyError('Choose an image for this shot first; the clip is made from it.');
+  const seed = buildPrompt(item).seed + 5000 + listClips(item).length;
+  const { data, ext } = await animateImage(cfg, { imagePath: still, prompt: clipPromptFor(item), negative: MOTION_NEGATIVE, seed });
+  return saveClip(item, data, ext, seed);
 }
 
 /** Items for a selection, in story order. Reference portraits only when asked for. */
