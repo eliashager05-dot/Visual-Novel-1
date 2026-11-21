@@ -119,6 +119,8 @@ export function migrateRecord(raw: unknown): SaveRecord {
   // v3 → v4: saves written before the phone lack it.
   if (!rec.state.phone) rec.state.phone = { threads: {}, names: {}, unread: {} };
   if (rec.state.stage.phone === undefined) rec.state.stage.phone = null;
+  // v4 → v5: saves written before the clock have none (the HUD simply hides it).
+  if (rec.state.clock === undefined) rec.state.clock = null;
   rec.schemaVersion = SAVE_SCHEMA_VERSION;
   rec.state.schemaVersion = SAVE_SCHEMA_VERSION;
   return rec;

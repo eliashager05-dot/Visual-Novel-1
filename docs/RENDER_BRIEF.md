@@ -1085,8 +1085,26 @@ file use a synthesised placeholder. See [AUDIO_GUIDE.md](AUDIO_GUIDE.md).
 | `splash` | Wet footsteps running in shallow water. | Room 7 | ⬜ to do |
 | `piano_note` | One soft low piano note, left to ring. | After Hours | ⬜ to do |
 | `car_door` | A car door closing solidly. | Coast Road, Before the Storm | ⬜ to do |
-| `phone_message` | A short, gentle two-note message tone. | Ninety Days, Stop Looking | ⬜ to do |
+| `phone_message` | A short, gentle two-note message tone. | The First Night, Ninety Days, Stop Looking | ⬜ to do |
 | `key_turn` | An old iron key turning in a lock, a heavy click. | Margit's Room | ⬜ to do |
+
+## Maps (optional)
+
+Map choices show a drawn chart of the island. To use your own illustration instead, save it as
+`src/assets/shots/<id>.png` (16:9, 1920×1080). Keep the places where the pins expect them, given here as
+percent from the left and from the top; or move the pins in `src/data/maps.ts` to match your picture.
+
+### `map_island` · "Halcyon Point" · ⬜ to do
+
+- **Brief:** a hand-drawn illustrated map of a small northern island seen from above, like an old nautical
+  chart or a tourist map: cream paper, ink coastline, soft sea colour, compass rose, no text labels (the game adds them).
+- **Places:**
+  - Hotel Halcyon at 67% across, 41% down (On the east cliff)
+  - The cove at 76.5% across, 58% down (Below the hotel, down the cliff path)
+  - The Low Tide at 52.5% across, 66% down (Bar on the harbour front)
+  - The harbour at 44% across, 73% down (Ferry pier and the town)
+  - The coast road at 30% across, 46% down (Loops the island in forty minutes)
+  - Old fish factory at 42% across, 19% down (Derelict, at the north end)
 
 ## Backgrounds (optional)
 

@@ -23,6 +23,7 @@ export function presentChoice(instr: ChoiceInstruction, state: GameState): Prese
         enabled,
         ...(enabled || !o.lockedHint ? {} : { lockedHint: o.lockedHint }),
         ...(hints.length ? { hints } : {}),
+        ...(o.place ? { place: o.place } : {}),
       };
     })
     .filter((o): o is NonNullable<typeof o> => o !== null);
@@ -32,6 +33,7 @@ export function presentChoice(instr: ChoiceInstruction, state: GameState): Prese
     prompt: instr.prompt ? interpolate(instr.prompt, state) : undefined,
     options,
     timeout: instr.timeout,
+    ...(instr.map ? { map: instr.map } : {}),
   };
 }
 

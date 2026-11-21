@@ -9,6 +9,8 @@ import { useGameInput } from '@/hooks/useGameInput';
 import type { DisplayedLine } from '@/types';
 import { CharacterLayer } from '../CharacterRenderer/CharacterRenderer';
 import { ChoiceMenu } from '../ChoiceMenu/ChoiceMenu';
+import { MapChoice } from '../ChoiceMenu/MapChoice';
+import { ClockChip } from '../DialogueBox/ClockChip';
 import { CinematicDialogue } from '../DialogueBox/CinematicDialogue';
 import { DialogueBox } from '../DialogueBox/DialogueBox';
 import { Hud } from '../DialogueBox/Hud';
@@ -82,7 +84,13 @@ export function GameScreen() {
           <Hud raised={!cinematic} />
         </>
       )}
-      {!hideUi && p.kind === 'choice' && (
+      {!hideUi && p.kind === 'choice' && p.choice.map && (
+        <>
+          <MapChoice choice={p.choice} onChoose={choose} />
+          <Hud raised={!cinematic} />
+        </>
+      )}
+      {!hideUi && p.kind === 'choice' && !p.choice.map && (
         <>
           {!phoneOpen && <div className="pointer-events-none absolute inset-y-0 right-0 w-[1000px] bg-gradient-to-l from-black/35 to-transparent" />}
           {lastLine && <Dialogue line={lastLine} lineId={-1} dimmed narrow={Boolean(phoneOpen)} />}
@@ -90,8 +98,9 @@ export function GameScreen() {
           <Hud raised={!cinematic} />
         </>
       )}
+      {!hideUi && game.clock && p.kind !== 'title' && !(p.kind === 'choice' && p.choice.map) && <ClockChip clock={game.clock} />}
       {(auto || skip) && !hideUi && (
-        <div className="pointer-events-none absolute left-[48px] top-[44px] text-[16px] uppercase tracking-[0.35em] text-[#e8c88f]/80">
+        <div className="pointer-events-none absolute left-[48px] top-[92px] text-[16px] uppercase tracking-[0.35em] text-[#e8c88f]/80">
           {skip ? 'Skipping ▸▸' : 'Auto ▸'}
         </div>
       )}

@@ -144,7 +144,7 @@ export function ChoiceMenu({ choice, onChoose, variant = 'screen' }: { choice: P
 }
 
 /** Walkthrough chips: "Noor ▲▲", "Vera trust ▼", "Sienna ✦". */
-function Hints({ hints }: { hints: ChoiceHint[] }) {
+export function Hints({ hints }: { hints: ChoiceHint[] }) {
   return (
     <span className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[17px] font-semibold">
       {hints.map((h) => {

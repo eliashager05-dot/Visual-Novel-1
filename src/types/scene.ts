@@ -1,5 +1,5 @@
 import type { CharacterId, Expression, StagePosition } from './character';
-import type { StageFx } from './gameState';
+import type { StageFx, TimeOfDay } from './gameState';
 
 // ---------------------------------------------------------------------------
 // Conditions — a small, serialisable predicate language for branching.
@@ -22,6 +22,10 @@ export type Condition =
   | { type: 'chose'; choice: string; option: string }
   | { type: 'visited'; scene: string }
   | { type: 'met'; character: CharacterId }
+  /** Day of the visit (1 = arrival day). */
+  | ({ type: 'day' } & Comparison)
+  /** Time of day is one of these. */
+  | { type: 'time'; periods: TimeOfDay[] }
   | { type: 'all'; conditions: Condition[] }
   | { type: 'any'; conditions: Condition[] }
   | { type: 'not'; condition: Condition };
@@ -65,6 +69,8 @@ export interface ChoiceOption {
   steps?: Step[];
   /** Leave the current flow entirely. Applied after inline steps. */
   goto?: JumpTarget;
+  /** On a map choice: the place on the map this option leads to. */
+  place?: string;
 }
 
 export type Step =
@@ -104,6 +110,8 @@ export type Step =
   | { type: 'phone'; thread: string | null }
   /** Weather and light over the image, until changed or the scene ends. `null` clears. */
   | { type: 'fx'; fx: StageFx | null }
+  /** Moves the story's clock. `day: 'next'` starts the following day. */
+  | { type: 'clock'; period: TimeOfDay; day?: number | 'next' }
   | { type: 'transition'; kind: TransitionKind; duration?: number }
   | { type: 'music'; track: string | null; fade?: number }
   | { type: 'sfx'; id: string }
@@ -121,6 +129,8 @@ export type Step =
       options: ChoiceOption[];
       /** Seconds before the default option is taken — tension choices. Optional. */
       timeout?: { seconds: number; defaultOption: string };
+      /** Show the options as places on this map (see `src/data/maps.ts`); each option needs a `place`. */
+      map?: string;
     }
   | {
       type: 'end';

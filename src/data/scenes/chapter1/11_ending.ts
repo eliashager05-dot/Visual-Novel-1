@@ -1,6 +1,6 @@
 import {
-  bg, C, cg, choice, effects, end, fx, jump, me, music, narrate, option, phone, photo, scene, setFlag, sfx,
-  shot, speaker, text, think, title, transition, trust, when,
+  bg, C, cg, choice, clock, effects, end, fx, jump, me, music, narrate, option, phone, photo, scene, setFlag,
+  sfx, shot, speaker, text, think, title, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -8,6 +8,7 @@ const vera = speaker('vera');
 // --- Margit's room -------------------------------------------------------
 export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
   bg('hotel_corridor_night', 'fade'),
+  clock('late'),
   fx({ flicker: 'candle' }),
   music('mystery', 3),
   when(
@@ -101,6 +102,7 @@ export const c1MargitRoom = scene('c1_margit_room', 'ch1', "Margit's Room", [
 // --- Cliffhanger ---------------------------------------------------------
 export const c1Cliffhanger = scene('c1_cliffhanger', 'ch1', 'Stop Looking', [
   bg('player_room_night', 'fade'),
+  clock('dawn'),
   fx(null),
   music(null, 3),
   shot('c1_room_dawn'),

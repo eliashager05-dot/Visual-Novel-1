@@ -23,6 +23,16 @@ export interface StageFx {
   sparkle?: boolean;
 }
 
+/** Parts of the day, in order. */
+export const TIMES_OF_DAY = ['dawn', 'morning', 'midday', 'afternoon', 'dusk', 'evening', 'night', 'late'] as const;
+export type TimeOfDay = (typeof TIMES_OF_DAY)[number];
+
+/** The story's calendar: which day of the visit it is, and when. Saved with the game. */
+export interface GameClock {
+  day: number;
+  period: TimeOfDay;
+}
+
 /** One message in a phone conversation. */
 export interface PhoneMessage {
   from: 'them' | 'player';
@@ -89,6 +99,8 @@ export interface GameState {
   /** choiceId → optionId of the most recent pick. */
   choicesMade: Record<string, string>;
   phone: PhoneState;
+  /** Day and time of day, once the story has set one. */
+  clock: GameClock | null;
   visitedScenes: string[];
   history: HistoryEntry[];
   /** Monotonic counter of executed lines; useful for playtime/progress heuristics. */
@@ -105,6 +117,8 @@ export type EngineEvent =
   | { type: 'characterMet'; character: CharacterId }
   /** A message arrived while the phone was put away. */
   | { type: 'phoneMessage'; thread: string }
+  /** The story moved to another day or time of day. */
+  | { type: 'clock'; clock: GameClock }
   | { type: 'ending'; id: string }
   | { type: 'relationshipChanged'; character: CharacterId; stat: 'affinity' | 'trust'; delta: number }
   | { type: 'milestone'; character: CharacterId; milestone: string };

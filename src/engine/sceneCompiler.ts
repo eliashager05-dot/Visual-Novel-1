@@ -27,6 +27,7 @@ export type Instruction =
       prompt?: string;
       options: CompiledOption[];
       timeout?: { seconds: number; defaultOption: string };
+      map?: string;
     };
 
 export interface CompiledScene {
@@ -113,6 +114,7 @@ export function compileScene(scene: SceneDefinition): CompiledScene {
           prompt: step.prompt,
           options: compiled,
           timeout: step.timeout,
+          ...(step.map ? { map: step.map } : {}),
         });
         // Each option gets its own block; all blocks rejoin at `after`.
         const rejoin: number[] = [];

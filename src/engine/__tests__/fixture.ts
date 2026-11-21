@@ -48,6 +48,9 @@ export function makeFixture(): GameContent {
     cgs: {},
     shots: {},
     contacts: { unknown: { id: 'unknown', name: 'Unknown number', color: '#999' } },
+    maps: {
+      town: { id: 'town', name: 'Town', places: { pier: { name: 'Pier', x: 20, y: 70 }, inn: { name: 'Inn', x: 60, y: 30 } } },
+    },
     music: {},
     sfx: {},
     scenes: {

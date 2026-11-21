@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, phone, reply, scene,
-  setFlag, sfx, shot, speaker, text, think, trust, when,
+  affinity, bg, C, cg, choice, clock, effects, fx, jump, mapChoice, me, milestone, music, narrate, option,
+  phone, reply, scene, setFlag, sfx, shot, speaker, text, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -10,6 +10,7 @@ const june = speaker('june');
 // --- The hub -------------------------------------------------------------
 export const c1FirstNight = scene('c1_first_night', 'ch1', 'The First Night', [
   bg('player_room_night', 'fade'),
+  clock('night'),
   music('mystery', 3),
   shot('c1_room_window'),
   narrate(`Midnight. The radiator sings its B-flat. Below the window, the sea breathes in and out against the cliff.`),
@@ -32,18 +33,20 @@ export const c1FirstNight = scene('c1_first_night', 'ch1', 'The First Night', [
     phone(null),
   ]),
 
-  choice(
+  mapChoice(
     'c1_night_choice',
+    'island',
     [
-      option('lobby', `Go down to the lobby. There's a lamp on at reception.`, { goto: { scene: 'c1_night_vera' } }),
+      option('lobby', `Go down to the lobby. There's a lamp on at reception.`, { place: 'hotel', goto: { scene: 'c1_night_vera' } }),
       option('bar', `Go down to the bar. Noor said she plays after closing.`, {
+        place: 'low_tide',
         condition: C.any(C.flag('noor_invited_piano'), C.affinity('noor', { gte: 30 })),
         showWhenLocked: true,
         lockedHint: `The bar's side door is locked tonight`,
         goto: { scene: 'c1_night_noor' },
       }),
-      option('cove', `Go down to the cove, toward the light.`, { goto: { scene: 'c1_night_june' } }),
-      option('letter', `Stay in and open Margit's letter.`, { goto: { scene: 'c1_night_letter' } }),
+      option('cove', `Go down to the cove, toward the light.`, { place: 'cove', goto: { scene: 'c1_night_june' } }),
+      option('letter', `Stay in and open Margit's letter.`, { place: 'hotel', goto: { scene: 'c1_night_letter' } }),
     ],
     'Where do you go?',
   ),
@@ -52,6 +55,7 @@ export const c1FirstNight = scene('c1_first_night', 'ch1', 'The First Night', [
 // --- Vera: the night audit ----------------------------------------------
 export const c1NightVera = scene('c1_night_vera', 'ch1', 'Night Audit', [
   bg('hotel_lobby_late', 'dissolve'),
+  clock('late'),
   fx({ flicker: 'lamp' }),
   music('night_audit', 2),
   shot('c1_vera_desk_wide'),
@@ -139,6 +143,7 @@ export const c1NightVera = scene('c1_night_vera', 'ch1', 'Night Audit', [
 // --- Noor: after hours --------------------------------------------------
 export const c1NightNoor = scene('c1_night_noor', 'ch1', 'After Hours', [
   bg('low_tide_bar_closed', 'dissolve'),
+  clock('late'),
   fx({ dust: true }),
   music('night_piano', 2),
   sfx('piano_note'),
@@ -216,6 +221,7 @@ export const c1NightNoor = scene('c1_night_noor', 'ch1', 'After Hours', [
 // --- June: the glow -----------------------------------------------------
 export const c1NightJune = scene('c1_night_june', 'ch1', 'Bloom', [
   bg('cove_night', 'dissolve'),
+  clock('late'),
   fx({ sparkle: true }),
   music('bloom', 3),
   shot('c1_cove_night_wide'),
@@ -276,6 +282,7 @@ export const c1NightJune = scene('c1_night_june', 'ch1', 'Bloom', [
 // --- Alone: the letter --------------------------------------------------
 export const c1NightLetter = scene('c1_night_letter', 'ch1', 'For When You Arrive', [
   bg('player_room_night', 'none'),
+  clock('late'),
   shot('c1_letter_desk'),
   music('mystery', 2),
   narrate(`The envelope is thick and cream-coloured and sealed with actual wax, because of course it is.`),

@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  think, trust, when,
+  affinity, bg, C, choice, clock, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx, shot,
+  speaker, think, trust, when,
 } from '../../story/dsl';
 
 const noor = speaker('noor');
@@ -8,6 +8,7 @@ const sienna = speaker('sienna');
 
 export const c1LowTide = scene('c1_low_tide', 'ch1', 'The Low Tide', [
   bg('low_tide_bar_night', 'fade'),
+  clock('night'),
   fx({ dust: true, flicker: 'lamp' }),
   music('low_tide', 2),
   shot('c1_bar_wide'),

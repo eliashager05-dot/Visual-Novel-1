@@ -150,6 +150,27 @@ export interface SetBrief {
 }
 
 /** Someone the player can message who is not a character in the cast (e.g. an unknown number). */
+/** A place the player can pick on a map choice. Coordinates are percent of the map (0–100). */
+export interface MapPlace {
+  name: string;
+  x: number;
+  y: number;
+  /** One line under the name, e.g. "Hotel Halcyon · Room 12". */
+  note?: string;
+}
+
+/** An illustrated map used by map choices. */
+export interface MapDefinition {
+  id: string;
+  name: string;
+  /**
+   * Shot id of a drop-in map illustration (`src/assets/shots/<id>.webp`).
+   * Until it exists the game draws a map itself.
+   */
+  image?: string;
+  places: Record<string, MapPlace>;
+}
+
 export interface ContactDefinition {
   id: string;
   name: string;

@@ -267,6 +267,28 @@ for (const c of allCgs) {
   p();
 }
 
+{
+  // Map illustrations for map choices: optional, the game draws a chart until one exists.
+  const maps = Object.values(content.maps).filter((m) => m.image);
+  if (maps.length) {
+    p('## Maps (optional)');
+    p();
+    p('Map choices show a drawn chart of the island. To use your own illustration instead, save it as');
+    p('`src/assets/shots/<id>.png` (16:9, 1920×1080). Keep the places where the pins expect them, given here as');
+    p('percent from the left and from the top; or move the pins in `src/data/maps.ts` to match your picture.');
+    p();
+    for (const m of maps) {
+      p(`### \`${m.image}\` · "${m.name}" · ${mark(isDone('shots', m.image!, undefined))}`);
+      p();
+      p('- **Brief:** a hand-drawn illustrated map of a small northern island seen from above, like an old nautical');
+      p('  chart or a tourist map: cream paper, ink coastline, soft sea colour, compass rose, no text labels (the game adds them).');
+      p('- **Places:**');
+      for (const place of Object.values(m.places)) p(`  - ${place.name} at ${place.x}% across, ${place.y}% down${place.note ? ` (${place.note})` : ''}`);
+      p();
+    }
+  }
+}
+
 p('## Backgrounds (optional)');
 p();
 p('Only needed if a scene is staged with sprites instead of shots. Every scene in Chapter One uses shots, so');

@@ -18,8 +18,12 @@ const EXT = /\.(webp|avif|jpe?g|png)$/i;
 const optimize = process.argv.includes('--optimize');
 const BIG = 1.5 * 1024 * 1024;
 
-const folders: { folder: string; label: string; ids: string[] }[] = [
-  { folder: 'shots', label: 'shots', ids: Object.keys(content.shots) },
+// Map illustrations are optional (the game draws a map until one exists), so
+// they are accepted in shots/ but not counted toward progress.
+const mapImages = Object.values(content.maps).flatMap((m) => (m.image ? [m.image] : []));
+
+const folders: { folder: string; label: string; ids: string[]; optional?: string[] }[] = [
+  { folder: 'shots', label: 'shots', ids: Object.keys(content.shots), optional: mapImages },
   { folder: 'cg', label: 'illustrations', ids: Object.keys(content.cgs) },
   { folder: 'backgrounds', label: 'backgrounds', ids: Object.keys(content.backgrounds) },
 ];
@@ -40,7 +44,7 @@ let warnings = 0;
 let converted = 0;
 let saved = 0;
 
-for (const { folder, label, ids } of folders) {
+for (const { folder, label, ids, optional = [] } of folders) {
   const dir = join(ASSETS, folder);
   const files = existsSync(dir) ? readdirSync(dir).filter((f) => EXT.test(f)) : [];
   const seen = new Map<string, string>();
@@ -51,8 +55,8 @@ for (const { folder, label, ids } of folders) {
     const path = join(dir, file);
     const problems: string[] = [];
 
-    if (!ids.includes(id)) {
-      const guess = ids.map((x) => [x, distance(x, id)] as const).sort((a, b) => a[1] - b[1])[0];
+    if (!ids.includes(id) && !optional.includes(id)) {
+      const guess = [...ids, ...optional].map((x) => [x, distance(x, id)] as const).sort((a, b) => a[1] - b[1])[0];
       problems.push(`ERROR  not a known ${label.replace(/s$/, '')} name${guess && guess[1] <= 6 ? ` — did you mean "${guess[0]}"?` : ''}`);
       errors++;
     }

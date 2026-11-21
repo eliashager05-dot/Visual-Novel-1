@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, shot, speaker,
-  think, transition, trust, when,
+  affinity, bg, C, choice, clock, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, shot,
+  speaker, think, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -9,6 +9,7 @@ const bram = speaker('bram');
 export const c1Hotel = scene('c1_hotel', 'ch1', 'The Halcyon', [
   hide('*'),
   bg('hotel_exterior_night', 'fade'),
+  clock('evening'),
   fx({ fog: 'light' }),
   music('old_rooms', 3),
   shot('c1_hotel_facade'),

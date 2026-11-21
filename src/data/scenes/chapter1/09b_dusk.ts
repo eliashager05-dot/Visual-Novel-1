@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  text, think, trust, when,
+  affinity, bg, C, choice, clock, effects, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot,
+  speaker, text, think, trust, when,
 } from '../../story/dsl';
 
 const sienna = speaker('sienna');
@@ -14,6 +14,7 @@ const bram = speaker('bram');
  */
 export const c1Dusk = scene('c1_dusk', 'ch1', 'Before the Storm', [
   bg('hotel_exterior_night', 'dissolve'),
+  clock('dusk'),
   fx({ fog: 'light' }),
   music('old_rooms', 2),
   shot('c1_dusk_porch'),

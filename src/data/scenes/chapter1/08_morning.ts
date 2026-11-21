@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, me, milestone, music, narrate, option, phone, reply, scene, setFlag,
-  setVar, sfx, shot, speaker, text, think, trust, when,
+  affinity, bg, C, choice, clock, effects, mapChoice, me, milestone, music, narrate, option, phone, reply,
+  scene, setFlag, setVar, sfx, shot, speaker, text, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -8,6 +8,7 @@ const bram = speaker('bram');
 
 export const c1Morning = scene('c1_morning', 'ch1', 'Ninety Days', [
   bg('hotel_terrace_morning', 'fade'),
+  clock('morning', 2),
   music('morning', 3),
   shot('c1_terrace_wide'),
   narrate(`Morning comes in bright and salty. The terrace hangs over the cliff like a held breath. Breakfast is coffee strong enough to strip paint and bread still warm from Bram's oven.`),
@@ -98,11 +99,12 @@ export const c1Morning = scene('c1_morning', 'ch1', 'Ninety Days', [
   ),
   effects(setFlag('knows_deadline')),
 
-  choice(
+  mapChoice(
     'c1_afternoon',
+    'island',
     [
-      option('sienna', `Lunch with Sienna.`, { goto: { scene: 'c1_sienna_drive' } }),
-      option('june', `Hold June's ladder.`, { goto: { scene: 'c1_june_lowtide' } }),
+      option('sienna', `Lunch with Sienna. She'll pick you up for a drive.`, { place: 'road', goto: { scene: 'c1_sienna_drive' } }),
+      option('june', `Hold June's ladder at low tide, 14:10.`, { place: 'cove', goto: { scene: 'c1_june_lowtide' } }),
     ],
     'How do you spend the afternoon?',
   ),

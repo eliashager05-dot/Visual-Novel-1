@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx,
-  shot, speaker, think, trust, when,
+  affinity, bg, C, cg, choice, clock, effects, fx, jump, me, milestone, music, narrate, option, scene, setFlag,
+  sfx, shot, speaker, think, trust, when,
 } from '../../story/dsl';
 
 const sienna = speaker('sienna');
@@ -9,6 +9,7 @@ const june = speaker('june');
 // --- Sienna: the coast road ---------------------------------------------
 export const c1SiennaDrive = scene('c1_sienna_drive', 'ch1', 'Coast Road', [
   bg('island_road_day', 'fade'),
+  clock('midday'),
   music('coast_road', 2),
   sfx('car_door'),
   shot('c1_sienna_car'),
@@ -95,6 +96,7 @@ export const c1SiennaDrive = scene('c1_sienna_drive', 'ch1', 'Coast Road', [
 // --- June: low tide ------------------------------------------------------
 export const c1JuneLowTide = scene('c1_june_lowtide', 'ch1', 'Low Tide', [
   bg('cove_low_tide_day', 'fade'),
+  clock('afternoon'),
   music('bloom', 2),
   shot('c1_june_lowtide_wide'),
   narrate(`At low tide the cove shows its bones: black rock, ribbons of kelp, rock pools like dropped mirrors. And fifty metres out, usually hidden, the rusted iron ring of an old mooring, standing up out of the mud.`),

@@ -1,19 +1,21 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { content } from '@/data';
+import { phoneTime } from '@/lib/clock';
 import { useGameStore } from '@/store/gameStore';
 import type { PhoneMessage } from '@/types';
 import { CharacterPortrait } from '../CharacterRenderer/CharacterPortrait';
 import { StageThumbnail } from '../Stage/StageThumbnail';
 
 /** The handset itself: frame, status bar and a header with the contact. */
-export function PhoneShell({ name, thread, children, onBack, time }: { name: string; thread: string | null; children: ReactNode; onBack?: () => void; time?: string }) {
+export function PhoneShell({ name, thread, children, onBack }: { name: string; thread: string | null; children: ReactNode; onBack?: () => void }) {
+  const time = phoneTime(useGameStore((s) => s.game?.clock ?? null));
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-[52px] border-[10px] border-[#14151a] bg-[#0b0c10] shadow-[0_30px_90px_rgba(0,0,0,0.7)] ring-1 ring-white/10">
       <div className="flex items-center justify-between px-8 pb-1 pt-4 text-[15px] font-semibold text-white/80">
-        <span>{time ?? ''}</span>
+        <span className="w-[60px]">{time}</span>
         <span className="h-[26px] w-[110px] rounded-full bg-black" />
-        <span className="tracking-widest">▮▮▮</span>
+        <span className="w-[60px] text-right tracking-widest">▮▮▮</span>
       </div>
       <div className="flex items-center gap-4 border-b border-white/[0.07] px-5 pb-3 pt-2">
         {onBack && (

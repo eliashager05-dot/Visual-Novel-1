@@ -30,6 +30,10 @@ export function evaluateCondition(cond: Condition, state: GameState): boolean {
       return state.visitedScenes.includes(cond.scene);
     case 'met':
       return state.relationships[cond.character]?.met ?? false;
+    case 'day':
+      return compare(state.clock?.day ?? 0, cond);
+    case 'time':
+      return state.clock !== null && cond.periods.includes(state.clock.period);
     case 'all':
       return cond.conditions.every((c) => evaluateCondition(c, state));
     case 'any':

@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, sfx, shot,
-  speaker, think, transition, trust, when,
+  affinity, bg, C, cg, choice, clock, effects, fx, hide, jump, me, music, narrate, option, scene, setFlag, sfx,
+  shot, speaker, think, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -13,6 +13,7 @@ const sienna = speaker('sienna');
 export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
   hide('*'),
   bg('hotel_exterior_storm', 'fade'),
+  clock('evening'),
   fx({ rain: 'heavy', lightning: true }),
   music('storm', 2),
   sfx('thunder'),
@@ -128,6 +129,7 @@ export const c1Storm = scene('c1_storm', 'ch1', 'The Storm', [
 // --- Aftermath -----------------------------------------------------------
 export const c1Aftermath = scene('c1_aftermath', 'ch1', 'Candles', [
   bg('lobby_candlelight', 'fade'),
+  clock('night'),
   fx({ flicker: 'candle', rain: 'window' }),
   music('aftermath', 3),
   shot('c1_candle_wide'),

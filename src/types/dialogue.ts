@@ -33,6 +33,8 @@ export interface PresentedOption {
   lockedHint?: string;
   /** Relationship consequences of picking it. Shown only when walkthrough mode is on. */
   hints?: ChoiceHint[];
+  /** Map choices: where on the map. */
+  place?: string;
 }
 
 export interface PresentedChoice {
@@ -40,6 +42,8 @@ export interface PresentedChoice {
   prompt?: string;
   options: PresentedOption[];
   timeout?: { seconds: number; defaultOption: string };
+  /** Present as places on this map instead of a list. */
+  map?: string;
 }
 
 export interface HistoryEntry {

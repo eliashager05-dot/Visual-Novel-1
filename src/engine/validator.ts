@@ -1,4 +1,4 @@
-import { EXPRESSIONS, type Condition, type Effect, type Expression } from '@/types';
+import { EXPRESSIONS, TIMES_OF_DAY, type Condition, type Effect, type Expression } from '@/types';
 import type { GameContent } from './content';
 import type { Instruction } from './sceneCompiler';
 import { SceneManager } from './sceneManager';
@@ -132,6 +132,10 @@ export function validateContent(content: GameContent): ValidationIssue[] {
       case 'visited':
         if (!content.scenes[cond.scene]) err(where, `condition references unknown scene "${cond.scene}"`);
         break;
+      case 'time':
+        if (cond.periods.length === 0) err(where, 'time condition lists no times of day');
+        for (const t of cond.periods) if (!(TIMES_OF_DAY as readonly string[]).includes(t)) err(where, `unknown time of day "${t}"`);
+        break;
       case 'all':
       case 'any':
         cond.conditions.forEach((c) => checkCondition(where, c));
@@ -219,12 +223,23 @@ export function validateContent(content: GameContent): ValidationIssue[] {
           }
           break;
         }
-        case 'choice':
+        case 'clock':
+          if (!(TIMES_OF_DAY as readonly string[]).includes(i.period)) err(where, `unknown time of day "${i.period}"`);
+          if (typeof i.day === 'number' && (!Number.isInteger(i.day) || i.day < 1)) err(where, 'clock day must be a whole number from 1');
+          break;
+        case 'choice': {
+          const map = i.map ? content.maps[i.map] : undefined;
+          if (i.map && !map) err(where, `unknown map "${i.map}"`);
+          if (i.map && i.timeout) err(where, 'a map choice cannot have a timeout');
           for (const o of i.options) {
             if (o.condition) checkCondition(`${where} option ${o.id}`, o.condition);
             if (o.effects) checkEffects(`${where} option ${o.id}`, o.effects);
+            if (o.place && !i.map) err(`${where} option ${o.id}`, '`place` only works on a map choice');
+            if (i.map && !o.place) err(`${where} option ${o.id}`, 'every option of a map choice needs a `place`');
+            if (map && o.place && !map.places[o.place]) err(`${where} option ${o.id}`, `map "${i.map}" has no place "${o.place}"`);
           }
           break;
+        }
         case 'end':
           if (i.nextChapter && !content.chapters.some((c) => c.id === i.nextChapter)) {
             err(where, `nextChapter "${i.nextChapter}" does not exist`);

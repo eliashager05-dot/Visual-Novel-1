@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, expr, fx, hide, jump, me, music, narrate, option, scene, setFlag, sfx, shot,
-  show, speaker, think, title, trust, when,
+  affinity, bg, C, cg, choice, clock, expr, fx, hide, jump, me, music, narrate, option, scene, setFlag, sfx,
+  shot, show, speaker, think, title, trust, when,
 } from '../../story/dsl';
 
 const noor = speaker('noor');
@@ -8,6 +8,7 @@ const stranger = (text: string, e?: Parameters<typeof noor>[1]) => noor(text, e,
 
 export const c1Ferry = scene('c1_ferry', 'ch1', 'The Crossing', [
   title('Chapter One', 'Low Tide'),
+  clock('dusk', 1),
   bg('ferry_deck_dusk', 'fade'),
   fx({ dust: true }),
   music('crossing', 2),

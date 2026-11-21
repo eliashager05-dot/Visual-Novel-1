@@ -151,6 +151,24 @@ phone(null),                                                           // put th
 
 Threads are character ids, or ids from `src/data/contacts.ts` for people who are not characters.
 
+Day and time, and choices on the map:
+
+```ts
+clock('dusk', 1),            // Day One · Dusk (shown top-left; the phone's clock follows it)
+clock('night'),              // same day
+clock('morning', 'next'),    // Day Two · Morning
+when(C.time('night', 'late'), [...]),  when(C.day({ gte: 2 }), [...]),
+
+mapChoice('c1_night_choice', 'island', [
+  option('lobby', 'Go down to the lobby.', { place: 'hotel', goto: { scene: 'c1_night_vera' } }),
+  option('letter', 'Stay in and read the letter.', { place: 'hotel', goto: { scene: 'c1_night_letter' } }),
+  option('cove', 'Go down to the cove.', { place: 'cove', goto: { scene: 'c1_night_june' } }),
+], 'Where do you go?'),
+```
+
+Places are defined per map in `src/data/maps.ts` (percent coordinates). Several options can share a place; the
+map groups them on one pin. Times of day: dawn, morning, midday, afternoon, dusk, evening, night, late.
+
 The DSL produces plain `Step` objects, so a scene can equally be a `.json` file matching `SceneDefinition`.
 
 ### Adding content (no engine changes)

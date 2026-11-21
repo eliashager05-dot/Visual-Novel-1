@@ -14,7 +14,7 @@ import { hashString, interpolate } from './text';
  */
 
 /** v2: stage.shot. v3: stage.fx. v4: phone and stage.phone. */
-export const SAVE_SCHEMA_VERSION = 4;
+export const SAVE_SCHEMA_VERSION = 5;
 export const HISTORY_LIMIT = 400;
 /** Guards against authoring mistakes like an unconditional goto loop. */
 const MAX_INSTRUCTIONS_PER_ADVANCE = 10_000;
@@ -48,6 +48,7 @@ export function createNewGame(
     vars: {},
     choicesMade: {},
     phone: { threads: {}, names: {}, unread: {} },
+    clock: null,
     visitedScenes: [],
     history: [],
     lineCount: 0,
@@ -289,6 +290,14 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
       case 'fx':
         state.stage.fx = instr.fx;
         break;
+
+      case 'clock': {
+        const day =
+          instr.day === 'next' ? (state.clock?.day ?? 0) + 1 : (instr.day ?? state.clock?.day ?? 1);
+        state.clock = { day, period: instr.period };
+        events.push({ type: 'clock', clock: { ...state.clock } });
+        break;
+      }
 
       case 'transition':
         events.push({ type: 'transition', kind: instr.kind, duration: instr.duration });

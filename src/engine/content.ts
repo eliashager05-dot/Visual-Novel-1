@@ -6,6 +6,7 @@ import type {
   ChapterDefinition,
   ContactDefinition,
   CharacterDefinition,
+  MapDefinition,
   SceneDefinition,
   ShotDefinition,
 } from '@/types';
@@ -22,6 +23,8 @@ export interface GameContent {
   shots: Record<string, ShotDefinition>;
   /** Phone contacts that are not characters. */
   contacts: Record<string, ContactDefinition>;
+  /** Maps for map choices. */
+  maps: Record<string, MapDefinition>;
   music: Record<string, AudioDefinition>;
   sfx: Record<string, AudioDefinition>;
   /** Default player name offered on new game. */

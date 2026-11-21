@@ -27,6 +27,7 @@ import type {
   StagePosition,
   StageFx,
   Step,
+  TimeOfDay,
   TransitionKind,
 } from '@/types';
 
@@ -132,6 +133,22 @@ export const choice = (id: string, options: ChoiceOption[], prompt?: string): St
   options,
   ...(prompt ? { prompt } : {}),
 });
+/**
+ * A choice shown as places on a map. Each option names its `place` on the map:
+ *
+ *   mapChoice('c1_night', 'island', [
+ *     option('cove', 'Go down to the cove.', { place: 'cove', goto: { scene: 'c1_night_june' } }),
+ *   ], 'Where do you go?')
+ */
+export const mapChoice = (id: string, map: string, options: ChoiceOption[], prompt?: string): Step => ({
+  type: 'choice',
+  id,
+  options,
+  map,
+  ...(prompt ? { prompt } : {}),
+});
+/** Moves the clock: `clock('morning', 'next')` starts the next day; `clock('night')` keeps the day. */
+export const clock = (period: TimeOfDay, day?: number | 'next'): Step => ({ type: 'clock', period, ...(day !== undefined ? { day } : {}) });
 export const option = (id: string, text: string, rest: Omit<ChoiceOption, 'id' | 'text'> = {}): ChoiceOption => ({
   id,
   text,
@@ -162,4 +179,6 @@ export const C = {
   all: (...conditions: Condition[]): Condition => ({ type: 'all', conditions }),
   any: (...conditions: Condition[]): Condition => ({ type: 'any', conditions }),
   not: (condition: Condition): Condition => ({ type: 'not', condition }),
+  day: (cmp: Comparison): Condition => ({ type: 'day', ...cmp }),
+  time: (...periods: TimeOfDay[]): Condition => ({ type: 'time', periods }),
 };
