@@ -3,6 +3,11 @@
 An original, choice-driven, 3D-rendered visual novel for adults (all characters 21+), built with React,
 TypeScript, Vite, Tailwind CSS, Zustand and Framer Motion.
 
+**On Windows, double-click `Play Halcyon.bat`.** It installs what is needed, starts the game and opens your
+browser. `Render Studio.bat` does the same for the render studio.
+
+From a terminal:
+
 ```bash
 npm install
 npm run dev        # http://localhost:5173

@@ -3,6 +3,7 @@
  * Run with `npm run studio`, then open http://127.0.0.1:5180
  */
 import { existsSync, readFileSync, statSync } from 'node:fs';
+import { exec } from 'node:child_process';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { basename, join } from 'node:path';
 import { milestones } from '../../src/data/renderSheets';
@@ -170,7 +171,17 @@ const server = createServer(async (req, res) => {
 
 // Local only: the studio can overwrite files, so it never listens on the network.
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Render studio: http://127.0.0.1:${PORT}   (Ctrl+C to stop)`);
+  const url = `http://127.0.0.1:${PORT}`;
+  console.log(`Render studio: ${url}   (Ctrl+C to stop)`);
+  // `--open` (used by "Render Studio.bat") opens the page in the default browser.
+  if (process.argv.includes('--open')) {
+    const cmd = process.platform === 'win32' ? `start "" "${url}"` : process.platform === 'darwin' ? `open "${url}"` : `xdg-open "${url}"`;
+    exec(cmd, () => undefined);
+  }
+});
+server.on('error', (e: NodeJS.ErrnoException) => {
+  console.error(e.code === 'EADDRINUSE' ? `The render studio is already running: open http://127.0.0.1:${PORT}` : e.message);
+  process.exitCode = 1;
 });
 
 // ---------------------------------------------------------------------------
