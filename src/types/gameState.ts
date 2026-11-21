@@ -23,12 +23,31 @@ export interface StageFx {
   sparkle?: boolean;
 }
 
+/** One message in a phone conversation. */
+export interface PhoneMessage {
+  from: 'them' | 'player';
+  text?: string;
+  /** An illustration or shot id, shown as a photo. */
+  image?: string;
+}
+
+/** The player's phone: every conversation so far. Saved with the game. */
+export interface PhoneState {
+  /** Conversation id (a character id or a contact id) → messages, oldest first. */
+  threads: Record<string, PhoneMessage[]>;
+  /** Display name per conversation, when it differs from the character's (e.g. "Unknown number"). */
+  names: Record<string, string>;
+  unread: Record<string, number>;
+}
+
 export interface StageState {
   background: string | null;
   cg: string | null;
   shot: string | null;
   /** Weather and light effects; cleared when a new scene starts. */
   fx: StageFx | null;
+  /** Conversation open on the phone, or null when the phone is put away. */
+  phone: string | null;
   characters: StageCharacter[];
   music: string | null;
 }
@@ -69,6 +88,7 @@ export interface GameState {
   vars: Record<string, number | string | boolean>;
   /** choiceId → optionId of the most recent pick. */
   choicesMade: Record<string, string>;
+  phone: PhoneState;
   visitedScenes: string[];
   history: HistoryEntry[];
   /** Monotonic counter of executed lines; useful for playtime/progress heuristics. */
@@ -83,6 +103,8 @@ export type EngineEvent =
   | { type: 'unlockGallery'; id: string }
   | { type: 'unlockScene'; id: string }
   | { type: 'characterMet'; character: CharacterId }
+  /** A message arrived while the phone was put away. */
+  | { type: 'phoneMessage'; thread: string }
   | { type: 'ending'; id: string }
   | { type: 'relationshipChanged'; character: CharacterId; stat: 'affinity' | 'trust'; delta: number }
   | { type: 'milestone'; character: CharacterId; milestone: string };

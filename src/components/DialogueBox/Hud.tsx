@@ -41,6 +41,12 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z" />
     </g>
   ),
+  phone: (
+    <g {...stroke}>
+      <rect x="6.5" y="2.5" width="11" height="19" rx="2.5" />
+      <path d="M10.5 18.5h3" />
+    </g>
+  ),
   sound: (
     <g {...stroke}>
       <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
@@ -84,6 +90,7 @@ function IconButton({
   onClick,
   active = false,
   disabled = false,
+  badge = 0,
 }: {
   icon: keyof typeof ICONS;
   label: string;
@@ -91,6 +98,7 @@ function IconButton({
   onClick: () => void;
   active?: boolean;
   disabled?: boolean;
+  badge?: number;
 }) {
   return (
     <button
@@ -102,7 +110,7 @@ function IconButton({
         onClick();
       }}
       className={[
-        'flex h-[54px] w-[54px] items-center justify-center rounded-full transition-all duration-150 disabled:opacity-25',
+        'relative flex h-[54px] w-[54px] items-center justify-center rounded-full transition-all duration-150 disabled:opacity-25',
         active ? 'text-[#e8c88f]' : 'text-white/85 hover:scale-110 hover:text-white',
       ].join(' ')}
       style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.95)) drop-shadow(0 2px 5px rgba(0,0,0,0.7))' }}
@@ -110,6 +118,11 @@ function IconButton({
       <svg viewBox="0 0 24 24" className="h-[38px] w-[38px]" aria-hidden>
         {ICONS[icon]}
       </svg>
+      {badge > 0 && (
+        <span className="absolute right-0 top-0 flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-[#e8c88f] px-1 text-[13px] font-bold text-black">
+          {badge}
+        </span>
+      )}
     </button>
   );
 }
@@ -120,10 +133,12 @@ export function Hud({ raised = false }: { raised?: boolean }) {
   const rollback = useGameStore((s) => s.rollback);
   const replay = useGameStore((s) => s.mode === 'replay');
   const muted = useSettings((s) => s.muted);
+  const unread = useGameStore((s) => Object.values(s.game?.phone.unread ?? {}).reduce((a, b) => a + b, 0));
 
   return (
     <>
       <div className="absolute right-[36px] top-[22px] z-10 flex gap-2">
+        <IconButton icon="phone" label={unread ? `Phone (${unread} unread)` : 'Phone'} hint="P" badge={unread} onClick={() => setOverlay('phone')} />
         <IconButton icon="history" label="History" hint="L" onClick={() => setOverlay('history')} />
         <IconButton icon="hide" label="Hide interface" hint="H / right-click" onClick={() => setHideUi(true)} />
         {!replay && <IconButton icon="save" label="Save" hint="F5 quick save" onClick={() => setOverlay('save')} />}

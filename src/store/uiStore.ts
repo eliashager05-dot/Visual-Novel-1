@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type Overlay = 'none' | 'history' | 'pause' | 'save' | 'load' | 'settings' | 'relationships';
+export type Overlay = 'none' | 'history' | 'pause' | 'save' | 'load' | 'settings' | 'relationships' | 'phone';
 
 export type MenuScreen = 'none' | 'load' | 'gallery' | 'settings';
 

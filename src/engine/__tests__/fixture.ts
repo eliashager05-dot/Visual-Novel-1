@@ -47,6 +47,7 @@ export function makeFixture(): GameContent {
     backgrounds: { room: { id: 'room', name: 'Room', placeholder: { palette: ['#000', '#111', '#222'] } } },
     cgs: {},
     shots: {},
+    contacts: { unknown: { id: 'unknown', name: 'Unknown number', color: '#999' } },
     music: {},
     sfx: {},
     scenes: {

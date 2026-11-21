@@ -13,8 +13,8 @@ import { hashString, interpolate } from './text';
  * `events` (sounds, transitions, toasts). Nothing in here touches the DOM.
  */
 
-/** v2: stage.shot added. v3: stage.fx added. */
-export const SAVE_SCHEMA_VERSION = 3;
+/** v2: stage.shot. v3: stage.fx. v4: phone and stage.phone. */
+export const SAVE_SCHEMA_VERSION = 4;
 export const HISTORY_LIMIT = 400;
 /** Guards against authoring mistakes like an unconditional goto loop. */
 const MAX_INSTRUCTIONS_PER_ADVANCE = 10_000;
@@ -41,12 +41,13 @@ export function createNewGame(
     schemaVersion: SAVE_SCHEMA_VERSION,
     player: { name: opts.playerName.trim() || content.defaultPlayerName },
     pointer: { scene: startScene, index: 0 },
-    stage: { background: null, cg: null, shot: null, fx: null, characters: [], music: null },
+    stage: { background: null, cg: null, shot: null, fx: null, phone: null, characters: [], music: null },
     presentation: { kind: 'idle' },
     relationships,
     flags: {},
     vars: {},
     choicesMade: {},
+    phone: { threads: {}, names: {}, unread: {} },
     visitedScenes: [],
     history: [],
     lineCount: 0,
@@ -90,19 +91,40 @@ function enterScene(manager: SceneManager, state: GameState, sceneId: string, ev
 }
 
 function pushHistory(state: GameState, line: DisplayedLine) {
-  state.history.push({ kind: line.kind, speaker: line.speaker, speakerName: line.speakerName, text: line.text });
+  const text = line.kind === 'text' && !line.text ? '[Photo]' : line.text;
+  state.history.push({ kind: line.kind, speaker: line.speaker, speakerName: line.speakerName, text });
   if (state.history.length > HISTORY_LIMIT) state.history.splice(0, state.history.length - HISTORY_LIMIT);
 }
 
-type LineInstruction = Extract<Instruction, { type: 'say' | 'narrate' | 'think' }>;
+type LineInstruction = Extract<Instruction, { type: 'say' | 'narrate' | 'think' | 'text' }>;
 
 /** Stable read-tracking key: survives edits elsewhere in the scene. */
 export function lineKey(sceneId: string, instr: LineInstruction): string {
+  if (instr.type === 'text') {
+    return `${sceneId}:${hashString(`text${instr.thread}${instr.from}${instr.text ?? ''}${instr.image ?? ''}`)}`;
+  }
   return `${sceneId}:${hashString((instr.type === 'say' ? instr.speaker : instr.type) + instr.text)}`;
+}
+
+/** The name a phone conversation is shown under. */
+export function contactName(manager: SceneManager, state: GameState, thread: string): string {
+  const def = manager.content.characters[thread];
+  return state.phone.names[thread] ?? def?.shortName ?? def?.name ?? manager.content.contacts[thread]?.name ?? thread;
 }
 
 /** Builds the on-screen line for an instruction. Pure: no state changes. */
 export function presentLine(manager: SceneManager, state: GameState, sceneId: string, instr: LineInstruction): DisplayedLine {
+  if (instr.type === 'text') {
+    const mine = instr.from === 'player';
+    return {
+      kind: 'text',
+      speaker: mine ? 'player' : manager.content.characters[instr.thread] ? instr.thread : null,
+      speakerName: mine ? state.player.name : contactName(manager, state, instr.thread),
+      text: instr.text ? interpolate(instr.text, state) : '',
+      key: lineKey(sceneId, instr),
+      thread: instr.thread,
+    };
+  }
   const text = interpolate(instr.text, state);
   if (instr.type !== 'say') {
     const think = instr.type === 'think';
@@ -169,6 +191,40 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
         state.lineCount++;
         return { state, events };
       }
+
+      case 'text': {
+        const thread = (state.phone.threads[instr.thread] ??= []);
+        thread.push({
+          from: instr.from,
+          ...(instr.text ? { text: interpolate(instr.text, state) } : {}),
+          ...(instr.image ? { image: instr.image } : {}),
+        });
+        if (instr.as) state.phone.names[instr.thread] = instr.as;
+        if (instr.image && content.cgs[instr.image]) events.push({ type: 'unlockGallery', id: instr.image });
+        // A message from someone under their own name means you know them.
+        const rel = state.relationships[instr.thread];
+        if (instr.from === 'them' && rel && !rel.met && !state.phone.names[instr.thread]) {
+          rel.met = true;
+          events.push({ type: 'characterMet', character: instr.thread });
+        }
+        if (instr.quiet) {
+          state.phone.unread[instr.thread] = (state.phone.unread[instr.thread] ?? 0) + 1;
+          events.push({ type: 'phoneMessage', thread: instr.thread });
+          break;
+        }
+        state.stage.phone = instr.thread;
+        state.phone.unread[instr.thread] = 0;
+        const line = presentLine(manager, state, scene.id, instr);
+        state.presentation = { kind: 'line', line };
+        pushHistory(state, line);
+        state.lineCount++;
+        return { state, events };
+      }
+
+      case 'phone':
+        state.stage.phone = instr.thread;
+        if (instr.thread) state.phone.unread[instr.thread] = 0;
+        break;
 
       case 'title':
         state.presentation = { kind: 'title', title: instr.title, subtitle: instr.subtitle };
@@ -267,7 +323,10 @@ function run(manager: SceneManager, state: GameState, events: EngineEvent[]): En
         const leaving = state.pointer.scene;
         state.pointer = manager.resolve(instr.target);
         // Weather belongs to a scene: a new scene starts clear unless it sets its own.
-        if (instr.target.scene !== leaving) state.stage.fx = null;
+        if (instr.target.scene !== leaving) {
+          state.stage.fx = null;
+          state.stage.phone = null;
+        }
         enterScene(manager, state, instr.target.scene, events);
         break;
       }

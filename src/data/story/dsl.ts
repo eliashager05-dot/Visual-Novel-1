@@ -90,6 +90,30 @@ export const music = (track: string | null, fade?: number): Step => ({ type: 'mu
 export const sfx = (id: string): Step => ({ type: 'sfx', id });
 export const title = (t: string, subtitle?: string): Step => ({ type: 'title', title: t, subtitle });
 
+// --- Phone ------------------------------------------------------------
+/** A message from someone; the phone opens on that conversation. `as` renames the conversation ("Unknown number"). */
+export const text = (thread: string, message: string, opts: { as?: string; quiet?: boolean } = {}): Step => ({
+  type: 'text',
+  thread,
+  from: 'them',
+  text: message,
+  ...opts,
+});
+/** A message the player sends in that conversation. */
+export const reply = (thread: string, message: string): Step => ({ type: 'text', thread, from: 'player', text: message });
+/** A photo message: an illustration or shot id, with an optional caption. */
+export const photo = (thread: string, image: string, opts: { caption?: string; as?: string; from?: 'them' | 'player'; quiet?: boolean } = {}): Step => ({
+  type: 'text',
+  thread,
+  from: opts.from ?? 'them',
+  image,
+  ...(opts.caption ? { text: opts.caption } : {}),
+  ...(opts.as ? { as: opts.as } : {}),
+  ...(opts.quiet ? { quiet: true } : {}),
+});
+/** Opens the phone on a conversation; `phone(null)` puts it away. */
+export const phone = (thread: string | null): Step => ({ type: 'phone', thread });
+
 // --- Flow ---------------------------------------------------------------
 export const label = (name: string): Step => ({ type: 'label', name });
 export const jump = (sceneOrLabel: JumpTarget | string): Step => ({

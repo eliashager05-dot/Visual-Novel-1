@@ -94,6 +94,14 @@ export type Step =
   | { type: 'cg'; id: string | null }
   /** Full-frame render; replaces sprite staging until cleared or the background changes. */
   | { type: 'shot'; id: string | null }
+  /**
+   * A phone message. Normally the phone opens on that conversation and the
+   * message is shown like a line. `quiet` delivers it in the background
+   * (notice plus unread badge) without stopping the story.
+   */
+  | { type: 'text'; thread: string; from: 'them' | 'player'; text?: string; image?: string; as?: string; quiet?: boolean }
+  /** Opens the phone on a conversation, or puts it away (`null`). */
+  | { type: 'phone'; thread: string | null }
   /** Weather and light over the image, until changed or the scene ends. `null` clears. */
   | { type: 'fx'; fx: StageFx | null }
   | { type: 'transition'; kind: TransitionKind; duration?: number }

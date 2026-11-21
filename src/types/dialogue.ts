@@ -2,7 +2,8 @@ import type { CharacterId, Expression } from './character';
 
 /** The line currently on screen. */
 export interface DisplayedLine {
-  kind: 'narrate' | 'think' | 'say';
+  /** 'text' is a phone message, shown in the phone rather than as a subtitle. */
+  kind: 'narrate' | 'think' | 'say' | 'text';
   speaker: CharacterId | 'player' | null;
   /** Resolved name for the name plate (null for narration). */
   speakerName: string | null;
@@ -10,6 +11,8 @@ export interface DisplayedLine {
   expression?: Expression;
   /** Stable key for read-tracking (skip-read mode). */
   key: string;
+  /** For 'text': the conversation it belongs to. */
+  thread?: string;
 }
 
 /** What an option does to a relationship, for walkthrough mode. */
@@ -40,7 +43,7 @@ export interface PresentedChoice {
 }
 
 export interface HistoryEntry {
-  kind: 'narrate' | 'think' | 'say' | 'choice';
+  kind: 'narrate' | 'think' | 'say' | 'text' | 'choice';
   speakerName: string | null;
   speaker: CharacterId | 'player' | null;
   text: string;

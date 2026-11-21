@@ -47,6 +47,8 @@ interface GameStore {
   save: (slot: SlotId, kind?: SaveKind) => boolean;
   load: (slot: SlotId) => boolean;
   quickSave: () => void;
+  /** Clears a conversation's unread count (opening it in the phone app). */
+  markThreadRead: (thread: string) => void;
   quickLoad: () => void;
   quitToTitle: () => void;
 }
@@ -184,6 +186,11 @@ export const useGameStore = create<GameStore>()((set, get) => {
     },
 
     quickSave: () => void get().save('quick', 'quick'),
+    markThreadRead: (thread) => {
+      const { game } = get();
+      if (!game || !game.phone.unread[thread]) return;
+      set({ game: { ...game, phone: { ...game.phone, unread: { ...game.phone.unread, [thread]: 0 } } } });
+    },
     quickLoad: () => {
       if (!saveRepo.read('quick')) return notify('No quick save yet');
       get().load('quick');

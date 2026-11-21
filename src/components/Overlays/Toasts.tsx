@@ -1,13 +1,18 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { useGameStore } from '@/store/gameStore';
 import { useUi, type Toast } from '@/store/uiStore';
+import { PHONE_BOX } from '../Phone/PhoneView';
 
 const TOAST_MS = 3200;
 
 export function Toasts() {
   const toasts = useUi((s) => s.toasts);
+  // When the phone is on screen, notices sit to its left instead of on it.
+  const phoneOpen = useGameStore((s) => Boolean(s.game?.stage.phone));
+  const right = phoneOpen ? PHONE_BOX.right + PHONE_BOX.width + 24 : 44;
   return (
-    <div className="pointer-events-none absolute right-[44px] top-[96px] z-[70] flex flex-col items-end gap-3">
+    <div className="pointer-events-none absolute top-[96px] z-[70] flex flex-col items-end gap-3" style={{ right }}>
       <AnimatePresence>
         {toasts.map((t) => (
           <ToastItem key={t.id} t={t} />

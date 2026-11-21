@@ -72,6 +72,10 @@ export function useGameInput() {
           e.preventDefault();
           if (!ui.transitioning) useGameStore.getState().rollback();
           break;
+        case 'p':
+        case 'P':
+          ui.setOverlay('phone');
+          break;
         case 'm':
         case 'M': {
           const s = useSettings.getState();

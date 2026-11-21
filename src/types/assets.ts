@@ -148,3 +148,10 @@ export interface SetBrief {
   name: string;
   description: string;
 }
+
+/** Someone the player can message who is not a character in the cast (e.g. an unknown number). */
+export interface ContactDefinition {
+  id: string;
+  name: string;
+  color: string;
+}

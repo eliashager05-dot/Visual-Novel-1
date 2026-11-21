@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, choice, effects, me, milestone, music, narrate, option, scene, setFlag, setVar, sfx, shot, speaker,
-  think, trust, when,
+  affinity, bg, C, choice, effects, me, milestone, music, narrate, option, phone, reply, scene, setFlag,
+  setVar, sfx, shot, speaker, text, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -75,9 +75,21 @@ export const c1Morning = scene('c1_morning', 'ch1', 'Ninety Days', [
 
   shot('c1_terrace_wide'),
   sfx('phone_message'),
-  narrate(`Two messages arrive within a minute of each other.`),
-  narrate(`The first, from a number you don't have saved: "Lunch? I'll drive. Wear shoes you can walk in. — S."`),
-  narrate(`The second is a note someone slid under your saucer while you were on the phone, in tiny, very neat capitals: LOW TIDE 14:10. NEED SOMEONE TO HOLD A LADDER. YOU HAVE HANDS. — J.C.`),
+  text('sienna', `Lunch? I'll drive. Wear shoes you can walk in. — S.`, { as: 'Unknown number' }),
+  choice('c1_sienna_text', [
+    option('where', `"Maybe. Depends where."`, {
+      effects: [affinity('sienna', 1)],
+      steps: [reply('sienna', `Maybe. Depends where.`), text('sienna', `Everywhere. It's a small island.`)],
+    }),
+    option('who', `"Who is this?"`, {
+      steps: [reply('sienna', `Who is this?`), text('sienna', `You kept the napkin. I know you did.`)],
+    }),
+    option('read', `Leave it on read.`, {
+      steps: [narrate(`You put the phone face down. It buzzes once more, and you don't look.`), text('sienna', `Bold. I like bold. 12:30.`)],
+    }),
+  ]),
+  phone(null),
+  narrate(`Under your saucer, someone has slid a note while you were on the phone, in tiny, very neat capitals: LOW TIDE 14:10. NEED SOMEONE TO HOLD A LADDER. YOU HAVE HANDS. — J.C.`),
   think(`The developer who wants to buy the cove, or the scientist who wants to understand it.`),
   when(
     C.variable('hotel_stance', { eq: 'together' }),

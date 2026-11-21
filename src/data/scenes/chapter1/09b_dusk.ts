@@ -1,6 +1,6 @@
 import {
   affinity, bg, C, choice, effects, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  think, trust, when,
+  text, think, trust, when,
 } from '../../story/dsl';
 
 const sienna = speaker('sienna');
@@ -17,6 +17,9 @@ export const c1Dusk = scene('c1_dusk', 'ch1', 'Before the Storm', [
   fx({ fog: 'light' }),
   music('old_rooms', 2),
   shot('c1_dusk_porch'),
+  when(C.variable('hotel_stance', { eq: 'together' }), [
+    text('vera', `Storm warning upgraded. Generator fuel is in the boathouse. Tell Bram if you see him. — V`, { quiet: true }),
+  ]),
   narrate(`By six the wind has teeth. The sky over the sea has gone from bruise to black, and the Halcyon's porch lights have come on early, swinging on their chains.`),
 
   when(

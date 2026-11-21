@@ -23,6 +23,8 @@ import { ScreenCover } from '../Overlays/ScreenCover';
 import { TitleCard } from '../Overlays/TitleCard';
 import { BackgroundLayer } from '../Stage/BackgroundLayer';
 import { CgLayer } from '../Stage/CgLayer';
+import { PhoneApp } from '../Phone/PhoneApp';
+import { PhoneView } from '../Phone/PhoneView';
 import { EffectsLayer } from '../Stage/EffectsLayer';
 import { ShotLayer } from '../Stage/ShotLayer';
 import { useSettings } from '@/store/settingsStore';
@@ -45,12 +47,13 @@ export function GameScreen() {
   if (!view || !game) return null;
   const p = view.presentation;
   const speaker = p.kind === 'line' && p.line.kind === 'say' ? p.line.speaker : null;
+  const phoneOpen = view.stage.phone;
 
   // Behind a choice, keep the line that led to it visible (dimmed).
   let lastLine: DisplayedLine | null = null;
   if (p.kind === 'choice') {
     const h = [...game.history].reverse().find((e) => e.kind !== 'choice');
-    if (h && h.kind !== 'choice') lastLine = { ...h, kind: h.kind, key: '' };
+    if (h && h.kind !== 'choice' && h.kind !== 'text') lastLine = { ...h, kind: h.kind, key: '' };
   }
 
   return (
@@ -71,17 +74,19 @@ export function GameScreen() {
       {/* Soft gradient so panel text stays legible over bright art (cinematic mode draws its own). */}
       {!hideUi && !cinematic && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[420px] bg-gradient-to-t from-black/55 to-transparent" />}
 
+      {!hideUi && <PhoneView thread={phoneOpen} replying={p.kind === 'choice'} />}
       {!hideUi && p.kind === 'line' && (
         <>
-          <Dialogue line={p.line} lineId={game.lineCount} />
+          {/* Messages appear in the phone itself, not as subtitles. */}
+          {p.line.kind !== 'text' && <Dialogue line={p.line} lineId={game.lineCount} narrow={Boolean(phoneOpen)} />}
           <Hud raised={!cinematic} />
         </>
       )}
       {!hideUi && p.kind === 'choice' && (
         <>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-[1000px] bg-gradient-to-l from-black/35 to-transparent" />
-          {lastLine && <Dialogue line={lastLine} lineId={-1} dimmed />}
-          <ChoiceMenu choice={p.choice} onChoose={choose} />
+          {!phoneOpen && <div className="pointer-events-none absolute inset-y-0 right-0 w-[1000px] bg-gradient-to-l from-black/35 to-transparent" />}
+          {lastLine && <Dialogue line={lastLine} lineId={-1} dimmed narrow={Boolean(phoneOpen)} />}
+          <ChoiceMenu choice={p.choice} onChoose={choose} variant={phoneOpen ? 'phone' : 'screen'} />
           <Hud raised={!cinematic} />
         </>
       )}
@@ -102,6 +107,7 @@ export function GameScreen() {
         {overlay === 'load' && <SaveLoadScreen key="load" mode="load" onClose={closeToPause} />}
         {overlay === 'settings' && <SettingsScreen key="settings" onClose={closeToPause} />}
         {overlay === 'relationships' && <RelationshipScreen key="rel" game={game} onClose={closeToPause} />}
+        {overlay === 'phone' && <PhoneApp key="phone" />}
       </AnimatePresence>
 
       {error && (

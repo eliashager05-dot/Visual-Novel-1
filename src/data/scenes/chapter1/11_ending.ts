@@ -1,6 +1,6 @@
 import {
-  bg, C, cg, choice, effects, end, fx, jump, me, music, narrate, option, scene, setFlag, sfx, shot, speaker,
-  think, title, transition, trust, when,
+  bg, C, cg, choice, effects, end, fx, jump, me, music, narrate, option, phone, photo, scene, setFlag, sfx,
+  shot, speaker, text, think, title, transition, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -116,17 +116,20 @@ export const c1Cliffhanger = scene('c1_cliffhanger', 'ch1', 'Stop Looking', [
   sfx('phone_message'),
   narrate(`Your phone lights up on the nightstand.`),
   shot('c1_cliff_player'),
+  photo('unknown', 'cg_margit_photo'),
   narrate(`Unknown number. No text. Just a photograph.`),
+  phone(null),
   cg('cg_margit_photo'),
   narrate(`The ferry deck. The same rail you leaned on yesterday. A woman in a yellow oilskin, grey hair whipping in the wind, looking straight into the camera.`),
   narrate(`Margit.`),
   narrate(`Behind her, the digital clock on the passenger-lounge wall shows a date and a time. Yesterday's date. 06:12.`),
   think(`The first sailing of the day. The crossing before mine.`),
+  cg(null),
   sfx('phone_message'),
   narrate(`A second message arrives while you're still staring at the first. Four words.`),
-  narrate(`"Stop looking. Don't sell."`),
+  text('unknown', `Stop looking. Don't sell.`),
   transition('black', 2),
-  cg(null),
+  phone(null),
   title('End of Chapter One', 'Low Tide'),
   end({ chapterComplete: true }),
 ], { replayable: true });

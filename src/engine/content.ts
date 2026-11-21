@@ -4,6 +4,7 @@ import type {
   CgDefinition,
   CharacterArt,
   ChapterDefinition,
+  ContactDefinition,
   CharacterDefinition,
   SceneDefinition,
   ShotDefinition,
@@ -19,6 +20,8 @@ export interface GameContent {
   backgrounds: Record<string, BackgroundDefinition>;
   cgs: Record<string, CgDefinition>;
   shots: Record<string, ShotDefinition>;
+  /** Phone contacts that are not characters. */
+  contacts: Record<string, ContactDefinition>;
   music: Record<string, AudioDefinition>;
   sfx: Record<string, AudioDefinition>;
   /** Default player name offered on new game. */

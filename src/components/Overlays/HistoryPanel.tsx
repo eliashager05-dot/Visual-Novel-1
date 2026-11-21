@@ -31,6 +31,7 @@ export function HistoryPanel() {
               <li key={i} className="grid grid-cols-[200px_1fr] gap-6">
                 <span className="pt-1 text-right font-serif text-[24px]" style={{ color }}>
                   {h.kind === 'narrate' ? '' : h.speakerName}
+                  {h.kind === 'text' && <span className="block text-[13px] uppercase tracking-[0.25em] text-white/35">message</span>}
                 </span>
                 <span
                   className={[

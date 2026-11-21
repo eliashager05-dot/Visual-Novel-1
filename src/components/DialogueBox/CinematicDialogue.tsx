@@ -11,7 +11,7 @@ import { Typewriter } from './Typewriter';
  * heavily outlined text, so it stays readable over any photoreal image while
  * covering as little of it as possible. Thoughts are shown in parentheses.
  */
-export function CinematicDialogue({ line, lineId, dimmed = false }: { line: DisplayedLine; lineId: number; dimmed?: boolean }) {
+export function CinematicDialogue({ line, lineId, dimmed = false, narrow = false }: { line: DisplayedLine; lineId: number; dimmed?: boolean; narrow?: boolean }) {
   const { textSpeed, boxOpacity } = useSettings();
   const skip = useUi((s) => s.skip);
   const completeSignal = useUi((s) => s.completeSignal);
@@ -30,7 +30,9 @@ export function CinematicDialogue({ line, lineId, dimmed = false }: { line: Disp
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[330px]"
         style={{ background: `linear-gradient(to top, rgba(0,0,0,${0.7 * boxOpacity}) 0%, rgba(0,0,0,${0.35 * boxOpacity}) 50%, transparent 100%)` }}
       />
-      <div className={['vn-subtitle absolute inset-x-0 bottom-[96px] flex flex-col items-center px-[250px] text-center', dimmed ? 'opacity-55' : ''].join(' ')}>
+      <div
+        className={['vn-subtitle absolute bottom-[96px] flex flex-col items-center text-center', narrow ? 'left-[80px] right-[700px]' : 'inset-x-0 px-[250px]', dimmed ? 'opacity-55' : ''].join(' ')}
+      >
         <AnimatePresence mode="wait">
           {line.speakerName && !isNarration && (
             <motion.div

@@ -116,6 +116,9 @@ export function migrateRecord(raw: unknown): SaveRecord {
   if (rec.thumb && rec.thumb.shot === undefined) rec.thumb.shot = null;
   // v2 → v3: saves written before weather effects lack stage.fx.
   if (rec.state.stage.fx === undefined) rec.state.stage.fx = null;
+  // v3 → v4: saves written before the phone lack it.
+  if (!rec.state.phone) rec.state.phone = { threads: {}, names: {}, unread: {} };
+  if (rec.state.stage.phone === undefined) rec.state.stage.phone = null;
   rec.schemaVersion = SAVE_SCHEMA_VERSION;
   rec.state.schemaVersion = SAVE_SCHEMA_VERSION;
   return rec;
@@ -140,10 +143,10 @@ export function restoreState(manager: SceneManager, record: SaveRecord): { state
   const p = state.presentation;
   if (p.kind === 'line') {
     const idx = instrs.findIndex(
-      (i) => (i.type === 'say' || i.type === 'narrate' || i.type === 'think') && lineKey(sceneId, i) === p.line.key,
+      (i) => (i.type === 'say' || i.type === 'narrate' || i.type === 'think' || (i.type === 'text' && !i.quiet)) && lineKey(sceneId, i) === p.line.key,
     );
     const instr = instrs[idx];
-    if (instr && (instr.type === 'say' || instr.type === 'narrate' || instr.type === 'think')) {
+    if (instr && (instr.type === 'say' || instr.type === 'narrate' || instr.type === 'think' || instr.type === 'text')) {
       state.pointer.index = idx + 1;
       state.presentation = { kind: 'line', line: presentLine(manager, state, sceneId, instr) };
       return { state, outcome: 'relocated' };

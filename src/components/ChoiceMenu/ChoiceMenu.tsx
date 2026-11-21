@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { content } from '@/data';
 import { useSettings } from '@/store/settingsStore';
+import { PHONE_BOX } from '../Phone/PhoneView';
 import type { ChoiceHint, PresentedChoice } from '@/types';
 import { useUi } from '@/store/uiStore';
 
@@ -10,7 +11,7 @@ import { useUi } from '@/store/uiStore';
  * options are shown disabled with an optional hint; timed choices show a bar
  * and pick the default when time runs out.
  */
-export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onChoose: (id: string) => void }) {
+export function ChoiceMenu({ choice, onChoose, variant = 'screen' }: { choice: PresentedChoice; onChoose: (id: string) => void; variant?: 'screen' | 'phone' }) {
   const enabled = choice.options.filter((o) => o.enabled);
   const [focus, setFocus] = useState(-1);
   const overlay = useUi((s) => s.overlay);
@@ -49,6 +50,41 @@ export function ChoiceMenu({ choice, onChoose }: { choice: PresentedChoice; onCh
     const t = setTimeout(() => onChoose(choice.timeout!.defaultOption), choice.timeout.seconds * 1000);
     return () => clearTimeout(t);
   }, [choice, overlay, onChoose]);
+
+  if (variant === 'phone') {
+    // Replies typed on the phone: right-aligned bubbles in the bottom of the handset.
+    return (
+      <div
+        className="absolute z-30 flex flex-col items-end justify-end gap-2.5"
+        style={{ right: PHONE_BOX.right + 26, top: PHONE_BOX.top + PHONE_BOX.height - 252, width: PHONE_BOX.width - 52, height: 232 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {choice.options.map((o, i) => (
+          <motion.button
+            key={o.id}
+            disabled={!o.enabled}
+            onClick={() => onChoose(o.id)}
+            onMouseEnter={() => o.enabled && setFocus(i)}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.06 * i, duration: 0.25 }}
+            className={[
+              'vn-subtitle max-w-full rounded-[20px] rounded-br-[6px] border px-5 py-2.5 text-right text-[20px] font-semibold leading-snug transition-colors',
+              o.enabled
+                ? focus === i
+                  ? 'border-[#e8c88f] bg-[#e8c88f] text-[#16130d]'
+                  : 'border-[#e8c88f]/60 bg-transparent text-[#f0dfb8]'
+                : 'cursor-not-allowed border-white/10 text-white/30',
+            ].join(' ')}
+          >
+            <span className="mr-2 text-[14px] opacity-50">{i + 1}</span>
+            {o.text}
+            {walkthrough && o.hints && <Hints hints={o.hints} />}
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <motion.div

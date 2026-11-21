@@ -34,7 +34,10 @@ export function AudioDirector() {
     if (played.current.has(events)) return; // StrictMode re-run, or no new step
     played.current.add(events);
     if (useUi.getState().skip) return; // fast-forwarding: stay quiet
-    for (const e of events) if (e.type === 'sfx') audioEngine.playSfx(e.id);
+    for (const e of events) {
+      if (e.type === 'sfx') audioEngine.playSfx(e.id);
+      else if (e.type === 'phoneMessage') audioEngine.playSfx('phone_message');
+    }
   }, [events]);
 
   return null;

@@ -16,11 +16,14 @@ export function DialogueBox({
   line,
   lineId,
   dimmed = false,
+  narrow = false,
 }: {
   line: DisplayedLine;
   /** Changes whenever a new line is shown, even if text repeats. */
   lineId: number;
   dimmed?: boolean;
+  /** Keep clear of the phone on the right. */
+  narrow?: boolean;
 }) {
   const { textSpeed, boxOpacity } = useSettings();
   const skip = useUi((s) => s.skip);
@@ -33,7 +36,7 @@ export function DialogueBox({
   const isThought = line.kind === 'think';
 
   return (
-    <div className="absolute inset-x-[150px] bottom-[34px] h-[248px]">
+    <div className={['absolute bottom-[34px] h-[248px]', narrow ? 'left-[80px] right-[700px]' : 'inset-x-[150px]'].join(' ')}>
       <div
         className="absolute inset-0 rounded-[28px] border border-white/[0.07] shadow-[0_30px_80px_rgba(0,0,0,0.55)] backdrop-blur-md"
         style={{

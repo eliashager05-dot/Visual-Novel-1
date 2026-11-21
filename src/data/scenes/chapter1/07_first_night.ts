@@ -1,6 +1,6 @@
 import {
-  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, scene, setFlag, sfx,
-  shot, speaker, think, trust, when,
+  affinity, bg, C, cg, choice, effects, fx, jump, me, milestone, music, narrate, option, phone, reply, scene,
+  setFlag, sfx, shot, speaker, text, think, trust, when,
 } from '../../story/dsl';
 
 const vera = speaker('vera');
@@ -16,6 +16,21 @@ export const c1FirstNight = scene('c1_first_night', 'ch1', 'The First Night', [
   think(`I've slept in studios, airport floors, a van in a car park in the rain. Apparently I can't sleep in a brass bed with a sea view.`),
   narrate(`On the desk lies the solicitor's envelope. Inside it, under the copies of the will, is a smaller envelope you haven't opened. Margit's handwriting: For when you arrive. Not before.`),
   narrate(`Out of the window, down at the cove, a single light moves slowly along the waterline.`),
+  when(C.flag('noor_invited_piano'), [
+    sfx('phone_message'),
+    text('noor', `Got your number from the hotel register. Very unprofessional of me.`),
+    text('noor', `Side door. It sticks. Not a big deal either way.`),
+    choice('c1_noor_text', [
+      option('tempting', `"Tempting."`, {
+        effects: [affinity('noor', 2)],
+        steps: [reply('noor', `Tempting.`), text('noor', `That's the spirit. Or the gin. One of the two.`)],
+      }),
+      option('tired', `"Long day. We'll see."`, {
+        steps: [reply('noor', `Long day. We'll see.`), text('noor', `Honest. Annoying, but honest.`)],
+      }),
+    ]),
+    phone(null),
+  ]),
 
   choice(
     'c1_night_choice',

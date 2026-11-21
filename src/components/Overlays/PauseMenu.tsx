@@ -42,7 +42,7 @@ export function PauseMenu() {
             </MenuButton>
             <p className="pt-5 text-[15px] leading-relaxed tracking-wide text-white/35">
               Click / Space — continue · Backspace — back · A — auto · S or hold Ctrl — skip · H — hide · L — history · R —
-              relationships · M — mute · F5 / F9 — quick save / load · Esc — menu
+              relationships · P — phone · M — mute · F5 / F9 — quick save / load · Esc — menu
             </p>
           </>
         )}

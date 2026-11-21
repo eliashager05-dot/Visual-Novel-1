@@ -184,6 +184,14 @@ export function validateContent(content: GameContent): ValidationIssue[] {
           if (!shot) err(where, `unknown shot "${i.id}"`);
           break;
         }
+        case 'text':
+          if (!content.characters[i.thread] && !content.contacts[i.thread]) err(where, `unknown phone contact "${i.thread}"`);
+          if (i.image && !content.cgs[i.image] && !content.shots[i.image]) err(where, `unknown photo "${i.image}" (use an illustration or shot id)`);
+          if (!i.text && !i.image) err(where, 'a message needs text or a photo');
+          break;
+        case 'phone':
+          if (i.thread && !content.characters[i.thread] && !content.contacts[i.thread]) err(where, `unknown phone contact "${i.thread}"`);
+          break;
         case 'unlock':
           if (!content.cgs[i.gallery]) err(where, `unknown gallery item "${i.gallery}"`);
           break;

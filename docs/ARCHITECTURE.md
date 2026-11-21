@@ -133,6 +133,24 @@ Conditions: `affinity`, `trust`, `var`, `flag`, `milestone`, `chose`, `visited`,
 Effects: `affinity`, `trust`, `flag`, `var` (`set`/`add`), `milestone`.
 Text tokens: `{player}`, `{var:name}`.
 
+Atmosphere: `fx({ rain: 'heavy', lightning: true, fog: 'light', flicker: 'candle', dust: true })` sets the
+living-still effects for the current shot; `fx(null)` clears them (a jump to another scene also clears them).
+Music and sound: `music('id')`, `sfx('id')`.
+
+Phone:
+
+```ts
+text('noor', 'Piano bar is open until two. Just saying.'),            // opens Noor's thread on screen
+text('sienna', 'Lunch? I\'ll drive.', { as: 'Unknown number' }),        // hides who it is until revealed
+text('vera', 'Storm warning upgraded.', { quiet: true }),             // no interruption: unread badge + notice
+reply('noor', 'On my way.'),                                           // the player's message
+photo('unknown', 'cg_margit_photo'),                                   // a CG as a picture message (unlocks it)
+choice('c1_noor_text', [...]),                                         // a choice while the phone is open shows as reply bubbles
+phone(null),                                                           // put the phone away
+```
+
+Threads are character ids, or ids from `src/data/contacts.ts` for people who are not characters.
+
 The DSL produces plain `Step` objects, so a scene can equally be a `.json` file matching `SceneDefinition`.
 
 ### Adding content (no engine changes)

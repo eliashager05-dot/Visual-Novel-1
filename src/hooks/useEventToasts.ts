@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { content } from '@/data';
-import { useGameStore } from '@/store/gameStore';
+import { contactName } from '@/engine';
+import { sceneManager, useGameStore as gameStore } from '@/store/gameStore';
 import { useSettings } from '@/store/settingsStore';
 import { useUi } from '@/store/uiStore';
 
@@ -9,14 +10,19 @@ import { useUi } from '@/store/uiStore';
  * character per step, phrased in story terms rather than numbers.
  */
 export function useEventToasts() {
-  const events = useGameStore((s) => s.events);
+  const events = gameStore((s) => s.events);
   const seen = useRef(new WeakSet<object>());
 
   useEffect(() => {
     if (seen.current.has(events)) return; // StrictMode re-run / no new events
     seen.current.add(events);
-    if (!useSettings.getState().relationshipNotices) return;
     const { pushToast } = useUi.getState();
+    // Message notices always show: they tell you there is something to read.
+    const game = gameStore.getState().game;
+    for (const e of events) {
+      if (e.type === 'phoneMessage' && game) pushToast({ tone: 'info', text: `New message · ${contactName(sceneManager, game, e.thread)}` });
+    }
+    if (!useSettings.getState().relationshipNotices) return;
     const perCharacter = new Map<string, { affinity: number; trust: number }>();
     for (const e of events) {
       if (e.type === 'relationshipChanged') {
