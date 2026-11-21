@@ -252,7 +252,7 @@ Originally planned scope:
 - Gallery: CGs, character profiles and a replayable scene list, all unlocked through play.
 
 ### Phase 4: Content ✅
-Chapter One, "Low Tide", is complete: 20 scenes, 100 briefed shots (with a visible protagonist) and 7 illustrations. It takes about
+Chapter One, "Low Tide", is complete: 19 scenes, 100 briefed shots (with a visible protagonist) and 7 illustrations. It takes about
 22–24 minutes per playthrough at default text speed (340–390 lines), with 30+ decision points and four
 exclusive first-night scenes. See [`STORY_CH1.md`](STORY_CH1.md) for the scene flow, every decision and
 its consequences, and the flags that carry into Chapter Two.

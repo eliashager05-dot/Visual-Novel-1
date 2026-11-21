@@ -14,6 +14,8 @@ import {
   type SlotId,
 } from '@/engine';
 import type { EngineEvent, GameState } from '@/types';
+import { achievements } from '@/data/achievements';
+import { newlyEarned } from '@/engine/achievements';
 import { usePersistentStore } from './persistentStore';
 import { saveRepo, useSaves } from './saveStore';
 import { useUi } from './uiStore';
@@ -51,6 +53,24 @@ interface GameStore {
 
 const notify = (text: string) => useUi.getState().pushToast({ tone: 'info', text });
 
+/** Notes scenes seen and chapters finished, then unlocks any achievements now earned. */
+function recordProgress(state: GameState) {
+  const p = usePersistentStore.getState();
+  const chapter =
+    state.presentation.kind === 'end' && state.presentation.chapterComplete
+      ? (content.scenes[state.pointer.scene]?.chapter ?? null)
+      : null;
+  p.trackProgress(state.visitedScenes, chapter);
+  const after = usePersistentStore.getState();
+  const earned = newlyEarned(achievements, after.achievements, state, {
+    scenesSeen: after.scenesSeen,
+    chaptersCompleted: after.chaptersCompleted,
+  });
+  if (!earned.length) return;
+  after.unlockAchievements(earned.map((a) => a.id));
+  for (const a of earned) useUi.getState().pushToast({ tone: 'achievement', text: a.title });
+}
+
 export const useGameStore = create<GameStore>()((set, get) => {
   /** Apply an engine result; returns false (and records the error) on failure. */
   const commit = (fn: () => EngineResult, opts: { pushPast?: boolean; autosave?: boolean } = {}) => {
@@ -65,6 +85,7 @@ export const useGameStore = create<GameStore>()((set, get) => {
       usePersistentStore.getState().ingestEvents(events);
       const past = opts.pushPast && prev ? [...get().past, prev].slice(-ROLLBACK_LIMIT) : get().past;
       set({ game: state, events, past, error: null });
+      recordProgress(state);
       // Autosave on entering a new scene and after every decision.
       const sceneChanged = prev && prev.pointer.scene !== state.pointer.scene;
       if (get().mode === 'story' && (opts.autosave || sceneChanged) && state.presentation.kind !== 'end') {
@@ -152,6 +173,7 @@ export const useGameStore = create<GameStore>()((set, get) => {
           notify('The story was updated since this save — resuming from the start of the scene');
         } else {
           set({ game: state, events: [], error: null });
+          recordProgress(state);
           notify('Game loaded');
         }
         return true;

@@ -1,13 +1,14 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { content } from '@/data';
+import { achievements } from '@/data/achievements';
 import { usePersistentStore } from '@/store/persistentStore';
 import { CharacterPortrait } from '../CharacterRenderer/CharacterPortrait';
 import { Panel } from '../Overlays/Panel';
 import { CgImage } from '../Stage/CgLayer';
 import { Tabs } from '../ui/controls';
 
-type Tab = 'cg' | 'characters' | 'scenes';
+type Tab = 'cg' | 'characters' | 'scenes' | 'progress';
 
 /**
  * Unlocks are per player (they persist across playthroughs). Locked items are
@@ -19,6 +20,9 @@ export function GalleryScreen({ onClose, onReplay }: { onClose: () => void; onRe
   const unlockedCg = usePersistentStore((s) => s.unlockedGallery);
   const met = usePersistentStore((s) => s.charactersMet);
   const unlockedScenes = usePersistentStore((s) => s.unlockedScenes);
+  const earned = usePersistentStore((s) => s.achievements);
+  const scenesSeen = usePersistentStore((s) => s.scenesSeen);
+  const chaptersCompleted = usePersistentStore((s) => s.chaptersCompleted);
 
   const cgs = Object.values(content.cgs);
   const people = Object.values(content.characters).filter((d) => d.role !== 'protagonist');
@@ -48,6 +52,7 @@ export function GalleryScreen({ onClose, onReplay }: { onClose: () => void; onRe
             { value: 'cg', label: `Illustrations ${count(cgs.filter((c) => unlockedCg[c.id]).length, cgs.length)}` },
             { value: 'characters', label: `Characters ${count(people.filter((p) => met[p.id]).length, people.length)}` },
             { value: 'scenes', label: `Scenes ${count(replayable.filter((s) => unlockedScenes[s.id]).length, replayable.length)}` },
+            { value: 'progress', label: `Achievements ${count(achievements.filter((a) => earned[a.id]).length, achievements.length)}` },
           ]}
         />
         <div className="min-h-[640px] overflow-y-auto px-12 py-8">
@@ -86,6 +91,49 @@ export function GalleryScreen({ onClose, onReplay }: { onClose: () => void; onRe
                   <LockedTile key={d.id} height={360} label="Not yet met" />
                 ),
               )}
+            </div>
+          )}
+
+          {tab === 'progress' && (
+            <div className="space-y-8">
+              <div className="grid grid-cols-3 gap-6">
+                {content.chapters.map((ch) => (
+                  <div key={ch.id} className="rounded-2xl border border-white/[0.08] px-6 py-5">
+                    <div className="text-[15px] uppercase tracking-[0.25em] text-white/35">{ch.title}</div>
+                    <div className="font-serif text-[30px] text-white/90">{ch.subtitle}</div>
+                    <div className={['mt-1 text-[17px]', chaptersCompleted[ch.id] ? 'text-[#e8c88f]' : 'text-white/35'].join(' ')}>
+                      {chaptersCompleted[ch.id] ? '★ Finished' : 'Not finished yet'}
+                    </div>
+                  </div>
+                ))}
+                <div className="rounded-2xl border border-white/[0.08] px-6 py-5">
+                  <div className="text-[15px] uppercase tracking-[0.25em] text-white/35">Scenes seen</div>
+                  <div className="font-serif text-[30px] text-white/90">
+                    {Object.keys(content.scenes).filter((s) => scenesSeen[s]).length} / {Object.keys(content.scenes).length}
+                  </div>
+                  <div className="mt-1 text-[17px] text-white/35">Across all playthroughs</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                {achievements.map((a) => {
+                  const got = earned[a.id];
+                  return (
+                    <div
+                      key={a.id}
+                      className={['flex gap-4 rounded-2xl border px-5 py-4', got ? 'border-[#e8c88f]/30 bg-[#e8c88f]/[0.05]' : 'border-white/[0.06]'].join(' ')}
+                    >
+                      <div className={['pt-1 text-[26px] leading-none', got ? 'text-[#e8c88f]' : 'text-white/15'].join(' ')}>★</div>
+                      <div className="min-w-0">
+                        <div className={['font-serif text-[24px] leading-tight', got ? 'text-white/95' : 'text-white/45'].join(' ')}>
+                          {got || !a.hidden ? a.title : '???'}
+                        </div>
+                        <div className="text-[16px] leading-snug text-white/45">{got || !a.hidden ? a.description : 'Hidden achievement'}</div>
+                        {got && <div className="mt-1 text-[13px] text-white/30">{new Date(got).toLocaleDateString()}</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 

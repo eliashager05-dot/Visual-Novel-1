@@ -23,7 +23,7 @@ function ToastItem({ t }: { t: Toast }) {
     const id = setTimeout(() => dismiss(t.id), TOAST_MS);
     return () => clearTimeout(id);
   }, [t.id, dismiss]);
-  const icon = t.tone === 'milestone' ? '✦' : t.tone === 'info' ? '•' : t.tone === 'up' ? '▲' : '▼';
+  const icon = t.tone === 'achievement' ? '★' : t.tone === 'milestone' ? '✦' : t.tone === 'info' ? '•' : t.tone === 'up' ? '▲' : '▼';
   return (
     <motion.div
       layout
@@ -33,10 +33,11 @@ function ToastItem({ t }: { t: Toast }) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="flex items-center gap-3 rounded-full border border-white/10 bg-black/60 px-6 py-3 text-[19px] text-white/85 backdrop-blur-md"
     >
-      <span style={{ color: t.color }} className={t.tone === 'down' ? 'opacity-60' : ''}>
+      <span style={{ color: t.tone === 'achievement' ? '#e8c88f' : t.color }} className={t.tone === 'down' ? 'opacity-60' : ''}>
         {icon}
       </span>
-      <span className={t.tone === 'milestone' ? 'font-serif text-[22px] italic' : ''}>{t.text}</span>
+      {t.tone === 'achievement' && <span className="text-[14px] uppercase tracking-[0.25em] text-[#e8c88f]/80">Achievement</span>}
+      <span className={t.tone === 'milestone' || t.tone === 'achievement' ? 'font-serif text-[22px] italic' : ''}>{t.text}</span>
     </motion.div>
   );
 }

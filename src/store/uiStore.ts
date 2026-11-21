@@ -7,7 +7,7 @@ export type MenuScreen = 'none' | 'load' | 'gallery' | 'settings';
 export interface Toast {
   id: number;
   text: string;
-  tone: 'up' | 'down' | 'milestone' | 'info';
+  tone: 'up' | 'down' | 'milestone' | 'info' | 'achievement';
   color?: string;
 }
 

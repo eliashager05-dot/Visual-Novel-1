@@ -13,13 +13,30 @@ interface PersistentState {
   endingsSeen: Record<string, true>;
   /** Characters ever met in any playthrough (gallery profiles). */
   charactersMet: Record<string, true>;
+  /** Every scene ever entered, in any playthrough (achievements). */
+  scenesSeen: Record<string, true>;
+  chaptersCompleted: Record<string, true>;
+  /** Achievement id → unlock time. */
+  achievements: Record<string, number>;
+  /** Records scenes and a completed chapter from the current state. */
+  trackProgress: (visited: string[], completedChapter: string | null) => void;
+  unlockAchievements: (ids: string[]) => void;
   markRead: (key: string) => void;
   isRead: (key: string) => boolean;
   ingestEvents: (events: EngineEvent[]) => void;
   resetProgress: () => void;
 }
 
-const empty = () => ({ readLines: {}, unlockedGallery: {}, unlockedScenes: {}, endingsSeen: {}, charactersMet: {} });
+const empty = () => ({
+  readLines: {},
+  unlockedGallery: {},
+  unlockedScenes: {},
+  endingsSeen: {},
+  charactersMet: {},
+  scenesSeen: {} as Record<string, true>,
+  chaptersCompleted: {} as Record<string, true>,
+  achievements: {} as Record<string, number>,
+});
 
 export const usePersistentStore = create<PersistentState>()(
   persist(
@@ -40,6 +57,21 @@ export const usePersistentStore = create<PersistentState>()(
           else if (e.type === 'characterMet') add('charactersMet', e.character);
         }
       },
+      trackProgress: (visited, completedChapter) => {
+        const s = get();
+        const fresh = visited.filter((v) => !s.scenesSeen[v]);
+        const chapterNew = completedChapter && !s.chaptersCompleted[completedChapter];
+        if (!fresh.length && !chapterNew) return;
+        set({
+          scenesSeen: fresh.length ? { ...s.scenesSeen, ...Object.fromEntries(fresh.map((v) => [v, true as const])) } : s.scenesSeen,
+          chaptersCompleted: chapterNew ? { ...s.chaptersCompleted, [completedChapter]: true } : s.chaptersCompleted,
+        });
+      },
+      unlockAchievements: (ids) => {
+        if (!ids.length) return;
+        const now = Date.now();
+        set((s) => ({ achievements: { ...s.achievements, ...Object.fromEntries(ids.map((id) => [id, now])) } }));
+      },
       resetProgress: () => set(empty()),
     }),
     {
@@ -52,6 +84,9 @@ export const usePersistentStore = create<PersistentState>()(
         unlockedScenes: s.unlockedScenes,
         endingsSeen: s.endingsSeen,
         charactersMet: s.charactersMet,
+        scenesSeen: s.scenesSeen,
+        chaptersCompleted: s.chaptersCompleted,
+        achievements: s.achievements,
       }),
     },
   ),
