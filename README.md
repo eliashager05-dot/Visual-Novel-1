@@ -21,6 +21,8 @@ npm run build
 - Generating the images with a local AI image generator: [`docs/AI_RENDER_GUIDE.md`](docs/AI_RENDER_GUIDE.md)
   (`npm run generate -- --milestone 1`, then `npm run studio` to compare and choose)
 - Building them in DAZ Studio instead: [`docs/DAZ_GUIDE.md`](docs/DAZ_GUIDE.md)
+- Same face in every image: train a character LoRA; the studio prepares the training folder:
+  [`docs/LORA_GUIDE.md`](docs/LORA_GUIDE.md)
 - Music and sound effects: drop files into `src/assets/music` and `src/assets/sounds`: [`docs/AUDIO_GUIDE.md`](docs/AUDIO_GUIDE.md)
 - Animated clips: the render studio's **Animate** button makes them from your chosen stills with your own
   ComfyUI video workflow (`ai-workflows/animate.json`), or save `<shotId>.mp4` (loops) /

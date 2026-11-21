@@ -41,7 +41,7 @@ export const DEFAULT_NEGATIVE =
   'deformed, extra fingers, extra limbs, fused fingers, bad hands, bad anatomy, cross-eyed, duplicate person, ' +
   'text, caption, subtitles, watermark, logo, signature, frame, border, blurry, low quality';
 
-const FRAMING: Record<CameraFraming, string> = {
+export const FRAMING: Record<CameraFraming, string> = {
   wide: 'wide establishing shot',
   medium: 'medium shot, waist up',
   close: 'close-up portrait, head and shoulders',
@@ -49,7 +49,7 @@ const FRAMING: Record<CameraFraming, string> = {
   over_shoulder: 'over-the-shoulder shot, foreground figure out of focus',
 };
 
-const EXPRESSION: Record<Expression, string> = {
+export const EXPRESSION: Record<Expression, string> = {
   neutral: 'calm neutral expression',
   happy: 'soft genuine smile',
   sad: 'sad, downcast eyes',
@@ -71,7 +71,7 @@ const SIDE: Record<StagePosition, string> = {
 };
 
 /** FNV-1a → positive 31-bit integer. */
-function seedFor(id: string): number {
+export function seedFor(id: string): number {
   let h = 0x811c9dc5;
   for (let i = 0; i < id.length; i++) {
     h ^= id.charCodeAt(i);
@@ -80,10 +80,10 @@ function seedFor(id: string): number {
   return (h >>> 0) % 2147483647;
 }
 
-const sheetOf = (charId: string) => renderSheets.find((s) => s.character === charId);
+export const sheetOf = (charId: string) => renderSheets.find((s) => s.character === charId);
 
 /** How the brief should refer to each person, since names mean nothing to an image model. */
-const ALIAS: Record<string, string> = {
+export const ALIAS: Record<string, string> = {
   player: 'the dark-haired man',
   vera: 'the blonde woman',
   noor: 'the curly-haired woman',
@@ -93,18 +93,19 @@ const ALIAS: Record<string, string> = {
 };
 
 /** "a 26 year old woman, …, wearing …, soft genuine smile" */
-function describeCharacter(c: ShotCharacter, sceneId: string | null, withExpression = true): string {
+function describeCharacter(c: ShotCharacter, sceneId: string | null, withExpression = true, trigger?: string): string {
   const sheet = sheetOf(c.id);
   if (!sheet) return content.characters[c.id]?.appearance ?? c.id;
   const outfit = (sceneId && sheet.wardrobe.find((w) => w.scenes.includes(sceneId))) || sheet.wardrobe[0];
-  const parts = [`a ${sheet.prompt}`];
+  // With a trained LoRA, its trigger word goes right before the description it was trained on.
+  const parts = [`${trigger ? `${trigger}, ` : ''}a ${sheet.prompt}`];
   if (outfit) parts.push(`wearing ${outfit.prompt}`);
   if (withExpression) parts.push(EXPRESSION[c.expression ?? 'neutral']);
   return parts.join(', ');
 }
 
 /** Removes notes meant for a 3D artist and replaces names with visual labels. */
-function cleanBrief(text: string): string {
+export function cleanBrief(text: string): string {
   let out = text
     .replace(/\((?:players? choose[^)]*|anonymous[^)]*)\)/gi, '')
     // A note addressed to the artist rather than describing the image.
@@ -166,8 +167,15 @@ export function listRenderItems(): RenderItem[] {
 
 export function buildPrompt(
   item: RenderItem,
-  opts: { style?: string; negative?: string; extra?: string } = {},
+  opts: {
+    style?: string;
+    negative?: string;
+    extra?: string;
+    /** Trigger word per character id, for characters with a trained LoRA. */
+    triggers?: Record<string, string>;
+  } = {},
 ): BuiltPrompt {
+  const trig = (id: string) => opts.triggers?.[id];
   const style = opts.style ?? DEFAULT_STYLE;
   // Image models weight the start of a prompt most, so the subject comes first and the style last.
   const parts: string[] = [];
@@ -177,7 +185,7 @@ export function buildPrompt(
     const sheet = sheetOf(charId)!;
     parts.push(
       'studio portrait, head and shoulders, facing the camera, plain grey backdrop, soft even light',
-      `a ${sheet.prompt}`,
+      `${trig(charId) ? `${trig(charId)}, ` : ''}a ${sheet.prompt}`,
       `wearing ${sheet.wardrobe[0]!.prompt}`,
       'calm neutral expression',
     );
@@ -199,12 +207,12 @@ export function buildPrompt(
     // Illustrations describe their own mood, so they carry no separate expression.
     const withExpression = Boolean(shot);
     if (people.length === 1) {
-      parts.push(describeCharacter(people[0]!, item.scene, withExpression));
+      parts.push(describeCharacter(people[0]!, item.scene, withExpression, trig(people[0]!.id)));
     } else if (people.length > 1) {
       parts.push(`${people.length} people`);
       for (const p of people) {
         const where = shot ? `${SIDE[p.position ?? 'center']}: ` : '';
-        parts.push(`${where}${describeCharacter(p, item.scene, withExpression)}`);
+        parts.push(`${where}${describeCharacter(p, item.scene, withExpression, trig(p.id))}`);
       }
     } else if (shot?.camera === 'wide') {
       parts.push('no people');

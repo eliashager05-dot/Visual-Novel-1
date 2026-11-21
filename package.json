@@ -15,7 +15,8 @@
     "renders": "tsx scripts/check-renders.ts",
     "generate": "tsx scripts/ai/generate.ts",
     "studio": "tsx scripts/ai/studio.ts",
-    "play": "vite --open"
+    "play": "vite --open",
+    "lora": "tsx scripts/ai/lora.ts"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

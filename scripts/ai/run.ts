@@ -1,6 +1,7 @@
 import { milestones } from '../../src/data/renderSheets';
 import { buildPrompt, listRenderItems, type BuiltPrompt, type RenderItem } from '../../src/production/prompts';
 import { MOTION_NEGATIVE, motionPrompt } from '../../src/production/animateWorkflow';
+import { loraTrigger } from '../../src/production/lora';
 import { animateImage, ComfyError, generateImage, inspectComfy, resolveCheckpoint } from './comfy';
 import type { AiConfig } from './config';
 import { chosenFile, listCandidates, listClips, loadOverrides, saveCandidate, saveClip, useCandidate } from './store';
@@ -17,11 +18,19 @@ export async function openSession(cfg: AiConfig): Promise<Session> {
   return { cfg, gpu, checkpoint: resolveCheckpoint(cfg, checkpoints) };
 }
 
+/** Trigger words of the characters that have a trained LoRA set up. */
+export function triggersFor(cfg: AiConfig): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [id, l] of Object.entries(cfg.loras)) if (l?.file) out[id] = l.trigger || loraTrigger(id);
+  return out;
+}
+
 export function promptFor(cfg: AiConfig, item: RenderItem): BuiltPrompt {
   return buildPrompt(item, {
     style: cfg.style || undefined,
     negative: cfg.negative,
     extra: loadOverrides()[item.id]?.extra,
+    triggers: triggersFor(cfg),
   });
 }
 

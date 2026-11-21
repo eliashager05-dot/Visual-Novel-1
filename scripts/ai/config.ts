@@ -25,7 +25,9 @@ export interface AiConfig {
   /** Extra words added to the built-in negative prompt. */
   negative: string;
   /** Optional per-character LoRA files in ComfyUI/models/loras, keyed by character id. */
-  loras: Record<string, { file: string; strength?: number }>;
+  loras: Record<string, { file: string; strength?: number; trigger?: string }>;
+  /** Full path of the model file, written into LoRA training settings (e.g. C:\ComfyUI\models\checkpoints\model.safetensors). */
+  trainingCheckpoint: string;
   /** Optional path to your own ComfyUI workflow (API format) with %POSITIVE% etc. placeholders. */
   workflow: string;
   timeoutSeconds: number;
@@ -49,6 +51,7 @@ export const DEFAULT_CONFIG: AiConfig = {
   style: '',
   negative: '',
   loras: {},
+  trainingCheckpoint: '',
   workflow: '',
   timeoutSeconds: 900,
   animateWorkflow: 'ai-workflows/animate.json',

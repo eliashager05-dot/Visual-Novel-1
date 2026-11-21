@@ -150,9 +150,8 @@ In rough order of effort:
 4. **Prefer single-person framing when a two-person image keeps failing.** Tell me which shots fail and I
    will re-stage them as a close-up and its reverse.
 5. **A per-character add-on model (a "LoRA").** This is the real fix for consistency. You train a small
-   file per character from 15–30 good images of them, and the generator then draws that exact person. Put
-   the file in `ComfyUI\models\loras\` and name it in the settings (section 8). Training is a project of
-   its own; ask me for a guide once the portraits are right.
+   file per character from 15–30 good images of them, and the generator then draws that exact person. The
+   studio collects the pictures and builds the training folder for you: see [LORA_GUIDE.md](LORA_GUIDE.md).
 6. **Your own workflow.** If you build a ComfyUI workflow that uses a reference face, export it in API
    format and point `workflow` at it (section 8).
 
@@ -180,7 +179,8 @@ The first run creates `ai-render.config.json` in the game folder. Edit it in any
 | `hires` | false | A second pass at full size: sharper, but slower and heavier on video memory. Try it once everything else works. |
 | `style` | empty | Replaces the style wording at the start of every prompt. |
 | `negative` | empty | Extra things to avoid, added to the built-in list. |
-| `loras` | `{}` | Per-character add-on models, for example `{ "noor": { "file": "noor.safetensors", "strength": 0.8 } }`. |
+| `loras` | `{}` | Per-character add-on models, for example `{ "noor": { "file": "noor.safetensors", "strength": 0.8 } }`. The character's trigger word (`hlcnoor`) is added to their prompts automatically; set `"trigger"` to use a different one. See [LORA_GUIDE.md](LORA_GUIDE.md). |
+| `trainingCheckpoint` | empty | Full path of your model file, written into LoRA training settings. |
 | `animateWorkflow` | `ai-workflows/animate.json` | Your image-to-video workflow, used by the **Animate** button (section 10). |
 | `animateTimeoutSeconds` | 3600 | How long to wait for one clip before giving up. |
 | `workflow` | empty | Path to your own workflow in API format. Placeholders: `%POSITIVE%`, `%NEGATIVE%`, `%CHECKPOINT%` inside strings, and `"%SEED%"`, `"%WIDTH%"`, `"%HEIGHT%"`, `"%STEPS%"`, `"%CFG%"` as whole values. |
