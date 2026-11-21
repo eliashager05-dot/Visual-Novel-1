@@ -19,6 +19,8 @@ export interface Settings {
   skipUnread: boolean;
   musicVolume: number;
   sfxVolume: number;
+  /** Silences everything without touching the volume sliders. */
+  muted: boolean;
   /** Dialogue panel opacity 0.3–1. */
   boxOpacity: number;
   ageConfirmed: boolean;
@@ -34,6 +36,7 @@ export const DEFAULT_SETTINGS: Settings = {
   skipUnread: false,
   musicVolume: 0.7,
   sfxVolume: 0.8,
+  muted: false,
   boxOpacity: 0.45,
   ageConfirmed: false,
 };

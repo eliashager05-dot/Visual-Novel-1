@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useSettings } from '@/store/settingsStore';
 import { useUi } from '@/store/uiStore';
 
 /**
@@ -38,6 +39,18 @@ const ICONS: Record<string, ReactNode> = {
   relationships: (
     <g {...stroke}>
       <path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z" />
+    </g>
+  ),
+  sound: (
+    <g {...stroke}>
+      <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+      <path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
+    </g>
+  ),
+  muted: (
+    <g {...stroke}>
+      <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+      <path d="M16 9.5l5 5M21 9.5l-5 5" />
     </g>
   ),
   menu: (
@@ -106,6 +119,7 @@ export function Hud({ raised = false }: { raised?: boolean }) {
   const canRollback = useGameStore((s) => s.past.length > 0);
   const rollback = useGameStore((s) => s.rollback);
   const replay = useGameStore((s) => s.mode === 'replay');
+  const muted = useSettings((s) => s.muted);
 
   return (
     <>
@@ -115,6 +129,13 @@ export function Hud({ raised = false }: { raised?: boolean }) {
         {!replay && <IconButton icon="save" label="Save" hint="F5 quick save" onClick={() => setOverlay('save')} />}
         <IconButton icon="load" label="Load" hint="F9 quick load" onClick={() => setOverlay('load')} />
         {!replay && <IconButton icon="relationships" label="Relationships" hint="R" onClick={() => setOverlay('relationships')} />}
+        <IconButton
+          icon={muted ? 'muted' : 'sound'}
+          label={muted ? 'Sound off' : 'Sound on'}
+          hint="M"
+          active={muted}
+          onClick={() => useSettings.getState().update({ muted: !muted })}
+        />
         <IconButton icon="menu" label="Menu" hint="Esc" onClick={() => setOverlay('pause')} />
       </div>
       <div className={['absolute right-[36px] z-10 flex gap-2', raised ? 'bottom-[296px]' : 'bottom-[26px]'].join(' ')}>

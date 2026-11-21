@@ -21,13 +21,13 @@ import { indexAssets, type VideoAsset } from './assetIndex';
  * null and the renderer draws the placeholder.
  */
 const discovered = import.meta.glob<string>(
-  '/src/assets/{shots,backgrounds,cg,characters}/**/*.{webp,avif,jpg,jpeg,png,mp4,webm}',
+  '/src/assets/{shots,backgrounds,cg,characters,music,sounds}/**/*.{webp,avif,jpg,jpeg,png,mp4,webm,ogg,mp3,wav,m4a,opus}',
   { eager: true, query: '?url', import: 'default' },
 );
 
-const { images: byKey, videos } = indexAssets(discovered);
+const { images: byKey, videos, audio } = indexAssets(discovered);
 
-export const discoveredAssetCount = byKey.size + videos.size;
+export const discoveredAssetCount = byKey.size + videos.size + audio.size;
 
 export function backgroundSrc(id: string): string | null {
   return content.backgrounds[id]?.src ?? byKey.get(`backgrounds/${id}`) ?? null;
@@ -39,6 +39,16 @@ export function cgSrc(id: string): string | null {
 
 export function shotSrc(id: string): string | null {
   return content.shots[id]?.src ?? byKey.get(`shots/${id}`) ?? null;
+}
+
+/** Music file for a track id, or null (the track then stays silent). */
+export function musicSrc(id: string): string | null {
+  return content.music[id]?.src ?? audio.get(`music/${id}`) ?? null;
+}
+
+/** Sound-effect file for an id, or null (a synthesised placeholder is played instead). */
+export function sfxSrc(id: string): string | null {
+  return content.sfx[id]?.src ?? audio.get(`sounds/${id}`) ?? null;
 }
 
 /** Animated clip for a shot, if one was dropped in. */

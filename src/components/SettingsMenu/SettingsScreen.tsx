@@ -9,7 +9,7 @@ import { Typewriter } from '../DialogueBox/Typewriter';
 import { Panel } from '../Overlays/Panel';
 import { ConfirmBar, Field, Segmented, Slider, Tabs, Toggle } from '../ui/controls';
 
-type Tab = 'text' | 'gameplay' | 'display' | 'data';
+type Tab = 'text' | 'audio' | 'gameplay' | 'display' | 'data';
 
 const SAMPLE = 'The island rises out of the haze — a dark hump of rock, a lighthouse, a scatter of lit windows.';
 
@@ -31,6 +31,7 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
         }}
         tabs={[
           { value: 'text', label: 'Text' },
+          { value: 'audio', label: 'Audio' },
           { value: 'gameplay', label: 'Gameplay' },
           { value: 'display', label: 'Display' },
           { value: 'data', label: 'Data' },
@@ -90,6 +91,24 @@ export function SettingsScreen({ onClose }: { onClose: () => void }) {
                 onChange={(v) => s.update({ boxOpacity: v / 100 })}
               />
             </Field>
+          </>
+        )}
+
+        {tab === 'audio' && (
+          <>
+            <Field label="Music volume">
+              <Slider label="Music volume" value={Math.round(s.musicVolume * 100)} min={0} max={100} step={5} format={(v) => `${v}%`} onChange={(v) => s.update({ musicVolume: v / 100 })} />
+            </Field>
+            <Field label="Sound effects volume">
+              <Slider label="Sound effects volume" value={Math.round(s.sfxVolume * 100)} min={0} max={100} step={5} format={(v) => `${v}%`} onChange={(v) => s.update({ sfxVolume: v / 100 })} />
+            </Field>
+            <Field label="Mute all" hint="Also on the speaker icon in the game, or the M key.">
+              <Toggle label="Mute all" value={s.muted} onChange={(v) => s.update({ muted: v })} />
+            </Field>
+            <p className="pt-5 text-[15px] leading-relaxed text-white/40">
+              Music plays from files in <code>src/assets/music</code>; until a track is added it stays silent. Sound
+              effects without a file use simple synthesised placeholders.
+            </p>
           </>
         )}
 

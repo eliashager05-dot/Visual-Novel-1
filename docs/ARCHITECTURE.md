@@ -231,8 +231,8 @@ Delivered:
   renders once delivered.
 - Rollback (Backspace / PageUp / "Back"), up to 80 steps, including back across choices.
 - Settings: text speed with a live preview, auto speed, dialogue style, text background, skip unread,
-  relationship notices, fullscreen, reset settings, and erase all progress. *Volume sliders arrive with
-  audio playback in Phase 5, so no non-functional controls ship now.*
+  relationship notices, fullscreen, reset settings, and erase all progress. Volume sliders were added
+  with audio playback.
 - Relationship menu (R): only characters you've met, tier, affinity and trust out of 100, profile entries
   as they unlock, and milestones reached. Unreached milestones appear only as a count.
 - Gallery: illustrations with a full-screen viewer, profiles of characters you've met, and replayable

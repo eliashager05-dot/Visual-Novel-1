@@ -1050,6 +1050,44 @@ Key moments, unlocked in the gallery. Render these with extra care: they are the
 - **Brief:** A phone-camera photograph, slightly tilted: a wiry 68-year-old woman in a yellow oilskin on a ferry deck in grey early-morning light, cropped iron-grey hair blowing, sharp blue eyes looking straight into the camera. Behind her, a white passenger-lounge wall with a digital clock.
 - **Save as:** `src/assets/cg/cg_margit_photo.png`
 
+## Music (0/13) and sound effects (0/13)
+
+Save music as `src/assets/music/<id>.ogg` and effects as `src/assets/sounds/<id>.mp3` (.ogg, .mp3, .wav, .m4a and
+.opus all work). Music loops, so it should loop cleanly. Until a track exists it is silent; effects without a
+file use a synthesised placeholder. See [AUDIO_GUIDE.md](AUDIO_GUIDE.md).
+
+| Music | What it should sound like | Used in | Status |
+|---|---|---|---|
+| `halcyon_theme` | Main theme and title screen: warm, wistful piano with light strings, a hint of mystery. Moderate tempo. Loops, 2–3 min. Also plays on the title screen. | The Harbour | ⬜ to do |
+| `crossing` | Opening ambience at sea: slow, wide, a little melancholy. Soft synth pad or strings over distant waves; no drums. Loops seamlessly, 2–3 min. | The Crossing | ⬜ to do |
+| `old_rooms` | Hotel interiors: gentle, slightly old-fashioned. Solo piano or a small string trio, like a 1920s hotel remembering itself. Loops. | The Halcyon, Dinner, Before the Storm | ⬜ to do |
+| `low_tide` | The bar: relaxed, warm and lived-in. Soft acoustic guitar, upright bass, brushed drums; low enough to talk over. Loops. | The Low Tide | ⬜ to do |
+| `sienna_theme` | Sienna: sleek and confident with an undertow of sadness. Muted electric piano, a slow groove, minor key. Loops. | The Low Tide | ⬜ to do |
+| `night_piano` | Noor at the piano after hours: a solo piano sketch, unfinished-sounding, intimate, the same short phrase returning with small changes. Loops. | After Hours | ⬜ to do |
+| `bloom` | The glowing cove: magical and hushed. Shimmering pads, celesta or glass harmonica, slow; the feeling of seeing something impossible. Loops. | Bloom, Low Tide | ⬜ to do |
+| `night_audit` | Vera at the desk at night: quiet, steady, a ticking clock feel; sparse piano and soft strings, tired but tender. Loops. | Night Audit | ⬜ to do |
+| `morning` | Morning on the terrace: bright, fresh, hopeful. Acoustic guitar or piano, light percussion, sea air. Loops. | Ninety Days | ⬜ to do |
+| `coast_road` | Driving the island road: forward motion, open landscape, a touch of tension underneath. Guitar and strings, mid tempo. Loops. | Coast Road | ⬜ to do |
+| `storm` | The storm: dark, driving, urgent. Low strings, timpani rolls, pulsing synth; builds without resolving. Loops. | The Storm | ⬜ to do |
+| `aftermath` | Candlelit lobby after the storm: exhausted calm, warm but uneasy. Solo cello or piano, very slow. Loops. | Candles | ⬜ to do |
+| `mystery` | Discoveries and secrets: quiet suspense. Low drones, sparse plucked notes, a music-box hint. Loops. | The First Night, For When You Arrive, Margit's Room | ⬜ to do |
+
+| Effect | What it should sound like | Used in | Status |
+|---|---|---|---|
+| `ferry_horn` | Deep ship horn, one long blast, 2–3 s, with a little harbour echo. | The Crossing | ⬜ to do |
+| `phone_buzz` | A phone vibrating on a hard surface, two short buzzes. | The Crossing, Ninety Days | ⬜ to do |
+| `gull` | Two or three gull calls over waves. | The Crossing | ⬜ to do |
+| `door_creak` | An old wooden door creaking open slowly. | Dinner, The Low Tide, Candles | ⬜ to do |
+| `glass_clink` | Two glasses clinking at a bar. | — | ⬜ to do |
+| `thunder` | A close thunderclap with a long rolling tail, 4–6 s. | The Storm | ⬜ to do |
+| `rain_heavy` | Heavy rain on windows and stone, 4–6 s, can fade in and out. | The Storm | ⬜ to do |
+| `power_down` | Electrics failing: a hum dropping away, a click, silence. | The Storm | ⬜ to do |
+| `splash` | Wet footsteps running in shallow water. | Room 7 | ⬜ to do |
+| `piano_note` | One soft low piano note, left to ring. | After Hours | ⬜ to do |
+| `car_door` | A car door closing solidly. | Coast Road, Before the Storm | ⬜ to do |
+| `phone_message` | A short, gentle two-note message tone. | Ninety Days, Stop Looking | ⬜ to do |
+| `key_turn` | An old iron key turning in a lock, a heavy click. | Margit's Room | ⬜ to do |
+
 ## Backgrounds (optional)
 
 Only needed if a scene is staged with sprites instead of shots. Every scene in Chapter One uses shots, so

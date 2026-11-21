@@ -10,6 +10,8 @@ describe('asset index', () => {
     '/src/assets/cg/cg_x.mp4': '/u/x.mp4',
     '/src/assets/characters/vera/standing/happy.webp': '/u/v.webp',
     '/src/assets/shots/notes.txt': '/u/n.txt',
+    '/src/assets/music/storm.ogg': '/u/storm.ogg',
+    '/src/assets/sounds/thunder.mp3': '/u/thunder.mp3',
   });
 
   it('finds stills by id regardless of extension', () => {
@@ -37,5 +39,10 @@ describe('asset index', () => {
     expect(videoId('c1_a.mp4')).toBe('c1_a');
     expect(videoId('c1_b.once.webm')).toBe('c1_b');
     expect(videoId('c1_c.png')).toBeNull();
+  });
+
+  it('finds music and sound effects', () => {
+    expect(idx.audio.get('music/storm')).toBe('/u/storm.ogg');
+    expect(idx.audio.get('sounds/thunder')).toBe('/u/thunder.mp3');
   });
 });

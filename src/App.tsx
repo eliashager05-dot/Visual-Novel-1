@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import { AudioDirector } from './components/Audio/AudioDirector';
 import { ErrorBoundary } from './components/Game/ErrorBoundary';
 import { GameScreen } from './components/Game/GameScreen';
 import { AgeGate } from './components/MainMenu/AgeGate';
@@ -28,6 +29,7 @@ export default function App() {
         ) : <MainMenu key="menu" />}
       </AnimatePresence>
       <Toasts />
+      <AudioDirector />
     </GameViewport>
   );
 }

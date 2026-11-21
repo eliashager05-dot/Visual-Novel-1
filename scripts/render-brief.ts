@@ -227,6 +227,46 @@ for (const c of allCgs) {
   p(`- **Save as:** \`src/assets/cg/${c.id}.png\``);
   p();
 }
+{
+  // Music and sound effects, with the scenes that use them.
+  const AUDIO = /\.(ogg|mp3|wav|m4a|opus)$/i;
+  const hasAudio = (folder: string, id: string) => {
+    const dir = ASSETS + folder;
+    return existsSync(dir) && readdirSync(dir).some((f) => AUDIO.test(f) && f.replace(AUDIO, '') === id);
+  };
+  const usedIn = new Map<string, Set<string>>();
+  for (const def of Object.values(content.scenes)) {
+    for (const i of manager.getScene(def.id).instructions) {
+      const key = i.type === 'music' && i.track ? `music:${i.track}` : i.type === 'sfx' ? `sfx:${i.id}` : null;
+      if (key) (usedIn.get(key) ?? usedIn.set(key, new Set()).get(key)!).add(def.title);
+    }
+  }
+  const tracks = Object.values(content.music);
+  const effects = Object.values(content.sfx);
+  const musicDone = tracks.filter((t) => t.src || hasAudio('music', t.id)).length;
+  const sfxDone = effects.filter((t) => t.src || hasAudio('sounds', t.id)).length;
+  p(`## Music (${musicDone}/${tracks.length}) and sound effects (${sfxDone}/${effects.length})`);
+  p();
+  p('Save music as `src/assets/music/<id>.ogg` and effects as `src/assets/sounds/<id>.mp3` (.ogg, .mp3, .wav, .m4a and');
+  p('.opus all work). Music loops, so it should loop cleanly. Until a track exists it is silent; effects without a');
+  p('file use a synthesised placeholder. See [AUDIO_GUIDE.md](AUDIO_GUIDE.md).');
+  p();
+  p('| Music | What it should sound like | Used in | Status |');
+  p('|---|---|---|---|');
+  p(`| \`halcyon_theme\` | ${content.music.halcyon_theme?.brief ?? ''} Also plays on the title screen. | ${[...(usedIn.get('music:halcyon_theme') ?? [])].join(', ') || '—'} | ${mark(hasAudio('music', 'halcyon_theme'))} |`);
+  for (const t of tracks) {
+    if (t.id === 'halcyon_theme') continue;
+    p(`| \`${t.id}\` | ${t.brief ?? t.title} | ${[...(usedIn.get(`music:${t.id}`) ?? [])].join(', ') || '—'} | ${mark(Boolean(t.src) || hasAudio('music', t.id))} |`);
+  }
+  p();
+  p('| Effect | What it should sound like | Used in | Status |');
+  p('|---|---|---|---|');
+  for (const t of effects) {
+    p(`| \`${t.id}\` | ${t.brief ?? t.title} | ${[...(usedIn.get(`sfx:${t.id}`) ?? [])].join(', ') || '—'} | ${mark(Boolean(t.src) || hasAudio('sounds', t.id))} |`);
+  }
+  p();
+}
+
 p('## Backgrounds (optional)');
 p();
 p('Only needed if a scene is staged with sprites instead of shots. Every scene in Chapter One uses shots, so');

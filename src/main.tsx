@@ -7,12 +7,18 @@ import { validateContent } from './engine';
 
 if (import.meta.env.DEV) {
   // QA handle for the browser console and automated tests.
-  void Promise.all([import('./store/gameStore'), import('./store/uiStore'), import('./store/persistentStore')]).then(
-    ([g, u, p]) => {
+  void Promise.all([
+    import('./store/gameStore'),
+    import('./store/uiStore'),
+    import('./store/persistentStore'),
+    import('./lib/audio/audioEngine'),
+  ]).then(
+    ([g, u, p, a]) => {
       (window as unknown as Record<string, unknown>).__halcyon = {
         game: g.useGameStore,
         ui: u.useUi,
         persistent: p.usePersistentStore,
+        audio: a.audioEngine,
       };
     },
   );

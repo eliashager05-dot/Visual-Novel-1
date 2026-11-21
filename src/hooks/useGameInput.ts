@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
+import { useSettings } from '@/store/settingsStore';
 import { useUi } from '@/store/uiStore';
 import { useAdvanceIntent } from './useGameController';
 
@@ -71,6 +72,12 @@ export function useGameInput() {
           e.preventDefault();
           if (!ui.transitioning) useGameStore.getState().rollback();
           break;
+        case 'm':
+        case 'M': {
+          const s = useSettings.getState();
+          s.update({ muted: !s.muted });
+          break;
+        }
         case 'r':
         case 'R':
           if (useGameStore.getState().mode === 'story') ui.setOverlay('relationships');

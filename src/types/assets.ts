@@ -36,6 +36,8 @@ export interface CgDefinition {
 export interface AudioDefinition {
   id: string;
   title: string;
+  /** What it should sound like: mood, instruments, tempo, length. The brief for finding or making it. */
+  brief?: string;
   src?: string;
 }
 

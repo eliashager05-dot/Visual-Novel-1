@@ -140,6 +140,39 @@ for (const { folder, label, ids } of folders) {
   if (clips.length) console.log(`  → ${[...clipIds.keys()].filter((id) => ids.includes(id)).length} animated`);
 }
 
+// Music and sound effects: names only (the browser decodes them).
+const AUDIO_EXT = /\.(ogg|mp3|wav|m4a|opus)$/i;
+for (const { folder, label, ids } of [
+  { folder: 'music', label: 'music tracks', ids: Object.keys(content.music) },
+  { folder: 'sounds', label: 'sound effects', ids: Object.keys(content.sfx) },
+]) {
+  const dir = join(ASSETS, folder);
+  const files = existsSync(dir) ? readdirSync(dir).filter((f) => AUDIO_EXT.test(f)) : [];
+  const seen = new Map<string, string>();
+  console.log(`\n${label.toUpperCase()} — ${files.length} file${files.length === 1 ? '' : 's'} in src/assets/${folder}`);
+  for (const file of files) {
+    const id = file.replace(AUDIO_EXT, '');
+    const notes: string[] = [];
+    if (!ids.includes(id)) {
+      const guess = ids.map((x) => [x, distance(x, id)] as const).sort((a, b) => a[1] - b[1])[0];
+      notes.push(`ERROR  not a known name${guess && guess[1] <= 6 ? ` — did you mean "${guess[0]}"?` : ''}`);
+      errors++;
+    }
+    if (seen.has(id)) {
+      notes.push(`ERROR  duplicate of ${seen.get(id)} (keep only one file per name)`);
+      errors++;
+    }
+    seen.set(id, file);
+    const size = statSync(join(dir, file)).size;
+    if (/\.wav$/i.test(file) && size > 20 * 1024 * 1024) {
+      notes.push(`WARN   ${mb(size)} — convert long WAV files to .ogg or .mp3`);
+      warnings++;
+    }
+    console.log(notes.length ? `  ${file}\n    ${notes.join('\n    ')}` : `  ${file}  ok (${mb(size)})`);
+  }
+  console.log(`  → ${[...seen.keys()].filter((id) => ids.includes(id)).length} of ${ids.length} ${label} delivered`);
+}
+
 console.log(
   `\n${errors} error${errors === 1 ? '' : 's'}, ${warnings} warning${warnings === 1 ? '' : 's'}` +
     (optimize ? `, ${converted} converted, ${mb(saved)} saved` : '') +
